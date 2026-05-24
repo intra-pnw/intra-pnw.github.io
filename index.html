@@ -3,1096 +3,1050 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTRA — Events Portal</title>
+<title>INTRA — Events</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,900;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@600;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:        #07080d;
-  --bg2:       #0d0f1a;
-  --bg3:       #11142a;
-  --panel:     #141728;
-  --panel2:    #1a1e35;
-  --border:    #2a2f52;
-  --border2:   #3a4080;
-  --gold:      #f0c040;
-  --gold2:     #ffd97d;
-  --cyan:      #00e5ff;
-  --purple:    #a855f7;
-  --red:       #ff4466;
-  --green:     #22d984;
-  --text:      #e8eaf6;
-  --text2:     #9fa8da;
-  --text3:     #5c6484;
-  --shadow:    0 0 40px rgba(0,229,255,.08), 0 4px 24px rgba(0,0,0,.6);
-  --glow-gold: 0 0 20px rgba(240,192,64,.4);
-  --glow-cyan: 0 0 20px rgba(0,229,255,.4);
+:root{
+  --bg:#080700;
+  --bg2:#0f0e00;
+  --panel:#141200;
+  --panel2:#1a1800;
+  --border:#2a2600;
+  --border2:#3d3800;
+  --gold:#f5c400;
+  --gold2:#ffd84d;
+  --gold3:#a88200;
+  --amber:#ffaa00;
+  --text:#f0e8c8;
+  --text2:#a09060;
+  --text3:#5a5030;
+  --red:#ff3344;
+  --green:#44ff88;
+  --cyan:#00ccff;
+  --glow:0 0 28px rgba(245,196,0,.4);
+  --glow-sm:0 0 12px rgba(245,196,0,.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Barlow',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Exo 2', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
+/* diagonal line bg */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:repeating-linear-gradient(
+    -55deg,
+    rgba(245,196,0,.018) 0px, rgba(245,196,0,.018) 1px,
+    transparent 1px, transparent 40px
+  );
 }
 
-/* ── Stars background ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse at 20% 20%, rgba(168,85,247,.06) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(0,229,255,.05) 0%, transparent 60%);
-  pointer-events: none;
+#app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ══ LOGIN WALL ══════════════════════════════════════ */
+#login-wall{
+  position:fixed;inset:0;z-index:500;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+}
+#login-wall.gone{display:none}
+
+.login-box{
+  width:100%;max-width:420px;
+  background:var(--panel);
+  border:2px solid var(--gold3);
+  border-radius:4px;
+  padding:2.5rem 2rem;
+  text-align:center;
+  box-shadow:var(--glow), inset 0 0 60px rgba(245,196,0,.03);
+  position:relative;
+}
+/* corner accents */
+.login-box::before,.login-box::after{
+  content:'';position:absolute;width:16px;height:16px;
+  border-color:var(--gold);border-style:solid;
+}
+.login-box::before{top:-2px;left:-2px;border-width:2px 0 0 2px}
+.login-box::after{bottom:-2px;right:-2px;border-width:0 2px 2px 0}
+
+.login-logo-wrap{margin-bottom:1.75rem}
+/* if you have a PNG: <img id="site-logo" src="logo.png"> will show instead */
+#site-logo{max-height:64px;max-width:220px;object-fit:contain;display:none}
+.login-logo-text{
+  font-family:'Black Ops One',sans-serif;
+  font-size:3rem;letter-spacing:.12em;
+  color:var(--gold);
+  text-shadow:var(--glow);
+  line-height:1;
+}
+.login-logo-sub{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:.75rem;letter-spacing:.45em;
+  color:var(--text3);text-transform:uppercase;margin-top:.3rem;
 }
 
-.stars {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image:
-    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,.7) 0%, transparent 100%),
-    radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,.5) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,.5) 0%, transparent 100%),
-    radial-gradient(2px 2px at 90% 30%, rgba(240,192,64,.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 15% 70%, rgba(0,229,255,.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 55% 85%, rgba(255,255,255,.4) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 80% 5%, rgba(255,255,255,.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 25% 55%, rgba(255,255,255,.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 65% 25%, rgba(168,85,247,.5) 0%, transparent 100%);
+.login-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:.7rem;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--text3);
+  text-align:left;display:block;margin-bottom:.5rem;
+}
+.login-input{
+  width:100%;background:var(--bg2);
+  border:1px solid var(--border2);
+  color:var(--gold2);
+  border-radius:2px;padding:.7rem 1rem;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:1.05rem;letter-spacing:.15em;
+  text-transform:uppercase;
+  margin-bottom:.9rem;
+  transition:border-color .2s,box-shadow .2s;
+}
+.login-input:focus{outline:none;border-color:var(--gold);box-shadow:var(--glow-sm)}
+.login-input::placeholder{color:var(--text3);letter-spacing:.15em}
+#login-err{color:var(--red);font-size:.78rem;min-height:1.1em;margin-bottom:.6rem;font-weight:600}
+
+/* ══ BUTTONS ══════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.48rem 1.1rem;border-radius:2px;border:none;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  transition:all .15s;text-decoration:none;white-space:nowrap;
+}
+.btn-primary{
+  background:var(--gold);color:#080700;width:100%;
+  justify-content:center;padding:.7rem;font-size:.9rem;
+}
+.btn-primary:hover{background:var(--gold2);box-shadow:var(--glow)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{color:var(--gold);border-color:var(--gold3)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{filter:brightness(1.1)}
+.btn-sm{padding:.3rem .75rem;font-size:.76rem}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* ══ HEADER ═══════════════════════════════════════════ */
+header{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.8rem 1.75rem;
+  border-bottom:1px solid var(--border2);
+  background:rgba(8,7,0,.9);backdrop-filter:blur(12px);
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 0 var(--border2);
+}
+.hdr-left{display:flex;align-items:center;gap:1rem}
+/* logo in header — shows PNG if available, else text */
+#hdr-logo-img{height:32px;width:auto;object-fit:contain;display:none}
+.hdr-logo-text{
+  font-family:'Black Ops One',sans-serif;
+  font-size:1.3rem;letter-spacing:.1em;
+  color:var(--gold);text-shadow:var(--glow-sm);
+}
+.hdr-sep{width:1px;height:22px;background:var(--border2)}
+
+#auth-bar{display:flex;align-items:center;gap:.7rem}
+.user-pill{
+  display:flex;align-items:center;gap:.55rem;
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:2px;padding:.28rem .75rem .28rem .4rem;
+}
+.user-av{
+  width:24px;height:24px;border-radius:1px;
+  background:var(--gold3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Black Ops One',sans-serif;font-size:.65rem;color:var(--bg);
+}
+.user-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:.8rem;color:var(--text2);letter-spacing:.05em;
+}
+.ticket-badge{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:.82rem;color:var(--gold);letter-spacing:.05em;
 }
 
-/* ── Layout ── */
-#app { position: relative; z-index: 1; }
-
-header {
-  padding: 2rem 2rem 1rem;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  background: linear-gradient(180deg, rgba(20,23,40,.9) 0%, transparent 100%);
-  position: sticky; top: 0; z-index: 100;
-  backdrop-filter: blur(12px);
+/* ══ REDEEM BAR ══════════════════════════════════════ */
+.redeem-bar{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.55rem 1.75rem;
+  border-bottom:1px solid var(--border);
+  background:rgba(245,196,0,.02);
 }
-
-.logo {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--gold) 0%, var(--cyan) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: .1em;
-  text-shadow: none;
-  filter: drop-shadow(0 0 12px rgba(240,192,64,.3));
+.redeem-input{
+  width:200px;background:var(--panel);border:1px solid var(--border2);
+  color:var(--gold2);border-radius:2px;padding:.38rem .75rem;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;
+  transition:border-color .2s;
 }
+.redeem-input:focus{outline:none;border-color:var(--gold)}
+.redeem-input::placeholder{color:var(--text3)}
+#redeem-msg{font-size:.76rem;font-weight:700}
 
-.logo span { color: var(--text2); font-size: .6em; font-family: 'Exo 2', sans-serif;
-  -webkit-text-fill-color: var(--text2); font-weight: 300; letter-spacing: .3em; display: block; }
+/* ══ TABS ════════════════════════════════════════════ */
+nav.tabs{
+  display:flex;overflow-x:auto;
+  border-bottom:1px solid var(--border2);
+  background:var(--bg2);padding:0 1.75rem;scrollbar-width:none;
+}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:.7rem 1.1rem;background:none;border:none;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text3);border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;
+}
+.tab-btn:hover{color:var(--text2)}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-btn .edate{font-size:.62rem;display:block;font-weight:400;margin-top:.05rem;letter-spacing:.05em}
+.tab-btn.active .edate{color:var(--gold3)}
 
-/* ── Auth bar ── */
-#auth-bar { display: flex; align-items: center; gap: 1rem; }
+/* ══ MAIN ════════════════════════════════════════════ */
+main{flex:1;padding:1.75rem;max-width:1080px;margin:0 auto;width:100%}
 
-.btn {
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .55rem 1.2rem; border-radius: 8px; border: none; cursor: pointer;
-  font-family: 'Exo 2', sans-serif; font-size: .9rem; font-weight: 600;
-  transition: all .2s; text-decoration: none; white-space: nowrap;
+/* ══ CARDS ═══════════════════════════════════════════ */
+.card{
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:2px;padding:1.25rem;margin-bottom:1.1rem;
+  position:relative;
 }
-.btn-discord { background: #5865F2; color: #fff; }
-.btn-discord:hover { background: #4752c4; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(88,101,242,.4); }
-.btn-gold { background: var(--gold); color: #1a1200; }
-.btn-gold:hover { background: var(--gold2); transform: translateY(-1px); box-shadow: var(--glow-gold); }
-.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
-.btn-ghost:hover { color: var(--text); border-color: var(--cyan); background: rgba(0,229,255,.05); }
-.btn-red { background: var(--red); color: #fff; }
-.btn-red:hover { background: #ff2255; transform: translateY(-1px); }
-.btn-green { background: var(--green); color: #071a10; }
-.btn-green:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.btn-sm { padding: .35rem .8rem; font-size: .8rem; }
+/* left accent bar */
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold3);border-radius:2px 0 0 2px}
+.card-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:.78rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold3);margin-bottom:.9rem;
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:680px){.grid2{grid-template-columns:1fr}}
 
-.ticket-badge {
-  display: flex; align-items: center; gap: .4rem;
-  background: var(--panel); border: 1px solid var(--gold);
-  border-radius: 8px; padding: .4rem .8rem;
-  color: var(--gold); font-weight: 700; font-size: .95rem;
+/* ══ EVENT HEADER ════════════════════════════════════ */
+.evhdr{padding:1.5rem 0 1.1rem;border-bottom:1px solid var(--border2);margin-bottom:1.5rem}
+.evhdr-title{
+  font-family:'Black Ops One',sans-serif;
+  font-size:clamp(1.5rem,4vw,2.2rem);letter-spacing:.05em;
+  color:var(--gold);text-shadow:var(--glow-sm);margin-bottom:.25rem;
 }
+.evhdr-date{color:var(--text3);font-size:.75rem;letter-spacing:.15em;font-family:'Barlow Condensed',sans-serif;font-weight:600;text-transform:uppercase}
 
-.avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--cyan); }
-
-/* ── Tab Nav ── */
-nav.tabs {
-  display: flex; overflow-x: auto; gap: 0;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2); padding: 0 2rem;
-  scrollbar-width: none;
+/* ══ COUNTDOWN ═══════════════════════════════════════ */
+.cd-wrap{text-align:center;padding:3.5rem 1rem}
+.cd-label{
+  font-family:'Black Ops One',sans-serif;font-size:1rem;letter-spacing:.1em;
+  color:var(--text2);margin-bottom:1.25rem;
 }
-nav.tabs::-webkit-scrollbar { display: none; }
-
-.tab-btn {
-  padding: 1rem 1.5rem; background: none; border: none; cursor: pointer;
-  font-family: 'Exo 2', sans-serif; font-size: .9rem; font-weight: 600;
-  color: var(--text3); position: relative; white-space: nowrap;
-  border-bottom: 3px solid transparent; transition: all .2s;
+.cd-timer{display:flex;justify-content:center;gap:.9rem;flex-wrap:wrap}
+.cd-unit{
+  background:var(--panel);border:1px solid var(--border2);
+  border-radius:2px;padding:1rem 1.4rem;min-width:70px;
+  position:relative;
 }
-.tab-btn:hover { color: var(--text2); }
-.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-.tab-btn .event-date { font-size: .7rem; color: var(--text3); display: block; font-weight: 300; }
-.tab-btn.active .event-date { color: var(--gold2); }
-
-/* ── Redeem bar ── */
-.redeem-bar {
-  display: flex; gap: .75rem; align-items: center; padding: 1rem 2rem;
-  background: linear-gradient(90deg, rgba(240,192,64,.04) 0%, transparent 100%);
-  border-bottom: 1px solid var(--border);
+.cd-unit::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold3)}
+.cd-unit .n{
+  font-family:'Black Ops One',sans-serif;font-size:2rem;
+  color:var(--gold);display:block;line-height:1;text-shadow:var(--glow-sm);
 }
-.redeem-bar input {
-  flex: 1; max-width: 320px;
-  background: var(--panel); border: 1px solid var(--border2);
-  color: var(--text); border-radius: 8px; padding: .55rem 1rem;
-  font-family: 'Exo 2', sans-serif; font-size: .9rem;
-  text-transform: uppercase; letter-spacing: .1em;
-  transition: border-color .2s;
-}
-.redeem-bar input:focus { outline: none; border-color: var(--gold); box-shadow: var(--glow-gold); }
-.redeem-bar input::placeholder { color: var(--text3); letter-spacing: .1em; }
-
-#redeem-msg { font-size: .85rem; font-weight: 600; }
-.ok { color: var(--green); } .err { color: var(--red); }
-
-/* ── Main content ── */
-main { padding: 2rem; max-width: 1200px; margin: 0 auto; }
-
-/* ── Countdown ── */
-.countdown-wrap {
-  text-align: center; padding: 3rem 2rem;
-}
-.countdown-label {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 1.4rem; color: var(--text2); margin-bottom: 1rem;
-}
-.countdown-timer {
-  display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
-}
-.countdown-unit {
-  background: var(--panel); border: 1px solid var(--border2);
-  border-radius: 12px; padding: 1.5rem 2rem; min-width: 90px;
-  box-shadow: var(--shadow);
-}
-.countdown-unit .num {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 2.5rem; color: var(--gold);
-  display: block; line-height: 1;
-  text-shadow: var(--glow-gold);
-}
-.countdown-unit .lbl {
-  font-size: .7rem; color: var(--text3); letter-spacing: .15em; text-transform: uppercase; display: block; margin-top: .3rem;
+.cd-unit .l{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:.6rem;color:var(--text3);text-transform:uppercase;
+  letter-spacing:.2em;display:block;margin-top:.2rem;
 }
 
-/* ── Event panels ── */
-.event-panel { display: none; animation: fadeIn .3s ease; }
-.event-panel.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+/* ══ TABLES ═══════════════════════════════════════════ */
+.rtable{width:100%;border-collapse:collapse}
+.rtable th{text-align:left;color:var(--text3);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.38rem .6rem;border-bottom:1px solid var(--border2);font-family:'Barlow Condensed',sans-serif;font-weight:700}
+.rtable td{padding:.45rem .6rem;border-bottom:1px solid var(--border);font-size:.83rem}
+.rtable tr:last-child td{border-bottom:none}
+.gold{color:var(--gold);font-weight:700}
 
-.event-header {
-  padding: 2.5rem 0 1.5rem;
-  border-bottom: 1px solid var(--border); margin-bottom: 2rem;
+/* ══ TRIVIA ═══════════════════════════════════════════ */
+.qcard{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:1rem;margin-bottom:.75rem}
+.qcard .qt{font-weight:700;margin-bottom:.6rem;line-height:1.5;font-size:.88rem}
+.hard-tag{font-size:.62rem;background:rgba(255,170,0,.12);color:var(--amber);border:1px solid rgba(255,170,0,.3);border-radius:2px;padding:.08rem .32rem;margin-left:.35rem;vertical-align:middle;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:.38rem}
+.choice{
+  background:var(--panel);border:1px solid var(--border2);color:var(--text);
+  border-radius:2px;padding:.48rem .8rem;cursor:pointer;
+  font-family:'Barlow',sans-serif;font-size:.82rem;text-align:left;transition:all .14s;
 }
-.event-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(1.6rem, 4vw, 2.5rem);
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  margin-bottom: .5rem;
-}
-.event-date-label { color: var(--text3); font-size: .9rem; letter-spacing: .1em; }
+.choice:hover{border-color:var(--gold3);color:var(--gold2)}
+.choice.sel{border-color:var(--gold);color:var(--gold);background:rgba(245,196,0,.07)}
 
-/* ── Cards / grid ── */
-.card {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem;
-  box-shadow: var(--shadow); transition: border-color .2s;
+/* ══ BOSS ════════════════════════════════════════════ */
+.boss-wrap{
+  background:linear-gradient(135deg,#0d0500,#1a0800);
+  border:1px solid #3a1800;border-radius:2px;padding:1.4rem;margin-bottom:1.25rem;
 }
-.card:hover { border-color: var(--border2); }
-.card h3 { color: var(--gold); font-family: 'Cinzel Decorative', serif; font-size: 1rem; margin-bottom: 1rem; }
+.boss-name{
+  font-family:'Black Ops One',sans-serif;font-size:1.4rem;letter-spacing:.06em;
+  color:var(--red);text-align:center;margin-bottom:.7rem;
+  text-shadow:0 0 24px rgba(255,51,68,.35);
+}
+.hp-track{width:100%;height:20px;background:#1a0500;border-radius:2px;overflow:hidden;border:1px solid #3a1800}
+.hp-fill{height:100%;background:linear-gradient(90deg,#7f0000,#ff3344);border-radius:2px;transition:width .5s;box-shadow:0 0 12px rgba(255,51,68,.45)}
+.hp-txt{text-align:center;margin-top:.4rem;color:var(--red);font-size:.78rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em}
+.class-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin:.7rem 0}
+.class-btn{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.9rem;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .15s;text-align:center}
+.class-btn:hover{border-color:var(--gold3)}.class-btn.sel{border-color:var(--gold);box-shadow:var(--glow-sm)}
+.class-icon{font-size:1.9rem;display:block;margin-bottom:.3rem}
+.class-name{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.class-desc{font-size:.68rem;color:var(--text2);margin-top:.12rem}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem}
+.sbar{background:var(--bg2);border-radius:2px;padding:.6rem}
+.sbar .sl{font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.15em;margin-bottom:.2rem;font-family:'Barlow Condensed',sans-serif;font-weight:700}
+.sbar .st{height:5px;background:var(--border2);border-radius:2px;overflow:hidden}
+.sbar .sf{height:100%;border-radius:2px;transition:width .3s}
+.hp-c .sf{background:var(--green)}.mana-c .sf{background:var(--cyan)}.stam-c .sf{background:var(--gold)}
+.sbar .sv{font-size:.68rem;color:var(--text2);margin-top:.2rem}
+.act-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.38rem;margin-top:.85rem}
+.blog{background:var(--bg2);border:1px solid var(--border);border-radius:2px;height:150px;overflow-y:auto;padding:.75rem;font-size:.74rem;color:var(--text2);line-height:1.65}
+.blog div{border-bottom:1px solid rgba(245,196,0,.04);padding:.04rem 0}
 
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-@media (max-width: 768px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+/* ══ GUESS ═══════════════════════════════════════════ */
+.ginput{width:100%;background:var(--panel);border:1px solid var(--border2);color:var(--text);border-radius:2px;padding:.45rem .8rem;font-family:'Barlow',sans-serif;font-size:.83rem;transition:border-color .2s}
+.ginput:focus{outline:none;border-color:var(--gold)}
 
-/* ── Rewards table ── */
-.rewards-table { width: 100%; border-collapse: collapse; }
-.rewards-table th { text-align: left; color: var(--text3); font-size: .8rem;
-  letter-spacing: .1em; padding: .5rem .75rem; border-bottom: 1px solid var(--border); }
-.rewards-table td { padding: .6rem .75rem; border-bottom: 1px solid var(--border); font-size: .9rem; }
-.rewards-table tr:last-child td { border-bottom: none; }
-.gold-text { color: var(--gold); font-weight: 700; }
+/* ══ CASINO ═══════════════════════════════════════════ */
+.cgame{background:var(--panel);border:1px solid var(--border2);border-radius:2px;padding:1.2rem;text-align:center;position:relative}
+.cgame::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold3);border-radius:2px 0 0 2px}
+.cgame h3{font-family:'Black Ops One',sans-serif;font-size:.88rem;letter-spacing:.08em;color:var(--gold);margin-bottom:.65rem}
+.cresult{font-size:.95rem;font-weight:700;min-height:1.5em;display:flex;align-items:center;justify-content:center;margin:.5rem 0;font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em}
+.binput{width:76px;background:var(--bg2);border:1px solid var(--border2);color:var(--gold2);border-radius:2px;padding:.32rem .6rem;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;text-align:center;margin:.38rem}
+.reels{display:flex;gap:.38rem;justify-content:center;margin:.7rem 0}
+.reel{width:50px;height:50px;background:var(--bg2);border:1px solid var(--border2);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.55rem}
+.reel.spin{animation:spin .4s ease}
+@keyframes spin{0%{transform:rotateX(0)}50%{transform:rotateX(180deg)}100%{transform:rotateX(360deg)}}
+.coin{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold2),var(--gold3));margin:.75rem auto;font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:var(--glow-sm)}
+.coin.flip{animation:cflip .8s ease}
+@keyframes cflip{0%{transform:rotateY(0)}50%{transform:rotateY(900deg)}100%{transform:rotateY(1080deg)}}
+.chambers{display:flex;justify-content:center;gap:.32rem;margin:.7rem 0;flex-wrap:wrap}
+.chamber{width:34px;height:34px;border-radius:50%;border:1px solid var(--border2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:all .3s}
+.chamber.danger{background:var(--red);border-color:var(--red);box-shadow:0 0 10px rgba(255,51,68,.45)}
+.chamber.safe{background:var(--green);border-color:var(--green)}
 
-/* ── Trivia ── */
-.question-card {
-  background: var(--panel2); border: 1px solid var(--border);
-  border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
-}
-.question-card .q-text { font-weight: 600; margin-bottom: .75rem; line-height: 1.5; }
-.question-card .hard-tag {
-  font-size: .7rem; background: rgba(168,85,247,.2); color: var(--purple);
-  border: 1px solid rgba(168,85,247,.4); border-radius: 4px; padding: .1rem .4rem;
-  margin-left: .5rem; vertical-align: middle;
-}
-.choices { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
-.choice-btn {
-  background: var(--panel); border: 1px solid var(--border2);
-  color: var(--text); border-radius: 8px; padding: .6rem 1rem;
-  cursor: pointer; font-family: 'Exo 2', sans-serif; font-size: .85rem;
-  text-align: left; transition: all .2s;
-}
-.choice-btn:hover { border-color: var(--cyan); background: rgba(0,229,255,.05); }
-.choice-btn.selected { border-color: var(--gold); background: rgba(240,192,64,.1); color: var(--gold); }
+/* ══ LEADERBOARD ══════════════════════════════════════ */
+.lb-row{display:flex;align-items:center;gap:.85rem;padding:.55rem .85rem;border-bottom:1px solid var(--border)}
+.lb-row:hover{background:rgba(245,196,0,.02)}
+.lb-rank{width:26px;font-family:'Black Ops One',sans-serif;font-size:.82rem;color:var(--text3);text-align:center}
+.lb-rank.r1{color:var(--gold)}.lb-rank.r2{color:#b0a080}.lb-rank.r3{color:#8a6a30}
+.lb-name{flex:1;font-size:.85rem;font-weight:600}.lb-val{color:var(--gold);font-weight:700;font-size:.85rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em}
 
-/* ── Boss Raid ── */
-.boss-hp-bar-wrap {
-  background: #1a0a0a; border: 1px solid #5a1a1a; border-radius: 12px;
-  padding: 1.5rem; margin-bottom: 2rem;
+/* ══ MISC ════════════════════════════════════════════ */
+.ok{color:var(--green)}.err{color:var(--red)}
+.tag{display:inline-block;font-size:.65rem;font-weight:700;border-radius:2px;padding:.12rem .38rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.tag-gold{background:rgba(245,196,0,.1);color:var(--gold);border:1px solid rgba(245,196,0,.25)}
+.tag-dim{background:rgba(90,80,48,.2);color:var(--text3);border:1px solid var(--border2)}
+.divider{border:none;border-top:1px solid var(--border2);margin:1rem 0}
+.loading{color:var(--text3);text-align:center;padding:2rem;font-size:.82rem;font-style:italic;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em}
+.notif{position:fixed;bottom:1.25rem;right:1.25rem;z-index:999;background:var(--panel);border:1px solid var(--border2);border-left:3px solid var(--gold);border-radius:2px;padding:.7rem 1.1rem;font-size:.8rem;font-weight:700;max-width:250px;display:none;animation:sin .25s ease;font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em}
+.notif.show{display:block}.notif.ok{border-left-color:var(--green);color:var(--green)}.notif.err{border-left-color:var(--red);color:var(--red)}
+@keyframes sin{from{transform:translateX(110%)}to{transform:translateX(0)}}
+.sav{position:fixed;top:.6rem;right:.6rem;z-index:200;background:var(--panel);border:1px solid var(--border2);border-radius:2px;padding:.25rem .7rem;font-size:.68rem;color:var(--text3);display:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.sav.show{display:block}
+.demo-banner{
+  background:rgba(245,196,0,.07);border-bottom:1px solid rgba(245,196,0,.2);
+  padding:.4rem 1.75rem;font-size:.73rem;color:var(--gold3);
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  display:none;text-align:center;
 }
-.boss-name {
-  font-family: 'Cinzel Decorative', serif; font-size: 1.8rem; color: var(--red);
-  text-align: center; margin-bottom: .75rem;
-  text-shadow: 0 0 30px rgba(255,68,102,.4);
-}
-.hp-bar-track {
-  width: 100%; height: 28px; background: #2a0a0a; border-radius: 8px; overflow: hidden;
-  border: 1px solid #5a1a1a;
-}
-.hp-bar-fill {
-  height: 100%; background: linear-gradient(90deg, #7f0000, #ff4466);
-  border-radius: 8px; transition: width .5s ease;
-  box-shadow: 0 0 16px rgba(255,68,102,.6);
-}
-.hp-text { text-align: center; margin-top: .5rem; color: var(--red); font-size: .9rem; }
-
-.class-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0; }
-.class-btn {
-  background: var(--panel2); border: 2px solid var(--border);
-  border-radius: 12px; padding: 1.25rem; cursor: pointer;
-  font-family: 'Exo 2', sans-serif; transition: all .2s; text-align: center;
-}
-.class-btn:hover { border-color: var(--cyan); }
-.class-btn.selected { border-color: var(--gold); box-shadow: var(--glow-gold); }
-.class-icon { font-size: 2.5rem; display: block; margin-bottom: .5rem; }
-.class-name { font-size: 1rem; font-weight: 700; color: var(--text); }
-.class-desc { font-size: .75rem; color: var(--text2); margin-top: .25rem; }
-
-.player-stats {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem;
-}
-.stat-bar { background: var(--panel); border-radius: 8px; padding: .75rem; }
-.stat-bar .stat-lbl { font-size: .7rem; color: var(--text3); margin-bottom: .3rem; text-transform: uppercase; letter-spacing: .1em; }
-.stat-bar .stat-track { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
-.stat-bar .stat-fill { height: 100%; border-radius: 4px; transition: width .3s; }
-.stat-bar.hp .stat-fill { background: var(--green); }
-.stat-bar.mana .stat-fill { background: var(--cyan); }
-.stat-bar.stamina .stat-fill { background: var(--gold); }
-.stat-bar .stat-val { font-size: .8rem; color: var(--text2); margin-top: .3rem; }
-
-.action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; margin-top: 1rem; }
-@media (max-width: 600px) { .action-grid { grid-template-columns: 1fr; } }
-
-.battle-log {
-  background: #0a0c18; border: 1px solid var(--border); border-radius: 8px;
-  height: 200px; overflow-y: auto; padding: 1rem;
-  font-size: .82rem; color: var(--text2); line-height: 1.8;
-}
-.battle-log .log-entry { padding: .1rem 0; border-bottom: 1px solid rgba(255,255,255,.03); }
-.battle-log .log-entry.dmg { color: #ff8899; }
-.battle-log .log-entry.heal { color: var(--green); }
-.battle-log .log-entry.buff { color: var(--cyan); }
-
-/* ── Guessing ── */
-.guess-input {
-  width: 100%; background: var(--panel); border: 1px solid var(--border2);
-  color: var(--text); border-radius: 8px; padding: .55rem 1rem;
-  font-family: 'Exo 2', sans-serif; font-size: .9rem; transition: border-color .2s;
-}
-.guess-input:focus { outline: none; border-color: var(--cyan); }
-
-/* ── Event 4 ── */
-.event4-message {
-  background: var(--panel); border: 1px solid var(--border2);
-  border-radius: 16px; padding: 3rem 2rem; text-align: center;
-  box-shadow: var(--shadow);
-}
-.event4-message h2 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  background: linear-gradient(135deg, var(--gold), var(--cyan));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  margin-bottom: 1.5rem;
-}
-.event4-message p { color: var(--text2); line-height: 1.9; max-width: 640px; margin: 0 auto .75rem; }
-
-/* ── Casino ── */
-.casino-game {
-  background: var(--panel); border: 1px solid var(--border);
-  border-radius: 16px; padding: 1.5rem; text-align: center;
-}
-.casino-game h3 {
-  font-family: 'Cinzel Decorative', serif; font-size: 1.1rem;
-  color: var(--gold); margin-bottom: 1rem;
-}
-.casino-result {
-  font-size: 1.2rem; font-weight: 700; min-height: 2em;
-  display: flex; align-items: center; justify-content: center;
-  margin: .75rem 0;
-}
-.bet-input {
-  width: 100px; background: var(--panel2); border: 1px solid var(--border2);
-  color: var(--text); border-radius: 8px; padding: .4rem .75rem;
-  font-family: 'Exo 2', sans-serif; font-size: 1rem; text-align: center;
-  margin: .5rem;
-}
-
-/* ── Slots ── */
-.slot-reels { display: flex; gap: .5rem; justify-content: center; margin: 1rem 0; }
-.slot-reel {
-  width: 64px; height: 64px; background: var(--bg);
-  border: 2px solid var(--border2); border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2rem;
-  transition: all .3s;
-}
-.slot-reel.spin { animation: spin .4s ease; }
-@keyframes spin { 0%{transform:rotateX(0)} 50%{transform:rotateX(180deg)} 100%{transform:rotateX(360deg)} }
-
-/* ── Coin flip ── */
-.coin {
-  width: 80px; height: 80px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--gold), #b8860b);
-  margin: 1rem auto; font-size: 2rem; display: flex;
-  align-items: center; justify-content: center;
-  box-shadow: var(--glow-gold);
-  transition: transform .5s;
-}
-.coin.flip { animation: coinFlip .8s ease; }
-@keyframes coinFlip {
-  0%{transform:rotateY(0)}  50%{transform:rotateY(900deg)}  100%{transform:rotateY(1080deg)}
-}
-
-/* ── Roulette ── */
-.chambers {
-  display: flex; justify-content: center; gap: .4rem; margin: 1rem 0; flex-wrap: wrap;
-}
-.chamber {
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 2px solid var(--border2); background: var(--panel2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.2rem; transition: all .3s;
-}
-.chamber.danger { background: var(--red); border-color: var(--red); box-shadow: 0 0 12px rgba(255,68,102,.6); }
-.chamber.safe   { background: var(--green); border-color: var(--green); }
-
-/* ── Leaderboard ── */
-.lb-row {
-  display: flex; align-items: center; gap: 1rem; padding: .7rem 1rem;
-  border-bottom: 1px solid var(--border); transition: background .2s;
-}
-.lb-row:hover { background: rgba(255,255,255,.02); }
-.lb-rank { width: 32px; font-family: 'Cinzel Decorative', serif;
-  font-size: 1rem; color: var(--text3); text-align: center; }
-.lb-rank.r1 { color: var(--gold); }
-.lb-rank.r2 { color: #c0c0c0; }
-.lb-rank.r3 { color: #cd7f32; }
-.lb-name { flex: 1; font-weight: 600; }
-.lb-val { color: var(--gold); font-weight: 700; }
-
-/* ── Login gate ── */
-.login-gate {
-  text-align: center; padding: 4rem 2rem;
-}
-.login-gate h2 {
-  font-family: 'Cinzel Decorative', serif; color: var(--gold);
-  margin-bottom: 1rem;
-}
-.login-gate p { color: var(--text2); margin-bottom: 2rem; }
-
-/* ── Misc ── */
-.tag {
-  display: inline-block; font-size: .75rem; font-weight: 600;
-  border-radius: 4px; padding: .2rem .5rem; margin-bottom: .5rem;
-}
-.tag-cyan { background: rgba(0,229,255,.1); color: var(--cyan); border: 1px solid rgba(0,229,255,.3); }
-.tag-gold { background: rgba(240,192,64,.1); color: var(--gold); border: 1px solid rgba(240,192,64,.3); }
-.tag-purple { background: rgba(168,85,247,.1); color: var(--purple); border: 1px solid rgba(168,85,247,.3); }
-
-.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
-
-.loading { color: var(--text3); text-align: center; padding: 2rem; font-style: italic; }
-
-.notif {
-  position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
-  background: var(--panel); border: 1px solid var(--border2);
-  border-radius: 12px; padding: 1rem 1.5rem;
-  font-size: .9rem; font-weight: 600; max-width: 300px;
-  box-shadow: var(--shadow); animation: slideIn .3s ease;
-  display: none;
-}
-.notif.show { display: block; }
-.notif.ok { border-color: var(--green); color: var(--green); }
-.notif.err { border-color: var(--red); color: var(--red); }
-@keyframes slideIn { from{transform:translateX(120%)} to{transform:translateX(0)} }
+.demo-banner.show{display:block}
 </style>
 </head>
 <body>
-<div class="stars"></div>
-<div id="app">
-  <!-- ── Header ── -->
-  <header>
-    <div>
-      <div class="logo">INTRA<span>Events Portal</span></div>
-    </div>
-    <div id="auth-bar">
-      <div id="auth-loading" class="loading" style="padding:.5rem">Loading…</div>
-    </div>
-  </header>
 
-  <!-- ── Redeem bar ── -->
-  <div class="redeem-bar">
-    <input type="text" id="code-input" placeholder="ENTER CODE" maxlength="16">
-    <button class="btn btn-gold btn-sm" onclick="handleRedeem()">🎫 Redeem</button>
-    <span id="redeem-msg"></span>
+<!-- ══ LOGIN WALL ══════════════════════════════════════ -->
+<div id="login-wall">
+  <div class="login-box">
+    <div class="login-logo-wrap">
+      <!-- PNG logo: place logo.png in your repo root, it auto-shows if present -->
+      <img id="login-logo-img" src="logo.png" alt="INTRA" style="max-height:72px;max-width:220px;object-fit:contain;display:block;margin:0 auto"
+           onerror="this.style.display='none';document.getElementById('login-logo-text').style.display='block'">
+      <div class="login-logo-text" id="login-logo-text" style="display:none">INTRA</div>
+      <div class="login-logo-sub">Events Portal</div>
+    </div>
+    <label class="login-label" for="key-in">Access Key</label>
+    <input class="login-input" id="key-in" type="text" placeholder="INTRA-XXXX-XXXX" maxlength="14" autocomplete="off" spellcheck="false">
+    <div id="login-err"></div>
+    <button class="btn btn-primary" onclick="doLogin()">Enter →</button>
   </div>
-
-  <!-- ── Tabs ── -->
-  <nav class="tabs" id="tabs-nav"></nav>
-
-  <!-- ── Main ── -->
-  <main id="main-content"></main>
 </div>
 
-<!-- Notification -->
+<div id="app">
+  <header>
+    <div class="hdr-left">
+      <img id="hdr-logo-img" src="logo.png" alt="INTRA" style="height:30px;object-fit:contain"
+           onerror="this.style.display='none';document.getElementById('hdr-logo-text').style.display='block'">
+      <div class="hdr-logo-text" id="hdr-logo-text" style="display:none">INTRA</div>
+      <div class="hdr-sep"></div>
+    </div>
+    <div id="auth-bar"></div>
+  </header>
+  <div class="demo-banner" id="demo-banner">⚠ DEMO MODE — nothing saves, no tickets awarded</div>
+  <div class="redeem-bar">
+    <input class="redeem-input" type="text" id="code-in" placeholder="REDEEM CODE" maxlength="16">
+    <button class="btn btn-ghost btn-sm" onclick="handleRedeem()">Redeem 🎫</button>
+    <span id="redeem-msg"></span>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+  <main id="main"></main>
+</div>
 <div class="notif" id="notif"></div>
+<div class="sav" id="sav">Saving…</div>
 
 <script>
-// ── Config ──────────────────────────────────────────────────────────────────
-const API = "https://your-backend.onrender.com"; // ← Change this
+// ══════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════
+// Your Cloudflare Worker URL — update after deploying worker.js
+const WORKER = "https://your-worker.your-subdomain.workers.dev";
 
-// ── Events config ────────────────────────────────────────────────────────────
+const DEMO_KEY = "INTRA-Q5KR-BC8F";
+
+// Guessing answers — set Sumnor's real answers here
+const GA = {0:"blue",1:"pizza",2:"rpg",3:"japan",4:"coffee",5:"night owl",6:"cats",7:"winter",8:"pc",9:"metal"};
+
+// Events — set your real dates
 const EVENTS = [
-  { id: "trivia",  title: "Trivia Night",         date: "2025-06-05T00:00:00", emoji: "🧠" },
-  { id: "boss",    title: "Boss Raid",             date: "2025-06-10T00:00:00", emoji: "⚔️" },
-  { id: "guess",   title: "Guessing Games",        date: "2025-06-15T00:00:00", emoji: "🎯" },
-  { id: "breather","title": "Breathe In, Breathe Out", date: "2025-06-20T00:00:00", emoji: "💨" },
-  { id: "casino",  title: "Casino Night",          date: "2025-06-25T00:00:00", emoji: "🎰" },
+  {id:"trivia",  title:"Trivia Night",           date:"2025-06-05T00:00:00", emoji:"🧠"},
+  {id:"boss",    title:"Boss Raid",               date:"2025-06-10T00:00:00", emoji:"⚔️"},
+  {id:"guess",   title:"Guessing Games",          date:"2025-06-15T00:00:00", emoji:"🎯"},
+  {id:"breather",title:"Breathe In, Breathe Out", date:"2025-06-20T00:00:00", emoji:"💨"},
+  {id:"casino",  title:"Casino Night",            date:"2025-06-25T00:00:00", emoji:"🎰"},
 ];
 
-// ── State ────────────────────────────────────────────────────────────────────
-let currentUser  = null;
-let activeTab    = null;
-let triviaState  = { answers: {}, submitted: false };
-let guessingState= { answers: {}, submitted: false };
-let bossState    = null;
-let bossPlayer   = null;
-let bossPolling  = null;
-
-// ── Utilities ────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-function notify(msg, type = "ok") {
-  const n = $("notif");
-  n.textContent = msg; n.className = `notif show ${type}`;
-  clearTimeout(n._t);
-  n._t = setTimeout(() => n.className = "notif", 3500);
-}
-
-async function apiFetch(path, method = "GET", body = null) {
-  const opts = { method, credentials: "include", headers: { "Content-Type": "application/json" } };
-  if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(API + path, opts);
+// ══════════════════════════════════════════════════════════
+// API
+// ══════════════════════════════════════════════════════════
+async function api(path, method="GET", body=null){
+  const opts = { method, headers:{"Content-Type":"application/json"} };
+  if(body) opts.body = JSON.stringify(body);
+  const res = await fetch(WORKER + path, opts);
   return res.json();
 }
 
-function formatDate(d) {
-  return new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let me = null;           // { discord_id, username, tickets, demo }
+let activeTab = null;
+let triviaAns = {};
+let guessAns  = {};
+let bossPlayer = null;
+let bossTimer  = null;
+let cdTick     = null;
+
+// ══════════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+function showSav(v){ $("sav").className=v?"sav show":"sav" }
+function notify(msg,type="ok"){
+  const n=$("notif"); n.textContent=msg; n.className=`notif show ${type}`;
+  clearTimeout(n._t); n._t=setTimeout(()=>n.className="notif",3500);
+}
+function fmtDate(d){ return new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}) }
+function timeUntil(ds){
+  const diff=new Date(ds)-Date.now(); if(diff<=0) return null;
+  return {d:Math.floor(diff/86400000),h:Math.floor(diff%86400000/3600000),
+          m:Math.floor(diff%3600000/60000),s:Math.floor(diff%60000/1000)};
+}
+function cdHTML(ds,label){
+  const t=timeUntil(ds); if(!t) return "";
+  return `<div class="cd-wrap"><div class="cd-label">${label}</div><div class="cd-timer">
+    <div class="cd-unit"><span class="n" id="cd-d">${t.d}</span><span class="l">Days</span></div>
+    <div class="cd-unit"><span class="n" id="cd-h">${t.h}</span><span class="l">Hours</span></div>
+    <div class="cd-unit"><span class="n" id="cd-m">${t.m}</span><span class="l">Mins</span></div>
+    <div class="cd-unit"><span class="n" id="cd-s">${t.s}</span><span class="l">Secs</span></div>
+  </div></div>`;
+}
+function startCd(ds){
+  clearInterval(cdTick);
+  cdTick=setInterval(()=>{
+    const t=timeUntil(ds); if(!t){clearInterval(cdTick);return}
+    if($("cd-d"))$("cd-d").textContent=t.d;
+    if($("cd-h"))$("cd-h").textContent=t.h;
+    if($("cd-m"))$("cd-m").textContent=t.m;
+    if($("cd-s"))$("cd-s").textContent=t.s;
+  },1000);
+}
+function evHdr(ev){
+  return `<div class="evhdr"><div class="evhdr-title">${ev.emoji} ${ev.title}</div>
+    <div class="evhdr-date">📅 ${fmtDate(ev.date)}</div></div>`;
+}
+// No-save wrapper — for demo mode all writes are blocked
+async function saveAction(fn){
+  if(me?.demo){ notify("Demo mode — no saves","err"); return null; }
+  return fn();
 }
 
-function timeUntil(dateStr) {
-  const diff = new Date(dateStr) - Date.now();
-  if (diff <= 0) return null;
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-  return { d, h, m, s, diff };
-}
+// ══════════════════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════════════════
+async function doLogin(){
+  const key = ($("key-in")?.value||"").trim().toUpperCase();
+  if(!key){ $("login-err").textContent="Enter your key."; return; }
 
-function countdownHTML(dateStr, label) {
-  const t = timeUntil(dateStr);
-  if (!t) return "";
-  return `
-  <div class="countdown-wrap">
-    <div class="countdown-label">${label}</div>
-    <div class="countdown-timer" id="cdTimer">
-      <div class="countdown-unit"><span class="num" id="cd-d">${t.d}</span><span class="lbl">Days</span></div>
-      <div class="countdown-unit"><span class="num" id="cd-h">${t.h}</span><span class="lbl">Hours</span></div>
-      <div class="countdown-unit"><span class="num" id="cd-m">${t.m}</span><span class="lbl">Minutes</span></div>
-      <div class="countdown-unit"><span class="num" id="cd-s">${t.s}</span><span class="lbl">Seconds</span></div>
-    </div>
-  </div>`;
-}
-
-function tickCountdown(dateStr) {
-  const t = timeUntil(dateStr);
-  if (!t) return;
-  if ($("cd-d")) $("cd-d").textContent = t.d;
-  if ($("cd-h")) $("cd-h").textContent = t.h;
-  if ($("cd-m")) $("cd-m").textContent = t.m;
-  if ($("cd-s")) $("cd-s").textContent = t.s;
-}
-
-// ── Auth ─────────────────────────────────────────────────────────────────────
-async function loadUser() {
-  const me = await apiFetch("/auth/me");
-  currentUser = me.logged_in ? me : null;
-  renderAuthBar();
-  buildTabs();
-  if (activeTab) showTab(activeTab);
-  else showTab(EVENTS[0].id);
-}
-
-function renderAuthBar() {
-  const bar = $("auth-bar");
-  if (!currentUser) {
-    bar.innerHTML = `<a href="${API}/auth/login" class="btn btn-discord">
-      <svg width="20" height="20" viewBox="0 0 71 55" fill="white"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5.4a.2.2 0 0 0-.2.1 40.7 40.7 0 0 0-1.8 3.7 54 54 0 0 0-16.2 0A37.2 37.2 0 0 0 25.5.5a.2.2 0 0 0-.2-.1A58.3 58.3 0 0 0 10.7 4.9a.2.2 0 0 0-.1.1C1.6 18.1-.9 31 .3 43.6a.2.2 0 0 0 .1.1 58.8 58.8 0 0 0 17.7 9 .2.2 0 0 0 .2-.1 42 42 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.7 38.7 0 0 1-5.5-2.6.2.2 0 0 1 0-.4l1.1-.8a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.3 0a.2.2 0 0 1 .2 0l1.1.8a.2.2 0 0 1 0 .4 36.2 36.2 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47 47 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.6 58.6 0 0 0 17.7-9 .2.2 0 0 0 .1-.1c1.5-15.3-2.5-28.6-10.5-40.4a.2.2 0 0 0-.1-.1zM23.7 35.9c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2z"/></svg>
-      Login with Discord</a>`;
-  } else {
-    const av = currentUser.avatar
-      ? `<img class="avatar" src="https://cdn.discordapp.com/avatars/${currentUser.id}/${currentUser.avatar}.png" alt="">`
-      : `<div class="avatar" style="background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.9rem">${currentUser.username[0]}</div>`;
-    bar.innerHTML = `
-      <div class="ticket-badge">🎫 ${currentUser.tickets ?? 0}</div>
-      ${av}
-      <span style="color:var(--text2);font-size:.9rem">${currentUser.username}</span>
-      <a href="${API}/auth/logout" class="btn btn-ghost btn-sm">Logout</a>`;
-  }
-}
-
-// ── Tabs ──────────────────────────────────────────────────────────────────────
-function buildTabs() {
-  const nav = $("tabs-nav");
-  const now = Date.now();
-  nav.innerHTML = `<button class="tab-btn ${activeTab === "home" ? "active" : ""}" onclick="showTab('home')">
-    🏠 Home</button>` +
-    EVENTS.map(e => {
-      const past    = new Date(e.date) < new Date(now - 86400000);
-      if (past) return ""; // Remove tab day after event
-      return `<button class="tab-btn ${activeTab === e.id ? "active" : ""}" onclick="showTab('${e.id}')">
-        ${e.emoji} ${e.title}<span class="event-date">${formatDate(e.date)}</span></button>`;
-    }).join("") +
-    `<button class="tab-btn ${activeTab === "leaderboard" ? "active" : ""}" onclick="showTab('leaderboard')">
-      🏆 Leaderboard</button>`;
-}
-
-function showTab(id) {
-  activeTab = id;
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll(".tab-btn").forEach(b => {
-    if (b.textContent.includes(EVENTS.find(e=>e.id===id)?.title || id) || 
-        (id === "home" && b.textContent.includes("🏠")) ||
-        (id === "leaderboard" && b.textContent.includes("🏆"))) {
-      b.classList.add("active");
-    }
-  });
-  clearInterval(bossPolling);
-  const main = $("main-content");
-  switch (id) {
-    case "home":       main.innerHTML = renderHome(); break;
-    case "trivia":     renderTrivia(main); break;
-    case "boss":       renderBoss(main); break;
-    case "guess":      renderGuess(main); break;
-    case "breather":   main.innerHTML = renderBreather(); break;
-    case "casino":     main.innerHTML = renderCasino(); break;
-    case "leaderboard":renderLeaderboard(main); break;
-    default: main.innerHTML = "<p>Coming soon.</p>";
-  }
-  if (id !== "boss") clearInterval(bossPolling);
-}
-
-// ── Home ──────────────────────────────────────────────────────────────────────
-function renderHome() {
-  return `
-  <div class="event-header">
-    <div class="event-title">Welcome to INTRA Events</div>
-    <div class="event-date-label">June 2025 — Season of Challenges</div>
-  </div>
-  <div class="grid2">
-    ${EVENTS.map(e => {
-      const past = new Date(e.date) < new Date(Date.now() - 86400000);
-      return `<div class="card" style="${past?"opacity:.4":""}">
-        <div style="font-size:2rem;margin-bottom:.5rem">${e.emoji}</div>
-        <div style="font-family:'Cinzel Decorative',serif;color:var(--gold);margin-bottom:.25rem">${e.title}</div>
-        <div style="color:var(--text3);font-size:.85rem;margin-bottom:.75rem">📅 ${formatDate(e.date)}</div>
-        ${past ? `<span class="tag tag-purple">Completed</span>` : `<button class="btn btn-ghost btn-sm" onclick="showTab('${e.id}')">View Event →</button>`}
-      </div>`;
-    }).join("")}
-  </div>
-  <div class="card" style="margin-top:1rem">
-    <h3>🎫 How Tickets Work</h3>
-    <p style="color:var(--text2);line-height:1.8">Earn tickets by participating in events. Redeem codes dropped during events for bonus tickets. The more you participate, the more you accumulate — keep an eye out for hidden codes!</p>
-  </div>`;
-}
-
-// ── Trivia ────────────────────────────────────────────────────────────────────
-async function renderTrivia(main) {
-  if (!currentUser) { main.innerHTML = loginGate(); return; }
-  const ev = EVENTS.find(e => e.id === "trivia");
-  const t  = timeUntil(ev.date);
-  if (t) { main.innerHTML = eventHeader(ev) + countdownHTML(ev.date, "Trivia Night starts in"); startCdTick(ev.date); return; }
-
-  if (triviaState.submitted) {
-    main.innerHTML = eventHeader(ev) + `<div class="card"><h3>✅ You've already submitted!</h3>
-      <p style="color:var(--text2)">Results will be announced after the event. Stay tuned for the leaderboard!</p></div>`;
+  // Demo key — no server call needed
+  if(key === DEMO_KEY){
+    me = { discord_id:"DEMO", username:"demo_user", tickets:999, demo:true };
+    localStorage.setItem("intra_sess", JSON.stringify({key, discord_id:"DEMO", username:"demo_user", demo:true}));
+    launch();
     return;
   }
 
-  main.innerHTML = eventHeader(ev) + `<div class="loading">Loading questions…</div>`;
-  let qs;
-  try { qs = await apiFetch("/api/trivia/questions"); } catch { main.innerHTML = eventHeader(ev) + `<p class="err">Error loading questions.</p>`; return; }
-  if (qs.error) { main.innerHTML = eventHeader(ev) + `<div class="card"><p style="color:var(--text2)">${qs.error === "already_done" ? "You've already completed Trivia Night!" : qs.error}</p></div>`; triviaState.submitted = true; return; }
+  $("login-err").textContent="Checking…";
+  try {
+    const r = await api("/auth/validate","POST",{key});
+    if(!r.valid){ $("login-err").textContent = r.error || "Invalid key."; return; }
+    me = { discord_id: r.discord_id, username: r.username, tickets: r.tickets, demo: false };
+    localStorage.setItem("intra_sess", JSON.stringify({key, discord_id:r.discord_id, username:r.username, demo:false}));
+    launch();
+  } catch(e){
+    $("login-err").textContent="Server unreachable — try again.";
+  }
+}
 
-  let html = eventHeader(ev) + `
-  <div class="card"><h3>📋 Rules</h3>
-    <p style="color:var(--text2)">Answer all 10 questions. Everyone who participates gets <strong class="gold-text">2 tickets</strong>. Top 10 get bonus tickets!</p>
-    <table class="rewards-table" style="margin-top:1rem"><thead><tr><th>Rank</th><th>Bonus Tickets</th></tr></thead><tbody>
-      <tr><td>🥇 1st</td><td class="gold-text">+20</td></tr><tr><td>🥈 2nd</td><td class="gold-text">+15</td></tr>
-      <tr><td>🥉 3rd</td><td class="gold-text">+10</td></tr><tr><td>Top 10</td><td class="gold-text">+5</td></tr>
-      <tr><td>Participation</td><td class="gold-text">+2</td></tr></tbody></table>
-  </div>`;
+function doLogout(){
+  me=null; localStorage.removeItem("intra_sess");
+  $("login-wall").classList.remove("gone");
+  $("key-in").value=""; $("login-err").textContent="";
+}
 
-  html += `<div id="trivia-questions">`;
-  qs.forEach((q, i) => {
-    html += `<div class="question-card">
-      <div class="q-text">Q${i+1}. ${q.q}${q.hard ? `<span class="hard-tag">★ HARD</span>` : ""}</div>
-      <div class="choices">
-        ${q.choices.map(c => `<button class="choice-btn" onclick="selectChoice(${q.id},'${c}',this)">${c}</button>`).join("")}
-      </div></div>`;
+async function restoreSession(){
+  const raw=localStorage.getItem("intra_sess"); if(!raw) return false;
+  try {
+    const s=JSON.parse(raw);
+    if(s.demo){ me={discord_id:"DEMO",username:"demo_user",tickets:999,demo:true}; return true; }
+    const r=await api("/auth/validate","POST",{key:s.key});
+    if(!r.valid){ localStorage.removeItem("intra_sess"); return false; }
+    me={discord_id:r.discord_id,username:r.username,tickets:r.tickets,demo:false};
+    return true;
+  } catch{ return false; }
+}
+
+function launch(){
+  $("login-wall").classList.add("gone");
+  if(me?.demo) $("demo-banner").classList.add("show");
+  else         $("demo-banner").classList.remove("show");
+  renderAuth(); buildTabs(); showTab("home");
+}
+
+// ══════════════════════════════════════════════════════════
+// AUTH BAR
+// ══════════════════════════════════════════════════════════
+function renderAuth(){
+  if(!me){ $("auth-bar").innerHTML=""; return; }
+  const initials=me.username.slice(0,2).toUpperCase();
+  const badge=me.demo?`<span class="tag tag-dim">Demo</span>`:`<span class="ticket-badge">🎫 ${me.tickets}</span>`;
+  $("auth-bar").innerHTML=`
+    <div class="user-pill">
+      <div class="user-av">${initials}</div>
+      <div class="user-name">@${me.username}</div>
+    </div>
+    ${badge}
+    <button class="btn btn-ghost btn-sm" onclick="doLogout()">Logout</button>`;
+}
+
+async function refreshTickets(){
+  if(!me||me.demo) return;
+  const r=await api(`/tickets/${me.discord_id}`);
+  me.tickets=r.tickets??me.tickets;
+  renderAuth();
+}
+
+async function addTickets(amount,reason){
+  // called after server confirms — just update local display
+  me.tickets=(me.tickets||0)+amount;
+  renderAuth();
+}
+
+// ══════════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════════
+function buildTabs(){
+  const now=Date.now();
+  // Show all tabs for demo, otherwise hide day-after-event
+  const visible=EVENTS.filter(e=>{
+    if(me?.demo) return true;
+    const d=new Date(e.date); d.setDate(d.getDate()+1);
+    return now<d;
   });
-  html += `</div><button class="btn btn-gold" onclick="submitTrivia()" style="margin-top:1rem">Submit Answers 🎯</button>`;
-  main.innerHTML = html;
+  $("tabs").innerHTML=
+    `<button class="tab-btn ${activeTab==="home"?"active":""}" onclick="showTab('home')">Home</button>`
+    +visible.map(e=>`<button class="tab-btn ${activeTab===e.id?"active":""}" onclick="showTab('${e.id}')">
+      ${e.emoji} ${e.title}<span class="edate">${fmtDate(e.date)}</span></button>`).join("")
+    +`<button class="tab-btn ${activeTab==="lb"?"active":""}" onclick="showTab('lb')">🏆 Leaderboard</button>`;
 }
 
-function selectChoice(qid, val, btn) {
-  const card = btn.closest(".question-card");
-  card.querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected"));
-  btn.classList.add("selected");
-  triviaState.answers[qid] = val;
+function showTab(id){
+  activeTab=id; buildTabs(); clearInterval(bossTimer);
+  const m=$("main");
+  ({
+    home:    ()=>{ m.innerHTML=renderHome() },
+    trivia:  ()=>renderTrivia(m),
+    boss:    ()=>renderBoss(m),
+    guess:   ()=>renderGuess(m),
+    breather:()=>{ m.innerHTML=renderBreather() },
+    casino:  ()=>{ m.innerHTML=renderCasino() },
+    lb:      ()=>renderLB(m),
+  }[id]||(() => m.innerHTML="<p>Coming soon.</p>"))();
 }
 
-async function submitTrivia() {
-  const qs = await apiFetch("/api/trivia/questions");
-  if (Object.keys(triviaState.answers).length < (Array.isArray(qs) ? qs.length : 10)) {
-    notify("Answer all questions first!", "err"); return;
-  }
-  const res = await apiFetch("/api/trivia/submit", "POST", { answers: triviaState.answers });
-  if (res.error) { notify(res.error, "err"); return; }
-  triviaState.submitted = true;
-  notify(`Submitted! Score: ${res.score}/${res.total}. +${res.reward} tickets!`);
-  renderTrivia($("main-content"));
-}
-
-// ── Boss Raid ─────────────────────────────────────────────────────────────────
-async function renderBoss(main) {
-  if (!currentUser) { main.innerHTML = loginGate(); return; }
-  const ev = EVENTS.find(e => e.id === "boss");
-  const t  = timeUntil(ev.date);
-  if (t) { main.innerHTML = eventHeader(ev) + countdownHTML(ev.date, "Boss Raid begins in"); startCdTick(ev.date); return; }
-
-  bossState = await apiFetch("/api/boss/state");
-
-  let html = eventHeader(ev);
-
-  // HP bar
-  const hpPct = Math.max(0, (bossState.hp / bossState.max_hp) * 100);
-  html += `<div class="boss-hp-bar-wrap">
-    <div class="boss-name">🐉 Drak'Thul the Undying</div>
-    <div class="hp-bar-track"><div class="hp-bar-fill" id="boss-hp-fill" style="width:${hpPct}%"></div></div>
-    <div class="hp-text" id="boss-hp-text">${bossState.hp.toLocaleString()} / ${bossState.max_hp.toLocaleString()} HP</div>
-    ${!bossState.active ? `<div style="text-align:center;margin-top:1rem;color:var(--green);font-family:'Cinzel Decorative',serif;font-size:1.4rem">💀 BOSS DEFEATED!</div>` : ""}
-  </div>`;
-
-  // Battle log
-  html += `<div class="card"><h3>📜 Battle Log</h3>
-    <div class="battle-log" id="battle-log">
-      ${(bossState.log || []).map(l => `<div class="log-entry">${l}</div>`).join("") || '<div class="log-entry" style="color:var(--text3)">No actions yet...</div>'}
-    </div></div>`;
-
-  // Check if player joined
-  const joined = await apiFetch("/api/boss/me_player").catch(() => null);
-  if (!bossPlayer && !joined?.error) bossPlayer = joined;
-
-  if (!bossPlayer || bossPlayer?.error) {
-    html += `<div class="card"><h3>⚔️ Choose Your Class</h3>
-      <div class="class-selector" id="class-sel">
-        ${[["assassin","🗡️","Swift attacks, hide & strike, max single-hit damage"],
-           ["tank","🛡️","Absorb hits, protect allies, draw boss aggro"],
-           ["supporter","✨","Bless, heal, turn the tide of battle"],
-           ["mage","🔮","Arcane power, fire & ice, devastating nova"]].map(([cls, icon, desc]) =>
-          `<div class="class-btn" onclick="selectClass('${cls}',this)">
-            <span class="class-icon">${icon}</span>
-            <div class="class-name">${cls.charAt(0).toUpperCase()+cls.slice(1)}</div>
-            <div class="class-desc">${desc}</div>
-          </div>`).join("")}
-      </div>
-      <button class="btn btn-gold" onclick="joinBoss()" style="margin-top:1rem">⚔️ Join Raid</button>
-    </div>`;
-  } else {
-    html += renderBossPlayer();
-  }
-
-  main.innerHTML = html;
-  bossPolling = setInterval(refreshBossState, 5000);
-}
-
-let selectedClass = null;
-function selectClass(cls, el) {
-  selectedClass = cls;
-  document.querySelectorAll(".class-btn").forEach(b => b.classList.remove("selected"));
-  el.classList.add("selected");
-}
-
-async function joinBoss() {
-  if (!selectedClass) { notify("Pick a class first!", "err"); return; }
-  const res = await apiFetch("/api/boss/join", "POST", { class: selectedClass });
-  if (res.error) { notify(res.error, "err"); return; }
-  bossPlayer = res.player;
-  notify(`Joined as ${selectedClass}!`);
-  renderBoss($("main-content"));
-}
-
-function renderBossPlayer() {
-  if (!bossPlayer) return "";
-  const p  = bossPlayer;
-  const cls = p.class;
-  const skills = {
-    assassin: [["attack","⚔️ Slash"],["hide","🌑 Hide"],["shadow_stab","🗡️ Shadow Stab"],["shadow_dimension","🌀 Shadow Dim"]],
-    tank:     [["attack","⚔️ Slash"],["aggro","😤 Aggro"],["shield","🛡️ Shield"],["damage_share","💪 Dmg Share"]],
-    supporter:[["attack","✨ Holy Fire"],["bless","💫 Bless"],["heal","💚 Heal"],["soothing_voice","🎵 Soothing Voice"]],
-    mage:     [["fireball","🔥 Fireball"],["blizzard","❄️ Blizzard"],["arcane_nova","✨ Arcane Nova"],["drink_mana_pot","🔵 Mana Pot"]],
-  }[cls] || [["attack","⚔️ Attack"]];
-
-  return `<div class="card"><h3>👤 Your Character</h3>
-    <div style="margin-bottom:1rem">
-      <strong>${p.name}</strong> — <span class="tag tag-cyan">${cls}</span>
-      <span class="tag tag-gold">Lv.${p.level}</span>
-    </div>
-    <div class="player-stats">
-      <div class="stat-bar hp"><div class="stat-lbl">HP</div>
-        <div class="stat-track"><div class="stat-fill" style="width:${(p.hp/p.max_hp*100).toFixed(0)}%"></div></div>
-        <div class="stat-val">${p.hp}/${p.max_hp}</div></div>
-      <div class="stat-bar mana"><div class="stat-lbl">Mana</div>
-        <div class="stat-track"><div class="stat-fill" style="width:${(p.mana/p.max_mana*100).toFixed(0)}%"></div></div>
-        <div class="stat-val">${p.mana}/${p.max_mana}</div></div>
-      <div class="stat-bar stamina"><div class="stat-lbl">Stamina</div>
-        <div class="stat-track"><div class="stat-fill" style="width:${(p.stamina/p.max_stamina*100).toFixed(0)}%"></div></div>
-        <div class="stat-val">${p.stamina}/${p.max_stamina}</div></div>
-    </div>
-    <div style="margin-top:.75rem;color:var(--text3);font-size:.85rem">
-      ⚗️ HP Pots: ${p.hp_pots} &nbsp;|&nbsp; 💧 Mana Pots: ${p.mana_pots} &nbsp;|&nbsp; 💰 Gold: ${p.gold} &nbsp;|&nbsp; XP: ${p.xp}
-    </div>
-    <div class="action-grid" style="margin-top:1rem">
-      ${skills.map(([action,label]) =>
-        `<button class="btn btn-ghost" onclick="doBossAction('${action}')">${label}</button>`).join("")}
-      <button class="btn btn-ghost" onclick="doBossAction('gather')">🌿 Gather (10m cd)</button>
-      <button class="btn btn-ghost" onclick="doBossAction('farm_mobs')">👹 Farm Mobs (30m cd)</button>
-      <button class="btn btn-ghost" onclick="doBossAction('drink_hp_pot')">🍶 HP Pot</button>
-      <button class="btn btn-ghost" onclick="doBossAction('buy_pot',{pot_type:'hp'})">🛒 Buy HP Pot (50g)</button>
-    </div>
-  </div>`;
-}
-
-async function doBossAction(action, extra = {}) {
-  const res = await apiFetch("/api/boss/action", "POST", { action, ...extra });
-  if (res.error) { notify(res.error, "err"); return; }
-  if (res.msg) notify(res.msg);
-  if (res.dmg)  notify(`Hit boss for ${res.dmg} dmg!`);
-  if (res.boss_hit) notify(`Boss hit you for ${res.boss_hit}! ❤️ ${res.your_hp} HP left`, "err");
-  await refreshBossState();
-}
-
-async function refreshBossState() {
-  const s = await apiFetch("/api/boss/state");
-  bossState = s;
-  const fill = $("boss-hp-fill");
-  const txt  = $("boss-hp-text");
-  if (fill) fill.style.width = `${Math.max(0, s.hp/s.max_hp*100)}%`;
-  if (txt)  txt.textContent = `${s.hp.toLocaleString()} / ${s.max_hp.toLocaleString()} HP`;
-  const log = $("battle-log");
-  if (log) {
-    log.innerHTML = (s.log || []).slice(-20).reverse().map(l => `<div class="log-entry">${l}</div>`).join("");
-  }
-}
-
-// ── Guessing ──────────────────────────────────────────────────────────────────
-async function renderGuess(main) {
-  if (!currentUser) { main.innerHTML = loginGate(); return; }
-  const ev = EVENTS.find(e => e.id === "guess");
-  const t  = timeUntil(ev.date);
-  if (t) { main.innerHTML = eventHeader(ev) + countdownHTML(ev.date, "Guessing Game starts in"); startCdTick(ev.date); return; }
-  if (guessingState.submitted) {
-    main.innerHTML = eventHeader(ev) + `<div class="card"><p style="color:var(--text2)">Already submitted!</p></div>`; return;
-  }
-  const qs = await apiFetch("/api/guessing/questions");
-  let html = eventHeader(ev) + `<div class="card"><h3>🎯 The Rules</h3>
-    <p style="color:var(--text2)">Guess what <strong>Sumnor</strong> personally answers to each question. If your answer contains the correct answer anywhere, it counts!</p>
-    <table class="rewards-table" style="margin-top:1rem"><thead><tr><th>Rank</th><th>Tickets</th></tr></thead><tbody>
-      <tr><td>🥇 1st</td><td class="gold-text">+20</td></tr><tr><td>🥈 2nd</td><td class="gold-text">+10</td></tr>
-      <tr><td>🥉 3rd</td><td class="gold-text">+5</td></tr><tr><td>Participation</td><td class="gold-text">+1</td></tr>
-    </tbody></table></div>`;
-  html += `<div id="guess-questions">`;
-  qs.forEach(q => {
-    html += `<div class="question-card">
-      <div class="q-text">Q${q.id+1}. ${q.q}</div>
-      <input class="guess-input" id="guess-${q.id}" placeholder="Your guess…">
-    </div>`;
-  });
-  html += `</div><button class="btn btn-gold" onclick="submitGuess()" style="margin-top:1rem">Submit Guesses 🎯</button>`;
-  main.innerHTML = html;
-}
-
-async function submitGuess() {
-  const qs = await apiFetch("/api/guessing/questions");
-  const answers = {};
-  qs.forEach(q => { answers[q.id] = ($(`guess-${q.id}`)?.value || "").trim(); });
-  const res = await apiFetch("/api/guessing/submit", "POST", { answers });
-  if (res.error) { notify(res.error, "err"); return; }
-  guessingState.submitted = true;
-  let resultHTML = `<div class="card"><h3>📊 Results — ${res.score}/10</h3>`;
-  res.breakdown.forEach(b => {
-    resultHTML += `<div style="padding:.5rem 0;border-bottom:1px solid var(--border);display:flex;gap:.75rem;align-items:center">
-      <span style="font-size:1.2rem">${b.correct?"✅":"❌"}</span>
-      <div><div style="font-size:.85rem;color:var(--text2)">${b.q}</div>
-      <div style="font-size:.8rem;color:${b.correct?"var(--green)":"var(--red)"}">Answer: ${b.answer}</div></div>
-    </div>`;
-  });
-  resultHTML += `<div style="margin-top:1rem;color:var(--gold);font-weight:700">+${res.reward} ticket(s) awarded!</div></div>`;
-  $("main-content").innerHTML = eventHeader(EVENTS.find(e=>e.id==="guess")) + resultHTML;
-}
-
-// ── Breather ──────────────────────────────────────────────────────────────────
-function renderBreather() {
-  const ev = EVENTS.find(e => e.id === "breather");
-  const t  = timeUntil(ev.date);
-  let html = eventHeader(ev);
-  if (t) return html + countdownHTML(ev.date, "This event begins in");
-  return html + `
-  <div class="event4-message">
-    <h2>Codes</h2>
-    <p>Some may have found some but most probably didn't.</p>
-    <p>I've hidden them everywhere — on my nation page and even in the announcements for events.</p>
-    <p>But today is different.</p>
-    <p><strong style="color:var(--gold)">I will send them to you — or my bot will, to be more exact.</strong></p>
-    <p>You will have <strong style="color:var(--cyan)">5 minutes</strong> to redeem it. If you fail, it won't work and others will get a chance.</p>
-    <p style="color:var(--text3);margin-top:1.5rem;font-style:italic">This is more of a breather round while I prepare the last event — so enjoy 🙂</p>
-    <hr class="divider">
-    <p style="color:var(--text3);font-size:.85rem">Redeem codes you receive via DM using the box at the top of this page.</p>
-    <p style="color:var(--text3);font-size:.8rem;margin-top:.5rem">Rewards scale down with each code you redeem: 10 → 7 → 5 → 3 tickets</p>
-  </div>`;
-}
-
-// ── Casino ────────────────────────────────────────────────────────────────────
-function renderCasino() {
-  const ev = EVENTS.find(e => e.id === "casino");
-  const t  = timeUntil(ev.date);
-  let html = eventHeader(ev);
-  if (t) return html + countdownHTML(ev.date, "Casino Night opens in");
-  if (!currentUser) return html + loginGate();
-
-  return html + `
-  <div class="card" style="margin-bottom:1.5rem">
-    <h3>🎰 House Rules</h3>
-    <p style="color:var(--text2)">Gamble your tickets. Coin flip only works if you have fewer than 100 tickets. Solo games yield smaller rewards. Play smart!</p>
+// ══════════════════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════════════════
+function renderHome(){
+  const now=Date.now();
+  return `<div class="evhdr">
+    <div class="evhdr-title">Welcome, @${me?.username||"Guest"}</div>
+    <div class="evhdr-date">INTRA Events · June 2025</div>
   </div>
   <div class="grid2">
-    <!-- Coin Flip -->
-    <div class="casino-game">
-      <h3>🪙 Coin Flip</h3>
-      <p style="color:var(--text3);font-size:.8rem">Doubles your bet — only if you have &lt;100 tickets</p>
-      <div class="coin" id="coin">🪙</div>
-      <div class="casino-result" id="cf-result">—</div>
-      <input class="bet-input" type="number" id="cf-bet" value="1" min="1">
-      <button class="btn btn-gold btn-sm" onclick="playCoinFlip()">Flip!</button>
-    </div>
-
-    <!-- Slots -->
-    <div class="casino-game">
-      <h3>🎰 Slots</h3>
-      <p style="color:var(--text3);font-size:.8rem">3 of a kind = 3× | 💎💎💎 = 5× | 2 match = 0.5×</p>
-      <div class="slot-reels">
-        <div class="slot-reel" id="sl0">🍒</div><div class="slot-reel" id="sl1">🍋</div><div class="slot-reel" id="sl2">🍊</div>
-      </div>
-      <div class="casino-result" id="sl-result">—</div>
-      <input class="bet-input" type="number" id="sl-bet" value="1" min="1">
-      <button class="btn btn-gold btn-sm" onclick="playSlots()">Spin!</button>
-    </div>
-
-    <!-- Russian Roulette -->
-    <div class="casino-game">
-      <h3>🔫 Russian Roulette</h3>
-      <p style="color:var(--text3);font-size:.8rem">Solo: win = +bet | Multi (bet 5): win = +25 tickets</p>
-      <div class="chambers" id="chambers">
-        ${Array.from({length:6},(_,i)=>`<div class="chamber" id="ch${i}">🔵</div>`).join("")}
-      </div>
-      <div class="casino-result" id="rr-result">—</div>
-      <div style="display:flex;gap:.5rem;justify-content:center;margin-top:.5rem;flex-wrap:wrap">
-        <button class="btn btn-red btn-sm" onclick="playRoulette(1,true)">Solo (bet 1)</button>
-        <button class="btn btn-gold btn-sm" onclick="playRoulette(5,false)">Multiplayer (bet 5)</button>
-      </div>
-    </div>
-
-    <!-- Dice -->
-    <div class="casino-game">
-      <h3>🎲 High Dice</h3>
-      <p style="color:var(--text3);font-size:.8rem">Roll 5 or 6 → win 1.5× your bet</p>
-      <div style="font-size:3rem;margin:1rem 0" id="dice-display">🎲</div>
-      <div class="casino-result" id="dice-result">—</div>
-      <input class="bet-input" type="number" id="dice-bet" value="1" min="1">
-      <button class="btn btn-gold btn-sm" onclick="playDice()">Roll!</button>
-    </div>
+    ${EVENTS.map(e=>{
+      const past=!me?.demo&&new Date(e.date)<new Date(now-86400000);
+      const locked=!me?.demo&&timeUntil(e.date)!==null;
+      return `<div class="card" style="${past?"opacity:.3":""}">
+        <div style="font-size:1.7rem;margin-bottom:.35rem">${e.emoji}</div>
+        <div style="font-family:'Black Ops One',sans-serif;font-size:.95rem;letter-spacing:.05em;color:var(--gold);margin-bottom:.2rem">${e.title}</div>
+        <div style="color:var(--text3);font-size:.72rem;margin-bottom:.6rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase">📅 ${fmtDate(e.date)}</div>
+        ${past?`<span class="tag tag-dim">Completed</span>`:locked?`<span class="tag tag-dim">Locked</span>`:`<button class="btn btn-ghost btn-sm" onclick="showTab('${e.id}')">View →</button>`}
+      </div>`;
+    }).join("")}
+  </div>
+  <div class="card">
+    <div class="card-title">How It Works</div>
+    <p style="color:var(--text2);font-size:.83rem;line-height:1.75">Participate in events to earn tickets. Redeem codes dropped during events for bonus tickets. The leaderboard tracks everyone's total.</p>
   </div>`;
 }
 
-const DICE_EMOJI = ["","⚀","⚁","⚂","⚃","⚄","⚅"];
-
-async function playCoinFlip() {
-  const bet = parseInt($("cf-bet")?.value) || 1;
-  const res = await apiFetch("/api/casino/coinflip", "POST", { bet });
-  if (res.error) { notify(res.error, "err"); return; }
-  const coin = $("coin");
-  coin.classList.add("flip");
-  setTimeout(() => coin.classList.remove("flip"), 900);
-  $("cf-result").innerHTML = res.won
-    ? `<span class="ok">✅ ${res.result.toUpperCase()}! +${Math.abs(res.diff)} tickets (${res.total} total)</span>`
-    : `<span class="err">❌ ${res.result.toUpperCase()}! -${Math.abs(res.diff)} tickets (${res.total} total)</span>`;
-  updateTicketBadge(res.total);
+// ══════════════════════════════════════════════════════════
+// REDEEM
+// ══════════════════════════════════════════════════════════
+async function handleRedeem(){
+  if(me?.demo){ notify("Demo mode — no saves","err"); return; }
+  const code=($("code-in")?.value||"").trim().toUpperCase();
+  if(!code) return;
+  const msg=$("redeem-msg"); msg.textContent="…"; msg.className="";
+  try {
+    const r=await api("/codes/redeem","POST",{code,discord_id:me.discord_id});
+    if(r.error){ msg.textContent=`❌ ${r.error}`; msg.className="err"; return; }
+    msg.textContent=`✅ +${r.reward} tickets!`; msg.className="ok";
+    notify(`+${r.reward} tickets! 🎫`);
+    me.tickets=r.total; renderAuth();
+    $("code-in").value="";
+  } catch(e){ msg.textContent="❌ Error"; msg.className="err"; }
 }
 
-async function playSlots() {
-  const bet = parseInt($("sl-bet")?.value) || 1;
-  for (let i=0;i<3;i++) { const el=$(`sl${i}`); if(el){el.classList.add("spin"); setTimeout(()=>el.classList.remove("spin"),400+i*100);} }
-  const res = await apiFetch("/api/casino/slots", "POST", { bet });
-  if (res.error) { notify(res.error, "err"); return; }
-  setTimeout(() => {
-    res.reels.forEach((r,i) => { const el=$(`sl${i}`); if(el) el.textContent=r; });
-    $("sl-result").innerHTML = res.diff > 0
-      ? `<span class="ok">+${res.diff} tickets! (${res.total} total)</span>`
-      : `<span class="err">${res.diff} tickets (${res.total} total)</span>`;
-    updateTicketBadge(res.total);
-  }, 600);
-}
+// ══════════════════════════════════════════════════════════
+// EVENT 1 — TRIVIA
+// ══════════════════════════════════════════════════════════
+const TQS=[
+  {id:0,q:"What is the capital of France?",             a:"Paris",       choices:["London","Paris","Berlin","Madrid"],hard:false},
+  {id:1,q:"What is 12 × 12?",                           a:"144",         choices:["132","144","156","168"],hard:false},
+  {id:2,q:"Which planet is closest to the Sun?",        a:"Mercury",     choices:["Venus","Earth","Mercury","Mars"],hard:false},
+  {id:3,q:"What year did World War II end?",             a:"1945",        choices:["1943","1944","1945","1946"],hard:false},
+  {id:4,q:"What is the chemical symbol for gold?",      a:"Au",          choices:["Go","Ag","Au","Gd"],hard:false},
+  {id:5,q:"Who wrote Romeo and Juliet?",                a:"Shakespeare", choices:["Dickens","Shakespeare","Hemingway","Chaucer"],hard:false},
+  {id:6,q:"When was INTRA first founded?",              a:"6/18/2025",   choices:["1/1/2025","3/15/2025","6/18/2025","12/1/2024"],hard:true},
+  {id:7,q:"Which news outlet did INTRA code a bot for?",a:"OCN",         choices:["RSN","OCN","El Dorado","Magnum Opus"],hard:true},
+  {id:8,q:"Who is the REAL owner of INTRA?",            a:"Sumnor",      choices:["Sumnor","Luna","SumTingWong","George Long"],hard:true},
+  {id:9,q:"How many planets are in our solar system?",  a:"8",           choices:["7","8","9","10"],hard:false},
+];
 
-async function playRoulette(bet, solo) {
-  const res = await apiFetch("/api/casino/roulette", "POST", { bet, solo });
-  if (res.error) { notify(res.error, "err"); return; }
-  const ch = document.querySelectorAll(".chamber");
-  ch.forEach((c,i) => {
-    c.className = "chamber";
-    c.textContent = "🔵";
-    if (i === res.chamber - 1) {
-      c.classList.add(res.survived ? "safe" : "danger");
-      c.textContent = res.survived ? "✅" : "💥";
+async function renderTrivia(m){
+  const ev=EVENTS.find(e=>e.id==="trivia");
+  const t=timeUntil(ev.date);
+  // Locked — show countdown only, no content
+  if(t&&!me?.demo){ m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Event starts in"); startCd(ev.date); return; }
+
+  // Check if already submitted
+  if(!me?.demo){
+    const st=await api(`/trivia/status/${me.discord_id}`);
+    if(st.done){
+      m.innerHTML=evHdr(ev)+`<div class="card"><div class="card-title">Already Submitted</div>
+        <p style="color:var(--text2);font-size:.83rem">Score: <span class="gold">${st.score}/10</span> — results announced after the event.</p></div>`;
+      return;
     }
-  });
-  $("rr-result").innerHTML = res.survived
-    ? `<span class="ok">Survived! +${Math.abs(res.diff)} tickets (${res.total} total)</span>`
-    : `<span class="err">💀 BANG! -${Math.abs(res.diff)} tickets (${res.total} total)</span>`;
-  updateTicketBadge(res.total);
-}
+  }
 
-async function playDice() {
-  const bet = parseInt($("dice-bet")?.value) || 1;
-  const res = await apiFetch("/api/casino/dice", "POST", { bet });
-  if (res.error) { notify(res.error, "err"); return; }
-  $("dice-display").textContent = DICE_EMOJI[res.roll] || "🎲";
-  $("dice-result").innerHTML = res.won
-    ? `<span class="ok">Rolled ${res.roll}! +${Math.abs(res.diff)} tickets (${res.total} total)</span>`
-    : `<span class="err">Rolled ${res.roll}. -${Math.abs(res.diff)} tickets (${res.total} total)</span>`;
-  updateTicketBadge(res.total);
-}
-
-// ── Leaderboard ───────────────────────────────────────────────────────────────
-async function renderLeaderboard(main) {
-  main.innerHTML = `<div class="event-header"><div class="event-title">🏆 Leaderboard</div></div><div class="loading">Loading…</div>`;
-  const lb = await apiFetch("/api/tickets/leaderboard");
-  let html = `<div class="event-header"><div class="event-title">🏆 Global Leaderboard</div></div>
-    <div class="card">`;
-  lb.forEach((row, i) => {
-    const rankClass = i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : "";
-    html += `<div class="lb-row">
-      <div class="lb-rank ${rankClass}">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1}</div>
-      <div class="lb-name">User ${row.uid.slice(-4)}</div>
-      <div class="lb-val">🎫 ${row.tickets}</div>
+  let html=evHdr(ev)+`<div class="card"><div class="card-title">Rules</div>
+    <p style="color:var(--text2);font-size:.83rem;margin-bottom:.9rem">Answer all 10. Participation = <span class="gold">+2 tickets</span>. Top scores earn bonus rewards.</p>
+    <table class="rtable"><thead><tr><th>Rank</th><th>Bonus</th></tr></thead><tbody>
+      <tr><td>🥇 1st</td><td class="gold">+20</td></tr><tr><td>🥈 2nd</td><td class="gold">+15</td></tr>
+      <tr><td>🥉 3rd</td><td class="gold">+10</td></tr><tr><td>Top 10</td><td class="gold">+5</td></tr>
+      <tr><td>Participation</td><td class="gold">+2</td></tr>
+    </tbody></table></div>`;
+  TQS.forEach(q=>{
+    html+=`<div class="qcard"><div class="qt">Q${q.id+1}. ${q.q}${q.hard?`<span class="hard-tag">★ Hard</span>`:""}</div>
+      <div class="choices">${q.choices.map(c=>`<button class="choice" onclick="selT(${q.id},'${c}',this)">${c}</button>`).join("")}</div>
     </div>`;
   });
-  html += `</div>`;
-  main.innerHTML = html;
+  html+=`<button class="btn btn-primary" style="margin-top:.9rem;max-width:220px" onclick="submitTrivia()">Submit Answers →</button>`;
+  m.innerHTML=html;
+}
+function selT(qid,val,btn){
+  btn.closest(".qcard").querySelectorAll(".choice").forEach(b=>b.classList.remove("sel"));
+  btn.classList.add("sel"); triviaAns[qid]=val;
+}
+async function submitTrivia(){
+  if(Object.keys(triviaAns).length<TQS.length){ notify("Answer all questions first","err"); return; }
+  const score=TQS.reduce((s,q)=>s+(triviaAns[q.id]===q.a?1:0),0);
+  if(me?.demo){ notify(`Demo: score would be ${score}/10 — not saved`); return; }
+  try {
+    const r=await api("/trivia/submit","POST",{discord_id:me.discord_id,score});
+    if(r.error){ notify(r.error,"err"); return; }
+    me.tickets=r.total; renderAuth();
+    notify(`Submitted! ${score}/10 · +2 tickets`);
+    renderTrivia($("main"));
+  } catch(e){ notify("Save failed","err"); }
 }
 
-// ── Redeem code ───────────────────────────────────────────────────────────────
-async function handleRedeem() {
-  if (!currentUser) { notify("Login with Discord first!", "err"); return; }
-  const code = $("code-input")?.value?.trim();
-  if (!code) return;
-  const msg = $("redeem-msg");
-  msg.textContent = "Checking…"; msg.className = "";
-  const res = await apiFetch("/api/redeem", "POST", { code }).catch(e => e);
-  if (res.ok) {
-    msg.textContent = `✅ +${res.reward} tickets! (${res.total} total)`;
-    msg.className = "ok";
-    updateTicketBadge(res.total);
-    notify(`Code redeemed! +${res.reward} tickets 🎫`);
-    if ($("code-input")) $("code-input").value = "";
+// ══════════════════════════════════════════════════════════
+// EVENT 2 — BOSS RAID
+// ══════════════════════════════════════════════════════════
+async function renderBoss(m){
+  const ev=EVENTS.find(e=>e.id==="boss");
+  const t=timeUntil(ev.date);
+  if(t&&!me?.demo){ m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Raid begins in"); startCd(ev.date); return; }
+
+  let raid;
+  try { raid=await api("/boss/state"); } catch{ raid={hp:500000,max_hp:500000,players:{},log:[],active:true,turn:0}; }
+  bossPlayer = raid.players?.[me.discord_id] ?? null;
+  const pct=Math.max(0,raid.hp/raid.max_hp*100);
+
+  let html=evHdr(ev)+`<div class="boss-wrap">
+    <div class="boss-name">☠ Drak'Thul the Undying</div>
+    <div class="hp-track"><div class="hp-fill" id="bfill" style="width:${pct}%"></div></div>
+    <div class="hp-txt" id="bhp">${raid.hp.toLocaleString()} / ${raid.max_hp.toLocaleString()} HP</div>
+    ${!raid.active?`<div style="text-align:center;margin-top:.9rem;color:var(--green);font-family:'Black Ops One',sans-serif;font-size:1rem;letter-spacing:.08em">BOSS DEFEATED</div>`:""}
+  </div>
+  <div class="card"><div class="card-title">Battle Log</div>
+    <div class="blog" id="blog">${(raid.log||[]).slice(-20).reverse().map(l=>`<div>${l}</div>`).join("")||`<div style="color:var(--text3)">No actions yet…</div>`}</div>
+  </div>`;
+
+  if(!bossPlayer){
+    html+=`<div class="card"><div class="card-title">Choose Class</div>
+      <div class="class-grid">${[["assassin","🗡️","Swift strikes, hide & burst"],["tank","🛡️","Protect and taunt"],["supporter","✨","Heal and bless allies"],["mage","🔮","Arcane damage burst"]].map(([cls,ic,dc])=>`
+        <div class="class-btn" onclick="selCls('${cls}',this)">
+          <span class="class-icon">${ic}</span>
+          <div class="class-name">${cls}</div>
+          <div class="class-desc">${dc}</div>
+        </div>`).join("")}</div>
+      <button class="btn btn-primary" style="margin-top:.9rem;max-width:200px" onclick="joinBoss()">Join Raid →</button>
+    </div>`;
   } else {
-    msg.textContent = `❌ ${res.error || "Invalid code"}`;
-    msg.className = "err";
+    html+=bossPlayerHTML(bossPlayer);
   }
+  m.innerHTML=html;
+  bossTimer=setInterval(pollBoss,7000);
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function updateTicketBadge(n) {
-  const badge = document.querySelector(".ticket-badge");
-  if (badge) badge.textContent = `🎫 ${n}`;
+let _selCls=null;
+function selCls(cls,el){ _selCls=cls; document.querySelectorAll(".class-btn").forEach(b=>b.classList.remove("sel")); el.classList.add("sel"); }
+
+async function joinBoss(){
+  if(!_selCls){ notify("Pick a class","err"); return; }
+  if(me?.demo){ notify("Demo — not saved"); return; }
+  try {
+    const r=await api("/boss/join","POST",{discord_id:me.discord_id,class:_selCls});
+    if(r.error){ notify(r.error,"err"); return; }
+    bossPlayer=r.player; notify("Joined!"); renderBoss($("main"));
+  } catch(e){ notify("Failed","err"); }
 }
 
-function eventHeader(ev) {
-  return `<div class="event-header">
-    <div class="event-title">${ev.emoji} ${ev.title}</div>
-    <div class="event-date-label">📅 ${formatDate(ev.date)}</div>
+function bossPlayerHTML(p){
+  const skills={
+    assassin:[["attack","⚔ Slash"],["hide","🌑 Hide"],["shadow_stab","🗡 Shadow Stab"],["shadow_dimension","🌀 Shadow Dim"]],
+    tank:    [["attack","⚔ Slash"],["aggro","😤 Aggro"],["shield","🛡 Shield"],["damage_share","💪 Dmg Share"]],
+    supporter:[["attack","✨ Holy Fire"],["bless","💫 Bless"],["heal","💚 Heal"],["soothing_voice","🎵 Soothing Voice"]],
+    mage:    [["fireball","🔥 Fireball"],["blizzard","❄ Blizzard"],["arcane_nova","✨ Arcane Nova"],["drink_mana_pot","🔵 Mana Pot"]],
+  }[p.class]||[["attack","⚔ Attack"]];
+  return `<div class="card"><div class="card-title">${p.name} · <span class="tag tag-gold">${p.class}</span> · Lv.${p.level}</div>
+    <div class="stat-row">
+      <div class="sbar hp-c"><div class="sl">HP</div><div class="st"><div class="sf" style="width:${(p.hp/p.max_hp*100).toFixed(0)}%"></div></div><div class="sv">${p.hp}/${p.max_hp}</div></div>
+      <div class="sbar mana-c"><div class="sl">Mana</div><div class="st"><div class="sf" style="width:${(p.mana/p.max_mana*100).toFixed(0)}%"></div></div><div class="sv">${p.mana}/${p.max_mana}</div></div>
+      <div class="sbar stam-c"><div class="sl">Stamina</div><div class="st"><div class="sf" style="width:${(p.stamina/p.max_stamina*100).toFixed(0)}%"></div></div><div class="sv">${p.stamina}/${p.max_stamina}</div></div>
+    </div>
+    <div style="font-size:.7rem;color:var(--text3);margin-top:.5rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em">
+      ⚗ HP Pots: ${p.hp_pots} &nbsp;|&nbsp; 💧 Mana Pots: ${p.mana_pots} &nbsp;|&nbsp; 💰 ${p.gold}g &nbsp;|&nbsp; XP: ${p.xp}</div>
+    <div class="act-grid">
+      ${skills.map(([a,l])=>`<button class="btn btn-ghost" onclick="bossAct('${a}')">${l}</button>`).join("")}
+      <button class="btn btn-ghost" onclick="bossAct('gather')">🌿 Gather (10m cd)</button>
+      <button class="btn btn-ghost" onclick="bossAct('farm_mobs')">👹 Farm Mobs (30m)</button>
+      <button class="btn btn-ghost" onclick="bossAct('drink_hp_pot')">🍶 HP Pot</button>
+      <button class="btn btn-ghost" onclick="bossAct('buy_pot')">🛒 Buy Pot (50g)</button>
+    </div>
   </div>`;
 }
 
-function loginGate() {
-  return `<div class="login-gate">
-    <h2>🔒 Login Required</h2>
-    <p>You need to login with Discord to participate in events.</p>
-    <a href="${API}/auth/login" class="btn btn-discord">
-      <svg width="20" height="20" viewBox="0 0 71 55" fill="white"><path d="M60.1 4.9A58.5 58.5 0 0 0 45.5.4a.2.2 0 0 0-.2.1 40.7 40.7 0 0 0-1.8 3.7 54 54 0 0 0-16.2 0A37.2 37.2 0 0 0 25.5.5a.2.2 0 0 0-.2-.1A58.3 58.3 0 0 0 10.7 4.9a.2.2 0 0 0-.1.1C1.6 18.1-.9 31 .3 43.6a.2.2 0 0 0 .1.1 58.8 58.8 0 0 0 17.7 9 .2.2 0 0 0 .2-.1 42 42 0 0 0 3.6-5.9.2.2 0 0 0-.1-.3 38.7 38.7 0 0 1-5.5-2.6.2.2 0 0 1 0-.4l1.1-.8a.2.2 0 0 1 .2 0c11.5 5.3 24 5.3 35.3 0a.2.2 0 0 1 .2 0l1.1.8a.2.2 0 0 1 0 .4 36.2 36.2 0 0 1-5.5 2.6.2.2 0 0 0-.1.3 47 47 0 0 0 3.6 5.9.2.2 0 0 0 .2.1 58.6 58.6 0 0 0 17.7-9 .2.2 0 0 0 .1-.1c1.5-15.3-2.5-28.6-10.5-40.4a.2.2 0 0 0-.1-.1zM23.7 35.9c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2zm23.6 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2c3.6 0 6.5 3.3 6.4 7.2 0 4-2.8 7.2-6.4 7.2z"/></svg>
-      Login with Discord</a>
+async function bossAct(action){
+  if(me?.demo){ notify("Demo — not saved"); return; }
+  try {
+    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action});
+    if(r.error){ notify(r.error,"err"); return; }
+    bossPlayer=r.player;
+    if(r.defeated){ await refreshTickets(); notify("Boss defeated! +5 tickets 🎫"); }
+    await pollBoss();
+  } catch(e){ notify("Failed","err"); }
+}
+
+async function pollBoss(){
+  try {
+    const r=await api("/boss/state");
+    const f=$("bfill"),h=$("bhp"),b=$("blog");
+    if(f) f.style.width=`${Math.max(0,r.hp/r.max_hp*100)}%`;
+    if(h) h.textContent=`${r.hp.toLocaleString()} / ${r.max_hp.toLocaleString()} HP`;
+    if(b) b.innerHTML=(r.log||[]).slice(-20).reverse().map(l=>`<div>${l}</div>`).join("");
+  } catch{}
+}
+
+// ══════════════════════════════════════════════════════════
+// EVENT 3 — GUESSING
+// ══════════════════════════════════════════════════════════
+const GQS=[
+  {id:0,q:"What is Sumnor's favorite color?"},
+  {id:1,q:"What is Sumnor's favorite food?"},
+  {id:2,q:"What is Sumnor's favorite game genre?"},
+  {id:3,q:"If Sumnor could visit one country, where?"},
+  {id:4,q:"What is Sumnor's go-to drink?"},
+  {id:5,q:"Morning person or night owl?"},
+  {id:6,q:"Cats or dogs?"},
+  {id:7,q:"What is Sumnor's favorite season?"},
+  {id:8,q:"PC or console?"},
+  {id:9,q:"What is Sumnor's favorite music type?"},
+];
+
+async function renderGuess(m){
+  const ev=EVENTS.find(e=>e.id==="guess");
+  const t=timeUntil(ev.date);
+  if(t&&!me?.demo){ m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Event starts in"); startCd(ev.date); return; }
+
+  if(!me?.demo){
+    const st=await api(`/guessing/status/${me.discord_id}`);
+    if(st.done){
+      m.innerHTML=evHdr(ev)+`<div class="card"><div class="card-title">Already Submitted</div>
+        <p style="color:var(--text2);font-size:.83rem">Score: <span class="gold">${st.score}/10</span></p></div>`;
+      return;
+    }
+  }
+
+  let html=evHdr(ev)+`<div class="card"><div class="card-title">Rules</div>
+    <p style="color:var(--text2);font-size:.83rem;margin-bottom:.9rem">Guess Sumnor's real answers. If your answer contains the right word anywhere, it counts.</p>
+    <table class="rtable"><thead><tr><th>Rank</th><th>Tickets</th></tr></thead><tbody>
+      <tr><td>🥇 1st</td><td class="gold">+20</td></tr><tr><td>🥈 2nd</td><td class="gold">+10</td></tr>
+      <tr><td>🥉 3rd</td><td class="gold">+5</td></tr><tr><td>Participation</td><td class="gold">+1</td></tr>
+    </tbody></table></div>`;
+  html+=GQS.map(q=>`<div class="qcard"><div class="qt">Q${q.id+1}. ${q.q}</div>
+    <input class="ginput" id="g${q.id}" placeholder="Your answer…"></div>`).join("");
+  html+=`<button class="btn btn-primary" style="margin-top:.9rem;max-width:220px" onclick="submitGuess()">Submit →</button>`;
+  m.innerHTML=html;
+}
+
+async function submitGuess(){
+  const answers={};
+  GQS.forEach(q=>{ answers[q.id]=($(`g${q.id}`)?.value||"").trim().toLowerCase(); });
+  const score=GQS.reduce((s,q)=>{
+    const c=(GA[q.id]||"").toLowerCase();
+    return s+(answers[q.id].includes(c)?1:0);
+  },0);
+
+  if(me?.demo){
+    // Show results without saving
+    const ev=EVENTS.find(e=>e.id==="guess");
+    let html=evHdr(ev)+`<div class="card"><div class="card-title">Results (Demo) — ${score}/10</div>`;
+    GQS.forEach(q=>{
+      const c=(GA[q.id]||"").toLowerCase();
+      const hit=(answers[q.id]||"").includes(c);
+      html+=`<div style="display:flex;gap:.6rem;align-items:flex-start;padding:.42rem 0;border-bottom:1px solid var(--border)">
+        <span>${hit?"✅":"❌"}</span>
+        <div><div style="font-size:.78rem;color:var(--text2)">${q.q}</div>
+        <div style="font-size:.72rem;color:${hit?"var(--green)":"var(--red)"}">Answer: ${GA[q.id]}</div></div></div>`;
+    });
+    html+=`<div style="margin-top:.9rem;color:var(--text3);font-size:.8rem">Demo mode — not saved</div></div>`;
+    $("main").innerHTML=html;
+    return;
+  }
+
+  try {
+    const r=await api("/guessing/submit","POST",{discord_id:me.discord_id,score});
+    if(r.error){ notify(r.error,"err"); return; }
+    me.tickets=r.total; renderAuth();
+    const ev=EVENTS.find(e=>e.id==="guess");
+    let html=evHdr(ev)+`<div class="card"><div class="card-title">Results — ${score}/10</div>`;
+    GQS.forEach(q=>{
+      const c=(GA[q.id]||"").toLowerCase(); const hit=(answers[q.id]||"").includes(c);
+      html+=`<div style="display:flex;gap:.6rem;align-items:flex-start;padding:.42rem 0;border-bottom:1px solid var(--border)">
+        <span>${hit?"✅":"❌"}</span>
+        <div><div style="font-size:.78rem;color:var(--text2)">${q.q}</div>
+        <div style="font-size:.72rem;color:${hit?"var(--green)":"var(--red)"}">Answer: ${GA[q.id]}</div></div></div>`;
+    });
+    html+=`<div style="margin-top:.9rem;color:var(--gold);font-size:.8rem;font-weight:700">+1 ticket awarded</div></div>`;
+    $("main").innerHTML=html;
+  } catch(e){ notify("Save failed","err"); }
+}
+
+// ══════════════════════════════════════════════════════════
+// EVENT 4 — BREATHER
+// ══════════════════════════════════════════════════════════
+function renderBreather(){
+  const ev=EVENTS.find(e=>e.id==="breather");
+  const t=timeUntil(ev.date);
+  if(t&&!me?.demo) return evHdr(ev)+cdHTML(ev.date,"Event begins in");
+  return evHdr(ev)+`<div class="card" style="text-align:center;padding:2.25rem 1.5rem">
+    <div style="font-family:'Black Ops One',sans-serif;font-size:1.4rem;letter-spacing:.08em;color:var(--gold);text-shadow:var(--glow-sm);margin-bottom:1.1rem">Codes</div>
+    <p style="color:var(--text2);font-size:.83rem;margin-bottom:.55rem;max-width:500px;margin-inline:auto">Some may have found some but most probably didn't. I've hidden them everywhere — in announcements, on the nation page.</p>
+    <p style="color:var(--text2);font-size:.83rem;margin-bottom:.55rem">But today is different.</p>
+    <p style="color:var(--gold);font-weight:700;font-size:.88rem;margin-bottom:.55rem">I will send them to you — or my bot will, to be more exact.</p>
+    <p style="color:var(--text2);font-size:.83rem;margin-bottom:.55rem">You have <strong style="color:var(--gold2)">5 minutes</strong> to redeem it. Miss it, someone else gets a chance.</p>
+    <div class="divider"></div>
+    <p style="color:var(--text3);font-size:.74rem">Redeem codes via DM using the box at the top. Rewards: 1st = 10 🎫 · 2nd = 7 · 3rd = 5 · 4th = 3</p>
+    <p style="color:var(--text3);font-size:.72rem;margin-top:.3rem;font-style:italic">Breather round while the final event is prepared — enjoy 🙂</p>
   </div>`;
 }
 
-let cdInterval = null;
-function startCdTick(dateStr) {
-  clearInterval(cdInterval);
-  cdInterval = setInterval(() => tickCountdown(dateStr), 1000);
+// ══════════════════════════════════════════════════════════
+// EVENT 5 — CASINO
+// ══════════════════════════════════════════════════════════
+function renderCasino(){
+  const ev=EVENTS.find(e=>e.id==="casino");
+  const t=timeUntil(ev.date);
+  if(t&&!me?.demo) return evHdr(ev)+cdHTML(ev.date,"Casino opens in");
+  return evHdr(ev)+`
+  <div class="card"><div class="card-title">House Rules</div>
+    <p style="color:var(--text2);font-size:.83rem">Gamble your tickets. Coin flip only works under 100 tickets. You lose the bet if you lose.</p>
+  </div>
+  <div class="grid2">
+    <div class="cgame"><h3>🪙 Coin Flip</h3>
+      <p style="color:var(--text3);font-size:.7rem;margin-bottom:.5rem">Doubles bet · only under 100 tickets</p>
+      <div class="coin" id="coin">🪙</div>
+      <div class="cresult" id="cfr">—</div>
+      <input class="binput" type="number" id="cfb" value="1" min="1">
+      <button class="btn btn-primary btn-sm" onclick="playCF()" style="width:auto;padding:.38rem 1rem">Flip</button>
+    </div>
+    <div class="cgame"><h3>🎰 Slots</h3>
+      <p style="color:var(--text3);font-size:.7rem;margin-bottom:.5rem">3 match = 3× · 💎💎💎 = 5× · 2 match = 0.5×</p>
+      <div class="reels"><div class="reel" id="sl0">🍒</div><div class="reel" id="sl1">🍋</div><div class="reel" id="sl2">🍊</div></div>
+      <div class="cresult" id="slr">—</div>
+      <input class="binput" type="number" id="slb" value="1" min="1">
+      <button class="btn btn-primary btn-sm" onclick="playSlots()" style="width:auto;padding:.38rem 1rem">Spin</button>
+    </div>
+    <div class="cgame"><h3>🔫 Russian Roulette</h3>
+      <p style="color:var(--text3);font-size:.7rem;margin-bottom:.5rem">Solo win = +bet · Multi bet 5, win = +25</p>
+      <div class="chambers" id="chmbrs">${Array.from({length:6},(_,i)=>`<div class="chamber" id="ch${i}">🔵</div>`).join("")}</div>
+      <div class="cresult" id="rrr">—</div>
+      <div style="display:flex;gap:.38rem;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-danger btn-sm" onclick="playRR(1,true)">Solo (1)</button>
+        <button class="btn btn-primary btn-sm" style="width:auto" onclick="playRR(5,false)">Multi (5)</button>
+      </div>
+    </div>
+    <div class="cgame"><h3>🎲 High Dice</h3>
+      <p style="color:var(--text3);font-size:.7rem;margin-bottom:.5rem">Roll 5 or 6 → win 1.5× bet</p>
+      <div style="font-size:2.4rem;margin:.65rem 0" id="dicedisplay">🎲</div>
+      <div class="cresult" id="dr">—</div>
+      <input class="binput" type="number" id="db" value="1" min="1">
+      <button class="btn btn-primary btn-sm" onclick="playDice()" style="width:auto;padding:.38rem 1rem">Roll</button>
+    </div>
+  </div>`;
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
-$("auth-loading").style.display = "none";
-loadUser();
+const DE=["","⚀","⚁","⚂","⚃","⚄","⚅"];
 
-// Enter key for redeem
-document.addEventListener("keydown", e => {
-  if (e.key === "Enter" && document.activeElement?.id === "code-input") handleRedeem();
+async function casinoCall(game,bet,extra={}){
+  if(me?.demo){
+    // Simulate locally, no save
+    const won=Math.random()<.45;
+    return {won, diff:won?bet:-bet, total:me.tickets+(won?bet:-bet), simulated:true, ...extra};
+  }
+  return api(`/casino/${game}`,"POST",{discord_id:me.discord_id,bet,...extra});
+}
+
+async function playCF(){
+  const b=parseInt($("cfb")?.value)||1;
+  if(!me?.demo&&me.tickets>=100){ notify("Disabled above 100 tickets","err"); return; }
+  const r=await casinoCall("coinflip",b);
+  if(r.error){ notify(r.error,"err"); return; }
+  if(!me.demo){me.tickets=r.total;renderAuth();}
+  const c=$("coin"); c.classList.add("flip"); setTimeout(()=>c.classList.remove("flip"),900);
+  $("cfr").innerHTML=r.won?`<span class="ok">✅ +${b} (${r.total})</span>`:`<span class="err">❌ -${b} (${r.total})</span>`;
+}
+
+async function playSlots(){
+  const b=parseInt($("slb")?.value)||1;
+  const syms=["🍒","🍋","🍊","⭐","💎","7️⃣"];
+  const reels=[0,1,2].map(()=>syms[Math.floor(Math.random()*syms.length)]);
+  for(let i=0;i<3;i++){const e=$(`sl${i}`);if(e){e.classList.add("spin");setTimeout(()=>e.classList.remove("spin"),400+i*100);}}
+  const r=await casinoCall("slots",b,{reels});
+  if(r.error){ notify(r.error,"err"); return; }
+  if(!me.demo){me.tickets=r.total;renderAuth();}
+  setTimeout(()=>{
+    (r.reels||reels).forEach((v,i)=>{const e=$(`sl${i}`);if(e)e.textContent=v;});
+    $("slr").innerHTML=r.diff>0?`<span class="ok">+${r.diff} (${r.total})</span>`:`<span class="err">${r.diff} (${r.total})</span>`;
+  },600);
+}
+
+async function playRR(bet,solo){
+  const r=await casinoCall("roulette",bet,{solo});
+  if(r.error){ notify(r.error,"err"); return; }
+  if(!me.demo){me.tickets=r.total;renderAuth();}
+  const chamber=r.chamber||(r.won?Math.floor(Math.random()*5)+2:1);
+  document.querySelectorAll(".chamber").forEach((el,i)=>{el.className="chamber";el.textContent="🔵";
+    if(i===chamber-1){el.classList.add(r.won?"safe":"danger");el.textContent=r.won?"✅":"💥";}});
+  $("rrr").innerHTML=r.won?`<span class="ok">Survived! +${Math.abs(r.diff)} (${r.total})</span>`:`<span class="err">💀 BANG! -${Math.abs(r.diff)} (${r.total})</span>`;
+}
+
+async function playDice(){
+  const b=parseInt($("db")?.value)||1;
+  const roll=1+Math.floor(Math.random()*6);
+  const r=await casinoCall("dice",b,{roll});
+  if(r.error){ notify(r.error,"err"); return; }
+  if(!me.demo){me.tickets=r.total;renderAuth();}
+  $("dicedisplay").textContent=DE[r.roll||roll];
+  $("dr").innerHTML=r.won?`<span class="ok">Rolled ${r.roll||roll}! +${Math.abs(r.diff)} (${r.total})</span>`:`<span class="err">Rolled ${r.roll||roll}. -${Math.abs(r.diff)} (${r.total})</span>`;
+}
+
+// ══════════════════════════════════════════════════════════
+// LEADERBOARD
+// ══════════════════════════════════════════════════════════
+async function renderLB(m){
+  m.innerHTML=`<div class="evhdr"><div class="evhdr-title">🏆 Leaderboard</div></div><div class="loading">Loading…</div>`;
+  try {
+    const lb=await api("/tickets/leaderboard");
+    let html=`<div class="evhdr"><div class="evhdr-title">🏆 Leaderboard</div></div><div class="card">`;
+    if(!lb.length) html+=`<p style="color:var(--text3);font-size:.83rem;padding:.5rem">No entries yet.</p>`;
+    lb.forEach((row,i)=>{
+      const rc=i===0?"r1":i===1?"r2":i===2?"r3":"";
+      const isMe=!me?.demo&&me?.discord_id===row.discord_id;
+      html+=`<div class="lb-row" style="${isMe?"background:rgba(245,196,0,.03)":""}">
+        <div class="lb-rank ${rc}">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1}</div>
+        <div class="lb-name">${isMe?`<span class="gold">@${row.username}</span>`:row.username||row.discord_id}${isMe?` <span class="tag tag-gold">You</span>`:""}</div>
+        <div class="lb-val">🎫 ${row.tickets}</div>
+      </div>`;
+    });
+    m.innerHTML=html+`</div>`;
+  } catch{ m.innerHTML=`<p style="color:var(--red);padding:2rem">Failed to load leaderboard.</p>`; }
+}
+
+// ══════════════════════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════════════════════
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&document.activeElement?.id==="key-in") doLogin();
+  if(e.key==="Enter"&&document.activeElement?.id==="code-in") handleRedeem();
 });
+
+(async()=>{
+  const ok=await restoreSession();
+  if(ok) launch();
+})();
 </script>
 </body>
 </html>
