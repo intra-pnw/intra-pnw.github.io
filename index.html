@@ -101,29 +101,38 @@ main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
 .rtable tr:last-child td{border-bottom:none}
 .gold{color:var(--gold);font-weight:700}
 
-/* TRIVIA */
+/* TRIVIA — one at a time */
 .qcard{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.95rem;margin-bottom:.7rem}
 .qt{font-weight:700;margin-bottom:.55rem;line-height:1.5;font-size:.86rem}
 .hard-tag{font-size:.6rem;background:rgba(255,170,0,.12);color:var(--amber);border:1px solid rgba(255,170,0,.28);border-radius:2px;padding:.07rem .3rem;margin-left:.3rem;vertical-align:middle;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em}
-.choices{display:grid;grid-template-columns:1fr 1fr;gap:.35rem}
-.choice{background:var(--panel);border:1px solid var(--border2);color:var(--text);border-radius:2px;padding:.44rem .75rem;cursor:pointer;font-family:'Barlow',sans-serif;font-size:.8rem;text-align:left;transition:all .13s}
+.choices-row{display:flex;gap:.35rem;flex-wrap:wrap}
+.choice{background:var(--panel);border:1px solid var(--border2);color:var(--text);border-radius:2px;padding:.44rem .75rem;cursor:pointer;font-family:'Barlow',sans-serif;font-size:.8rem;text-align:left;transition:all .13s;min-width:120px}
 .choice:hover{border-color:var(--gold3);color:var(--gold2)}
 .choice.sel{border-color:var(--gold);color:var(--gold);background:rgba(245,196,0,.07)}
+.choice.correct{border-color:var(--green);color:var(--green);background:rgba(68,255,136,.07)}
+.choice.wrong{border-color:var(--red);color:var(--red);background:rgba(255,51,68,.07)}
+.q-progress{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.65rem}
+.q-nav{display:flex;align-items:center;gap:.65rem;margin-top:.85rem}
+.answer-reveal{margin-top:.6rem;padding:.55rem .75rem;border-radius:2px;font-size:.78rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em}
+.answer-reveal.ok{background:rgba(68,255,136,.08);border:1px solid rgba(68,255,136,.25);color:var(--green)}
+.answer-reveal.bad{background:rgba(255,51,68,.08);border:1px solid rgba(255,51,68,.25);color:var(--red)}
 
 /* BOSS SCENE */
-.scene-wrap{position:relative;width:100%;height:280px;border:1px solid var(--border2);border-radius:2px;overflow:hidden;margin-bottom:1rem;background:#0a1a06}
+.scene-wrap{position:relative;width:100%;height:320px;border:1px solid var(--border2);border-radius:2px;overflow:hidden;margin-bottom:1rem}
 .scene-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
-.scene-hp{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:80%;text-align:center}
-.scene-hp-track{width:100%;height:14px;background:rgba(0,0,0,.6);border-radius:2px;overflow:hidden;border:1px solid #5a1010}
-.scene-hp-fill{height:100%;background:linear-gradient(90deg,#7f0000,#ff3344);border-radius:2px;transition:width .6s}
-.scene-hp-lbl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;color:#ff8899;letter-spacing:.08em;margin-top:.2rem}
-.boss-name-lbl{font-family:'Black Ops One',sans-serif;font-size:1.1rem;letter-spacing:.06em;color:var(--red);text-align:center;text-shadow:0 0 20px rgba(255,51,68,.3);margin-bottom:.65rem}
+.boss-name-lbl{font-family:'Black Ops One',sans-serif;font-size:1.1rem;letter-spacing:.06em;color:var(--red);text-align:center;margin-bottom:.35rem}
+
+/* XP bar */
+.xp-track-wrap{margin-bottom:.75rem}
+.xp-row{display:flex;justify-content:space-between;align-items:center;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.22rem}
+.xp-track{width:100%;height:7px;background:var(--border2);border-radius:2px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:2px;transition:width .4s}
 
 /* BOSS PHASE BUTTONS */
 .phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin:.85rem 0}
 .phase-btn{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.9rem .5rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-align:center;transition:all .15s;color:var(--text2)}
 .phase-btn:hover{border-color:var(--gold3);color:var(--gold2)}
-.phase-btn .pi{font-size:1.6rem;display:block;margin-bottom:.3rem}
+.phase-btn .pi{font-size:.95rem;display:block;margin-bottom:.3rem;font-family:'Black Ops One',sans-serif}
 .phase-btn .pn{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .phase-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(245,196,0,.06)}
 
@@ -131,7 +140,7 @@ main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
 .class-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.65rem 0}
 .class-btn{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.85rem;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .14s;text-align:center}
 .class-btn:hover{border-color:var(--gold3)}.class-btn.sel{border-color:var(--gold);box-shadow:var(--glow-sm)}
-.class-icon{font-size:1.8rem;display:block;margin-bottom:.28rem}
+.class-icon{font-size:1rem;display:block;margin-bottom:.28rem;font-family:'Black Ops One',sans-serif;color:var(--gold3)}
 .class-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
 .class-desc{font-size:.67rem;color:var(--text2);margin-top:.1rem}
 
@@ -155,6 +164,17 @@ main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
 .party-member .pm-name{flex:1;font-weight:600}
 .party-member .pm-class{font-size:.7rem;color:var(--text2);font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase}
 
+/* CRITICAL HIT MINIGAME */
+.crit-modal{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center}
+.crit-box{background:var(--panel);border:2px solid var(--gold);border-radius:4px;padding:1.75rem;max-width:420px;width:90%;text-align:center;box-shadow:var(--glow)}
+.crit-title{font-family:'Black Ops One',sans-serif;font-size:1.1rem;color:var(--gold);letter-spacing:.07em;margin-bottom:.5rem}
+.crit-timer{font-family:'Black Ops One',sans-serif;font-size:2.4rem;color:var(--red);margin:.5rem 0}
+.crit-prompt{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;color:var(--text2);margin-bottom:.75rem;letter-spacing:.05em}
+.crit-target{font-family:'Black Ops One',sans-serif;font-size:1.3rem;color:var(--gold2);margin-bottom:.75rem;letter-spacing:.1em;background:var(--bg2);padding:.5rem;border-radius:2px}
+.crit-input{width:100%;background:var(--bg2);border:1px solid var(--border2);color:var(--gold2);border-radius:2px;padding:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.14em;text-transform:uppercase;text-align:center}
+.crit-input:focus{outline:none;border-color:var(--gold)}
+.crit-hint{font-size:.7rem;color:var(--text3);margin-top:.45rem}
+
 /* GUESS */
 .ginput{width:100%;background:var(--panel);border:1px solid var(--border2);color:var(--text);border-radius:2px;padding:.42rem .75rem;font-family:'Barlow',sans-serif;font-size:.82rem;transition:border-color .2s}
 .ginput:focus{outline:none;border-color:var(--gold)}
@@ -169,18 +189,17 @@ main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
 .reel{width:48px;height:48px;background:var(--bg2);border:1px solid var(--border2);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
 .reel.spin{animation:rspin .4s ease}
 @keyframes rspin{0%{transform:rotateX(0)}50%{transform:rotateX(180deg)}100%{transform:rotateX(360deg)}}
-.coin{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold2),var(--gold3));margin:.7rem auto;font-size:1.5rem;display:flex;align-items:center;justify-content:center;box-shadow:var(--glow-sm)}
+.coin{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold2),var(--gold3));margin:.7rem auto;font-family:'Black Ops One',sans-serif;font-size:.85rem;color:var(--bg);display:flex;align-items:center;justify-content:center;box-shadow:var(--glow-sm)}
 .coin.flip{animation:cflip .8s ease}
 @keyframes cflip{0%{transform:rotateY(0)}50%{transform:rotateY(900deg)}100%{transform:rotateY(1080deg)}}
 .chambers{display:flex;justify-content:center;gap:.3rem;margin:.65rem 0;flex-wrap:wrap}
-.chamber{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .3s}
-.chamber.danger{background:var(--red);border-color:var(--red)}.chamber.safe{background:var(--green);border-color:var(--green)}
+.chamber{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--text3);transition:all .3s}
+.chamber.danger{background:var(--red);border-color:var(--red);color:#fff}.chamber.safe{background:var(--green);border-color:var(--green);color:#000}
 .chamber.active-shot{border-color:var(--gold);box-shadow:var(--glow-sm)}
 
 /* POKER */
 .poker-room{background:radial-gradient(ellipse at 50% 50%,#0d2a0d,#050f05);border:1px solid #1a4a1a;border-radius:4px;padding:1.5rem;margin-top:.5rem}
 .poker-table{background:radial-gradient(ellipse at 50% 50%,#1a4a1a,#0d2a0d);border:3px solid #2a6a2a;border-radius:50%;width:100%;max-width:480px;height:200px;margin:0 auto 1rem;position:relative;display:flex;align-items:center;justify-content:center}
-.community-cards{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap}
 .player-seats{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-top:.75rem}
 .seat{background:rgba(0,0,0,.4);border:1px solid #1a4a1a;border-radius:3px;padding:.65rem;text-align:center}
 .seat.active-seat{border-color:var(--gold);box-shadow:var(--glow-sm)}
@@ -188,14 +207,20 @@ main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
 .seat-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.08em;color:var(--text2);margin-bottom:.35rem}
 .seat-cards{display:flex;gap:.25rem;justify-content:center;margin-bottom:.3rem}
 .seat-chips{font-size:.7rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700}
-.card-svg{width:36px;height:50px;border-radius:3px;border:1px solid #333}
-.card-back{background:linear-gradient(135deg,#1a0050,#3a00a0);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
-.poker-actions{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;margin-top:.75rem}
-.poker-pot{font-family:'Black Ops One',sans-serif;font-size:.9rem;color:var(--gold);text-align:center;letter-spacing:.06em;margin:.5rem 0}
 .card-widget{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:36px;height:50px;border-radius:3px;border:1px solid #555;font-size:.88rem;line-height:1;font-weight:700;font-family:'Barlow Condensed',sans-serif;cursor:default;user-select:none}
 .card-widget.red{background:#fff;color:#cc0000}
 .card-widget.black{background:#fff;color:#111}
+.card-widget.back{background:linear-gradient(135deg,#1a0050,#3a00a0);color:#8866cc;border-color:#4422aa}
 .card-widget .rank{font-size:.78rem;line-height:1}.card-widget .suit{font-size:1rem;line-height:1}
+.poker-pot{font-family:'Black Ops One',sans-serif;font-size:.9rem;color:var(--gold);text-align:center;letter-spacing:.06em;margin:.5rem 0}
+.poker-actions{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;margin-top:.75rem}
+
+/* INVITE NOTIFICATION */
+.invite-notif{position:fixed;top:4rem;right:1.2rem;z-index:999;background:var(--panel);border:1px solid var(--border3);border-left:3px solid var(--gold);border-radius:2px;padding:.85rem 1rem;max-width:260px;font-family:'Barlow Condensed',sans-serif;display:none;animation:nsin .22s ease;box-shadow:var(--glow-sm)}
+.invite-notif.show{display:block}
+.invite-title{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem}
+.invite-text{font-size:.8rem;color:var(--text2);margin-bottom:.65rem}
+.invite-btns{display:flex;gap:.45rem}
 
 /* LB */
 .lb-row{display:flex;align-items:center;gap:.8rem;padding:.52rem .8rem;border-bottom:1px solid var(--border)}
@@ -217,6 +242,27 @@ main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
 @keyframes nsin{from{transform:translateX(110%)}to{transform:translateX(0)}}
 .sav{position:fixed;top:.55rem;right:.55rem;z-index:200;background:var(--panel);border:1px solid var(--border2);border-radius:2px;padding:.22rem .65rem;font-size:.66rem;color:var(--text3);display:none;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase}
 .sav.show{display:block}
+
+/* MINIGAME OVERLAY */
+.minigame-wrap{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:1rem;margin-top:.75rem}
+.minigame-title{font-family:'Black Ops One',sans-serif;font-size:.8rem;letter-spacing:.07em;color:var(--gold3);margin-bottom:.6rem}
+.minigame-canvas{display:block;width:100%;height:140px;background:var(--bg2);border:1px solid var(--border);border-radius:2px;cursor:pointer}
+.minigame-score{font-family:'Black Ops One',sans-serif;font-size:.95rem;color:var(--gold);text-align:center;margin:.5rem 0}
+
+/* Roulette multiplier display */
+.mult-display{font-family:'Black Ops One',sans-serif;font-size:1.4rem;color:var(--gold);text-align:center;margin:.5rem 0;text-shadow:var(--glow-sm)}
+.mult-track{display:flex;gap:.25rem;justify-content:center;margin:.5rem 0}
+.mult-step{width:38px;height:38px;border-radius:2px;border:1px solid var(--border2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;color:var(--text3);transition:all .3s;flex-direction:column;gap:1px}
+.mult-step.done{border-color:var(--green);background:rgba(68,255,136,.08);color:var(--green)}
+.mult-step.dead{border-color:var(--red);background:rgba(255,51,68,.08);color:var(--red)}
+.mult-step .ms-label{font-size:.55rem;letter-spacing:.06em;text-transform:uppercase}
+.mult-step .ms-val{font-size:.78rem;font-weight:900}
+
+/* Heal target picker */
+.heal-target-list{display:flex;flex-direction:column;gap:.3rem;margin:.5rem 0}
+.heal-target-btn{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.45rem .75rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;text-align:left;transition:all .14s;display:flex;align-items:center;gap:.5rem;color:var(--text2)}
+.heal-target-btn:hover{border-color:var(--green);color:var(--green)}
+.htb-hp{font-size:.65rem;color:var(--text3);margin-left:auto}
 </style>
 </head>
 <body>
@@ -228,21 +274,17 @@ main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
          onerror="this.style.display='none';document.getElementById('llogo-txt').style.display='block'">
     <div class="llogo" id="llogo-txt" style="display:none">INTRA</div>
     <div class="lsub">Events Portal</div>
-
-    <!-- Step 1: Key -->
     <div id="step-key">
       <label class="llabel" for="key-in">Access Key</label>
       <input class="linput" id="key-in" type="text" placeholder="INTRA-XXXX-XXXX" maxlength="15" autocomplete="off" spellcheck="false">
       <div id="lerr"></div>
-      <button class="btn btn-primary" onclick="doLogin()">Enter →</button>
+      <button class="btn btn-primary" onclick="doLogin()">Enter</button>
     </div>
-
-    <!-- Step 2: Pick name (shown after valid key for new users) -->
     <div id="step-name" class="name-step">
       <label class="llabel" for="name-in">Choose a display name</label>
       <input class="linput" id="name-in" type="text" placeholder="Your name (max 20 chars)" maxlength="20" autocomplete="off">
       <div id="nerr" style="color:var(--red);font-size:.76rem;min-height:1em;margin-bottom:.55rem"></div>
-      <button class="btn btn-primary" onclick="confirmName()">Set Name →</button>
+      <button class="btn btn-primary" onclick="confirmName()">Set Name</button>
     </div>
   </div>
 </div>
@@ -257,29 +299,35 @@ main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
     </div>
     <div id="auth-bar"></div>
   </header>
-  <div class="demo-bar" id="demo-bar">⚠ DEMO MODE — all events playable, nothing saves, no tickets awarded</div>
-
-  <!-- TABS -->
+  <div class="demo-bar" id="demo-bar">DEMO MODE — all events playable, nothing saves, no tickets awarded</div>
   <nav class="tabs" id="tabs"></nav>
-  <main id="main"><div class="loading">Loading…</div></main>
+  <main id="main"><div class="loading">Loading...</div></main>
 </div>
+
 <div class="notif" id="notif"></div>
-<div class="sav" id="sav">Saving…</div>
+<div class="sav" id="sav">Saving...</div>
+<div class="invite-notif" id="invite-notif">
+  <div class="invite-title">Party Invite</div>
+  <div class="invite-text" id="invite-text"></div>
+  <div class="invite-btns">
+    <button class="btn btn-green btn-sm" onclick="acceptInvite()">Accept</button>
+    <button class="btn btn-danger btn-sm" onclick="declineInvite()">Decline</button>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════════════════════
-// CONFIG
 const WORKER  = "https://your-worker.your-subdomain.workers.dev";
 const DEMO_KEY = "INTRA-Q5KR-BC8F";
 const GA = {0:"blue",1:"pizza",2:"rpg",3:"japan",4:"coffee",5:"night owl",6:"cats",7:"winter",8:"pc",9:"metal"};
 
-// Event dates — UTC midnight
+// Events — only show an event if it has started (or demo mode)
 const EVENTS = [
-  {id:"trivia",   title:"Trivia Night",           date:"2025-06-05T00:00:00Z", emoji:"🧠", idx:0},
-  {id:"boss",     title:"Boss Raid",               date:"2025-06-10T00:00:00Z", emoji:"⚔️",  idx:1},
-  {id:"guess",    title:"Guessing Games",          date:"2025-06-15T00:00:00Z", emoji:"🎯", idx:2},
-  {id:"breather", title:"Breathe In, Breathe Out", date:"2025-06-20T00:00:00Z", emoji:"💨", idx:3},
-  {id:"casino",   title:"Casino Night",            date:"2025-06-25T00:00:00Z", emoji:"🎰", idx:4},
+  {id:"trivia",   title:"Trivia Night",           date:"2025-06-05T00:00:00Z", idx:0},
+  {id:"boss",     title:"Boss Raid",               date:"2025-06-10T00:00:00Z", idx:1},
+  {id:"guess",    title:"Guessing Games",          date:"2025-06-15T00:00:00Z", idx:2},
+  {id:"breather", title:"Breathe In, Breathe Out", date:"2025-06-20T00:00:00Z", idx:3},
+  {id:"casino",   title:"Casino Night",            date:"2025-06-25T00:00:00Z", idx:4},
 ];
 // ══════════════════════════════════════════════════════════
 
@@ -290,12 +338,23 @@ async function api(path, method="GET", body=null){
   return r.json();
 }
 
-// ── STATE ─────────────────────────────────────────────────
-let me=null, activeTab=null, triviaAns={}, guessAns={};
+let me=null, activeTab=null;
+let triviaAns={}, triviaQIdx=0, triviaRevealed=false;
+let guessAns={};
 let bossPlayer=null, bossTimer=null, cdTick=null;
-let tempKey=null; // key held between step 1 and step 2
+let tempKey=null;
+let _selCls=null, _bossPhase="class", _bossRaid=null, _partyList=[];
+let _pendingInvite=null;
+let _casinoTab="coinflip";
+let _poker={players:[],hands:{},community:[],deck:[],pot:0,phase:"setup",bet:5,turn:0,bets:{},folded:new Set(),started:false};
+let _rrMode="solo", _rrPlayers=[], _rrTurn=0, _rrBet=1, _rrPot=0, _rrAlive=[];
+let _selShots=1;
+// crit hit minigame state
+let _critActive=false, _critTimer=null, _critResolve=null;
+// boss animations
+let _bossFlinch=false, _flinchTimer=null;
+let _bossAnimFrame=null;
 
-// ── UTILS ─────────────────────────────────────────────────
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function showSav(v){$("sav").className=v?"sav show":"sav"}
@@ -307,8 +366,7 @@ function fmtDate(d){return new Date(d).toLocaleDateString("en-GB",{day:"numeric"
 function fmtUTC(d){const dt=new Date(d);return dt.toUTCString().replace("GMT","UTC")}
 function timeUntil(ds){
   const diff=new Date(ds)-Date.now();if(diff<=0)return null;
-  return{d:Math.floor(diff/86400000),h:Math.floor(diff%86400000/3600000),
-         m:Math.floor(diff%3600000/60000),s:Math.floor(diff%60000/1000)};
+  return{d:Math.floor(diff/86400000),h:Math.floor(diff%86400000/3600000),m:Math.floor(diff%3600000/60000),s:Math.floor(diff%60000/1000)};
 }
 function cdHTML(ds,label){
   const t=timeUntil(ds);if(!t)return"";
@@ -332,15 +390,16 @@ function startCd(ds){
   },1000);
 }
 function evHdr(ev){
-  return`<div class="evhdr"><div class="evtitle">${ev.emoji} ${ev.title}</div>
-    <div class="evdate">📅 ${fmtDate(ev.date)} UTC</div></div>`;
+  return`<div class="evhdr"><div class="evtitle">${ev.title}</div>
+    <div class="evdate">Date: ${fmtDate(ev.date)} UTC</div></div>`;
 }
 function isLive(ev){return me?.demo||!timeUntil(ev.date)}
+// Only show event if it has started (or first event always visible for countdown)
 function isVisible(ev){
   if(me?.demo)return true;
-  if(ev.idx===0)return true;
+  if(ev.idx===0)return true;   // always show first as countdown
   const prev=EVENTS[ev.idx-1];
-  return!timeUntil(prev.date);
+  return!timeUntil(prev.date); // only show once previous event started
 }
 function isGone(ev){
   if(me?.demo)return false;
@@ -356,19 +415,15 @@ async function doLogin(){
     localStorage.setItem("intra_sess",JSON.stringify({key,discord_id:"DEMO",username:"demo_user",demo:true}));
     launch();return;
   }
-  $("lerr").textContent="Checking…";
+  $("lerr").textContent="Checking...";
   try{
     const r=await api("/auth/validate","POST",{key});
     if(!r.valid){$("lerr").textContent=r.error||"Invalid key.";return}
-    // If first claim, ask for name
     if(!r.username||r.username===r.discord_id){
       tempKey=key;
-      Object.assign(r,{pending_name:true});
-      // Store partial session
       localStorage.setItem("intra_sess",JSON.stringify({key,discord_id:r.discord_id,username:r.discord_id,demo:false,pending_name:true}));
       me={discord_id:r.discord_id,username:r.discord_id,tickets:r.tickets,demo:false};
-      $("step-key").style.display="none";
-      $("step-name").style.display="block";
+      $("step-key").style.display="none";$("step-name").style.display="block";
       return;
     }
     me={discord_id:r.discord_id,username:r.username,tickets:r.tickets,demo:false};
@@ -380,7 +435,7 @@ async function doLogin(){
 async function confirmName(){
   const name=($("name-in")?.value||"").trim();
   if(name.length<2){$("nerr").textContent="At least 2 characters.";return}
-  $("nerr").textContent="Saving…";
+  $("nerr").textContent="Saving...";
   try{
     await api("/auth/set_name","POST",{discord_id:me.discord_id,name});
     me.username=name;
@@ -407,7 +462,7 @@ async function restoreSession(){
       me={discord_id:s.discord_id,username:s.discord_id,tickets:0,demo:false};
       tempKey=s.key;
       $("step-key").style.display="none";$("step-name").style.display="block";
-      return false; // don't auto-launch, wait for name
+      return false;
     }
     const r=await api("/auth/validate","POST",{key:s.key});
     if(!r.valid){localStorage.removeItem("intra_sess");return false}
@@ -419,14 +474,16 @@ async function restoreSession(){
 function launch(){
   $("login-wall").classList.add("gone");
   if(me?.demo)$("demo-bar").classList.add("show");
-  renderAuth();buildTabs();showTab("home");
+  renderAuth();buildTabs();
+  // Show first visible event
+  const first=EVENTS.find(e=>isVisible(e)&&!isGone(e));
+  showTab(first?first.id:"trivia");
 }
 
-// ── AUTH BAR ──────────────────────────────────────────────
 function renderAuth(){
   if(!me){$("auth-bar").innerHTML="";return}
   const ini=me.username.slice(0,2).toUpperCase();
-  const badge=me.demo?`<span class="tag tag-dim">Demo</span>`:`<span class="tbadge">🎫 ${me.tickets}</span>`;
+  const badge=me.demo?`<span class="tag tag-dim">Demo</span>`:`<span class="tbadge">[T] ${me.tickets}</span>`;
   $("auth-bar").innerHTML=`<div class="upill"><div class="uav">${ini}</div><div class="uname">@${me.username}</div></div>${badge}<button class="btn btn-ghost btn-sm" onclick="doLogout()">Logout</button>`;
 }
 
@@ -436,22 +493,21 @@ async function refreshTickets(){
   me.tickets=r.tickets??me.tickets;renderAuth();
 }
 
-// ── TABS ──────────────────────────────────────────────────
 function buildTabs(){
   const visible=EVENTS.filter(e=>isVisible(e)&&!isGone(e));
   $("tabs").innerHTML=
-    `<button class="tab-btn ${activeTab==="home"?"active":""}" onclick="showTab('home')">Home</button>`
-    +`<button class="tab-btn ${activeTab==="redeem"?"active":""}" onclick="showTab('redeem')">🎫 Redeem</button>`
+    `<button class="tab-btn ${activeTab==="redeem"?"active":""}" onclick="showTab('redeem')">[T] Redeem</button>`
     +visible.map(e=>`<button class="tab-btn ${activeTab===e.id?"active":""}" onclick="showTab('${e.id}')">
-      ${e.emoji} ${e.title}<span class="edate">${fmtDate(e.date)}</span></button>`).join("")
-    +`<button class="tab-btn ${activeTab==="lb"?"active":""}" onclick="showTab('lb')">🏆 Leaderboard</button>`;
+      ${e.title}<span class="edate">${fmtDate(e.date)}</span></button>`).join("")
+    +`<button class="tab-btn ${activeTab==="lb"?"active":""}" onclick="showTab('lb')">[#] Leaderboard</button>`;
 }
 
 function showTab(id){
-  activeTab=id;buildTabs();clearInterval(bossTimer);
+  activeTab=id;buildTabs();
+  clearInterval(bossTimer);
+  if(_bossAnimFrame){cancelAnimationFrame(_bossAnimFrame);_bossAnimFrame=null}
   const m=$("main");
   ({
-    home:   ()=>{m.innerHTML=renderHome()},
     redeem: ()=>{m.innerHTML=renderRedeem()},
     trivia: ()=>renderTrivia(m),
     boss:   ()=>renderBoss(m),
@@ -462,35 +518,15 @@ function showTab(id){
   }[id]||(() => m.innerHTML="<p>Coming soon.</p>"))();
 }
 
-// ── HOME ──────────────────────────────────────────────────
-function renderHome(){
-  return`<div class="evhdr"><div class="evtitle">Welcome, @${me?.username||"Guest"}</div><div class="evdate">INTRA Events · June 2025</div></div>
-  <div class="grid2">
-    ${EVENTS.map(e=>{
-      const gone=isGone(e),live=isLive(e),vis=isVisible(e);
-      const locked=!vis;
-      return`<div class="card" style="${gone?"opacity:.3":""}">
-        <div style="font-size:1.6rem;margin-bottom:.3rem">${e.emoji}</div>
-        <div style="font-family:'Black Ops One',sans-serif;font-size:.9rem;letter-spacing:.05em;color:var(--gold);margin-bottom:.18rem">${e.title}</div>
-        <div style="color:var(--text3);font-size:.7rem;margin-bottom:.55rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase">📅 ${fmtDate(e.date)} UTC</div>
-        ${gone?`<span class="tag tag-dim">Completed</span>`:locked?`<span class="tag tag-dim">Locked</span>`:live?`<button class="btn btn-ghost btn-sm" onclick="showTab('${e.id}')">Play →</button>`:`<span class="tag tag-dim">Upcoming</span>`}
-      </div>`;
-    }).join("")}
-  </div>
-  <div class="card"><div class="ctitle">How Tickets Work</div>
-    <p style="color:var(--text2);font-size:.82rem;line-height:1.75">Participate in events, redeem codes, and climb the leaderboard. Each event awards tickets for participation and top scores.</p>
-  </div>`;
-}
-
 // ── REDEEM TAB ────────────────────────────────────────────
 function renderRedeem(){
-  return`<div class="evhdr"><div class="evtitle">🎫 Redeem Code</div><div class="evdate">Enter a code to claim your tickets</div></div>
+  return`<div class="evhdr"><div class="evtitle">Redeem Code</div><div class="evdate">Enter a code to claim your tickets</div></div>
   <div style="max-width:480px;margin:0 auto">
     <div class="card" style="text-align:center;padding:2.5rem 2rem">
       <div class="ctitle" style="margin-bottom:1.5rem">Code Redemption</div>
       <input class="linput" id="code-in" type="text" placeholder="ENTER CODE" maxlength="16" style="text-align:center;font-size:1.1rem;letter-spacing:.18em;margin-bottom:1rem">
       <div id="redeem-msg" style="min-height:1.2em;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82rem;margin-bottom:.9rem"></div>
-      <button class="btn btn-primary" onclick="handleRedeem()">Redeem →</button>
+      <button class="btn btn-primary" onclick="handleRedeem()">Redeem</button>
     </div>
     <div class="card" style="margin-top:.9rem">
       <div class="ctitle">Where to find codes</div>
@@ -508,21 +544,23 @@ async function handleRedeem(){
   if(me?.demo){notify("Demo mode — no saves","err");return}
   const code=($("code-in")?.value||"").trim().toUpperCase();
   if(!code)return;
-  const msg=$("redeem-msg");msg.textContent="Checking…";msg.className="";
+  const msg=$("redeem-msg");msg.textContent="Checking...";msg.className="";
   try{
     const r=await api("/codes/redeem","POST",{code,discord_id:me.discord_id});
-    if(r.error){msg.textContent=`❌ ${r.error}`;msg.className="err";return}
-    msg.textContent=`✅ +${r.reward} tickets!`;msg.className="ok";
-    notify(`+${r.reward} tickets! 🎫`);
+    if(r.error){msg.textContent=`! ${r.error}`;msg.className="err";return}
+    msg.textContent=`+${r.reward} tickets!`;msg.className="ok";
+    notify(`+${r.reward} tickets!`);
     me.tickets=r.total;renderAuth();
     $("code-in").value="";
-  }catch{msg.textContent="❌ Error";msg.className="err"}
+  }catch{msg.textContent="! Error";msg.className="err"}
 }
 
-// ── TRIVIA ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// TRIVIA — one question at a time, reveal answer immediately
+// ══════════════════════════════════════════════════════════
 const TQS=[
   {id:0,q:"What is the capital of France?",a:"Paris",choices:["London","Paris","Berlin","Madrid"],hard:false},
-  {id:1,q:"What is 12 × 12?",a:"144",choices:["132","144","156","168"],hard:false},
+  {id:1,q:"What is 12 x 12?",a:"144",choices:["132","144","156","168"],hard:false},
   {id:2,q:"Which planet is closest to the Sun?",a:"Mercury",choices:["Venus","Earth","Mercury","Mars"],hard:false},
   {id:3,q:"What year did World War II end?",a:"1945",choices:["1943","1944","1945","1946"],hard:false},
   {id:4,q:"What is the chemical symbol for gold?",a:"Au",choices:["Go","Ag","Au","Gd"],hard:false},
@@ -538,23 +576,58 @@ async function renderTrivia(m){
   if(!isLive(ev)){m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Event starts in");startCd(ev.date);return}
   if(!me?.demo){
     const st=await api(`/trivia/status/${me.discord_id}`);
-    if(st.done){m.innerHTML=evHdr(ev)+`<div class="card"><div class="ctitle">Already Submitted</div><p style="color:var(--text2);font-size:.82rem">Score: <span class="gold">${st.score}/10</span> — results announced after the event.</p></div>`;return}
+    if(st.done){
+      const score=Object.values(triviaAns).length?TQS.reduce((s,q)=>s+(triviaAns[q.id]===q.a?1:0),0):st.score||0;
+      m.innerHTML=evHdr(ev)+`<div class="card"><div class="ctitle">Already Submitted</div><p style="color:var(--text2);font-size:.82rem">Score: <span class="gold">${score}/10</span> — results announced after the event.</p></div>`;return}
   }
+  renderTriviaQuestion(m);
+}
+
+function renderTriviaQuestion(m){
+  const ev=EVENTS.find(e=>e.id==="trivia");
+  const q=TQS[triviaQIdx];
+  const answered=triviaAns[q.id]!==undefined;
+  const isLast=triviaQIdx===TQS.length-1;
+  const score=TQS.reduce((s,qq)=>s+(triviaAns[qq.id]===qq.a?1:0),0);
+
   let html=evHdr(ev)+`<div class="card"><div class="ctitle">Rules</div>
     <p style="color:var(--text2);font-size:.82rem;margin-bottom:.85rem">Answer all 10. Participation = <span class="gold">+2 tickets</span>. Top scores earn bonus.</p>
     <table class="rtable"><thead><tr><th>Rank</th><th>Bonus</th></tr></thead><tbody>
-      <tr><td>🥇 1st</td><td class="gold">+20</td></tr><tr><td>🥈 2nd</td><td class="gold">+15</td></tr>
-      <tr><td>🥉 3rd</td><td class="gold">+10</td></tr><tr><td>Top 10</td><td class="gold">+5</td></tr>
+      <tr><td>1st</td><td class="gold">+20</td></tr><tr><td>2nd</td><td class="gold">+15</td></tr>
+      <tr><td>3rd</td><td class="gold">+10</td></tr><tr><td>Top 10</td><td class="gold">+5</td></tr>
       <tr><td>Participation</td><td class="gold">+2</td></tr>
     </tbody></table></div>`;
-  TQS.forEach(q=>{
-    html+=`<div class="qcard"><div class="qt">Q${q.id+1}. ${q.q}${q.hard?`<span class="hard-tag">★ Hard</span>`:""}</div>
-      <div class="choices">${q.choices.map(c=>`<button class="choice" onclick="selT(${q.id},'${c}',this)">${c}</button>`).join("")}</div></div>`;
-  });
-  html+=`<button class="btn btn-primary" style="margin-top:.85rem;max-width:220px" onclick="submitTrivia()">Submit →</button>`;
+
+  html+=`<div class="qcard">
+    <div class="q-progress">Question ${triviaQIdx+1} / ${TQS.length} &nbsp;|&nbsp; Score so far: ${score}</div>
+    <div class="qt">Q${triviaQIdx+1}. ${q.q}${q.hard?`<span class="hard-tag">Hard</span>`:""}</div>
+    <div class="choices-row" id="choices-row">
+      ${q.choices.map(c=>{
+        let cls="choice";
+        if(answered){
+          if(c===q.a)cls+=" correct";
+          else if(c===triviaAns[q.id])cls+=" wrong";
+        } else if(triviaAns[q.id]===c)cls+=" sel";
+        return`<button class="choice ${answered?(c===q.a?"correct":(c===triviaAns[q.id]?"wrong":"")):"" }" onclick="${answered?"":"selT("+q.id+",'"+c+"',this)"}" ${answered?"disabled":""}>${c}</button>`;
+      }).join("")}
+    </div>
+    ${answered?`<div class="answer-reveal ${triviaAns[q.id]===q.a?"ok":"bad"}">${triviaAns[q.id]===q.a?"Correct!":"Wrong — Answer: "+q.a}</div>`:""}
+    <div class="q-nav">
+      ${triviaQIdx>0?`<button class="btn btn-ghost btn-sm" onclick="triviaNav(-1)">Back</button>`:""}
+      ${answered?(isLast?`<button class="btn btn-primary btn-sm" style="width:auto" onclick="submitTrivia()">Submit All</button>`:`<button class="btn btn-primary btn-sm" style="width:auto" onclick="triviaNav(1)">Next</button>`):(triviaAns[q.id]!==undefined?`<button class="btn btn-ghost btn-sm" onclick="triviaNav(1)">Skip</button>`:"")}
+    </div>
+  </div>`;
   m.innerHTML=html;
 }
-function selT(qid,val,btn){btn.closest(".qcard").querySelectorAll(".choice").forEach(b=>b.classList.remove("sel"));btn.classList.add("sel");triviaAns[qid]=val}
+
+function triviaNav(dir){
+  triviaQIdx=Math.max(0,Math.min(TQS.length-1,triviaQIdx+dir));
+  renderTriviaQuestion($("main"));
+}
+function selT(qid,val,btn){
+  triviaAns[qid]=val;
+  renderTriviaQuestion($("main"));
+}
 async function submitTrivia(){
   if(Object.keys(triviaAns).length<TQS.length){notify("Answer all first","err");return}
   const score=TQS.reduce((s,q)=>s+(triviaAns[q.id]===q.a?1:0),0);
@@ -562,106 +635,130 @@ async function submitTrivia(){
   try{
     const r=await api("/trivia/submit","POST",{discord_id:me.discord_id,score});
     if(r.error){notify(r.error,"err");return}
-    me.tickets=r.total;renderAuth();notify(`Submitted! ${score}/10 · +2 tickets`);
+    me.tickets=r.total;renderAuth();notify(`Submitted! ${score}/10 — +2 tickets`);
     renderTrivia($("main"));
   }catch{notify("Save failed","err")}
 }
 
-// ── BOSS RAID ─────────────────────────────────────────────
-// Phase machine: pick-class → pick-name → phase-select → [harvest|hunt|party|fight]
+// ══════════════════════════════════════════════════════════
+// BOSS RAID
+// ══════════════════════════════════════════════════════════
 const BOSS_MAX=500000;
 const CLS_STATS={assassin:{hp:800,mana:600,stamina:700,dmg:120},tank:{hp:2000,mana:400,stamina:1200,dmg:60},supporter:{hp:900,mana:1200,stamina:500,dmg:40},mage:{hp:700,mana:1500,stamina:400,dmg:100}};
-let _selCls=null, _bossPhase="class", _bossRaid=null, _partyList=[];
+const XP_PER_LEVEL=300; // lower = faster leveling
+const GATHER_CD=180000; // 3 min
+const FARM_CD=600000;   // 10 min
 
 async function renderBoss(m){
   const ev=EVENTS.find(e=>e.id==="boss");
   if(!isLive(ev)){m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Raid begins in");startCd(ev.date);return}
-
-  // Load raid state
   try{_bossRaid=me.demo?(_bossRaid||{hp:BOSS_MAX,max_hp:BOSS_MAX,players:{},log:[],active:true,turn:0}):await api("/boss/state")}
   catch{_bossRaid={hp:BOSS_MAX,max_hp:BOSS_MAX,players:{},log:[],active:true,turn:0}}
-
   bossPlayer=_bossRaid.players?.[me.discord_id]??null;
   if(bossPlayer&&_bossPhase==="class")_bossPhase="phase";
 
+  // Check if player is dead and no party
+  if(bossPlayer&&bossPlayer.hp<=0&&_bossPhase==="fight"){
+    _bossPhase="dead";
+  }
+
+  const hp=_bossRaid.hp,maxhp=_bossRaid.max_hp||BOSS_MAX;
+  const pct=Math.max(0,(hp/maxhp)*100);
+  const xpPct=bossPlayer?Math.min(100,(((bossPlayer.xp||0)%XP_PER_LEVEL)/XP_PER_LEVEL)*100):0;
+  const lvl=bossPlayer?.level||1;
+
   let inner="";
   if(_bossPhase==="class") inner=bossClassPick();
+  else if(_bossPhase==="dead") inner=bossDead();
   else inner=bossMain();
 
-  const pct=Math.max(0,(_bossRaid.hp/_bossRaid.max_hp)*100);
+  const showScene=_bossPhase==="fight"||_bossPhase==="phase";
+
   m.innerHTML=evHdr(ev)+`
-    <div class="boss-name-lbl">☠ Drak'Thul the Undying</div>
-    <div style="margin-bottom:.7rem">
-      <div class="scene-hp-track"><div class="scene-hp-fill" id="bfill" style="width:${pct}%"></div></div>
-      <div class="scene-hp-lbl" id="bhp">${_bossRaid.hp.toLocaleString()} / ${_bossRaid.max_hp.toLocaleString()} HP${!_bossRaid.active?" · DEFEATED":""}</div>
+    <div class="boss-name-lbl">Drak'Thul the Undying</div>
+    <div style="margin-bottom:.55rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--red);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.22rem">
+        <span>Boss HP</span><span>${hp.toLocaleString()} / ${maxhp.toLocaleString()}${!_bossRaid.active?" — DEFEATED":""}</span>
+      </div>
+      <div style="width:100%;height:14px;background:rgba(0,0,0,.6);border-radius:2px;overflow:hidden;border:1px solid #5a1010">
+        <div id="bfill" style="height:100%;background:linear-gradient(90deg,#7f0000,#ff3344);border-radius:2px;transition:width .6s;width:${pct}%"></div>
+      </div>
     </div>
-    <div class="scene-wrap" id="boss-scene"></div>
+    ${bossPlayer?`<div class="xp-track-wrap">
+      <div class="xp-row"><span>Level ${lvl} / 20</span><span>${bossPlayer.xp||0} XP</span></div>
+      <div class="xp-track"><div class="xp-fill" style="width:${xpPct}%"></div></div>
+    </div>`:""}
+    ${showScene?`<div class="scene-wrap" id="boss-scene"></div>`:""}
     ${inner}
     <div class="card" style="margin-top:.85rem"><div class="ctitle">Battle Log</div>
-      <div class="blog" id="blog">${(_bossRaid.log||[]).slice(-20).reverse().map(l=>`<div>${l}</div>`).join("")||'<div style="color:var(--text3)">No actions yet…</div>'}</div>
+      <div class="blog" id="blog">${(_bossRaid.log||[]).slice(-20).reverse().map(l=>`<div>${l}</div>`).join("")||'<div style="color:var(--text3)">No actions yet...</div>'}</div>
     </div>`;
 
-  drawScene();
-  bossTimer=setInterval(()=>{if(!me?.demo)pollBoss()},7000);
+  if(showScene){
+    startBossCanvas();
+  }
+  if(_bossPhase!=="class"&&_bossPhase!=="dead"){
+    bossTimer=setInterval(()=>{if(!me?.demo)pollBoss()},7000);
+  }
 }
+
+function bossDead(){
+  return`<div class="card" style="text-align:center;padding:2rem">
+    <div style="font-family:'Black Ops One',sans-serif;font-size:1.1rem;color:var(--red);margin-bottom:.6rem">You have fallen.</div>
+    <p style="color:var(--text2);font-size:.82rem;margin-bottom:.85rem">Your party fought bravely. Participation earned: <span class="gold">${bossPlayer?.participation||0}</span> pts</p>
+    <button class="btn btn-ghost" onclick="rejoinAfterDeath()">Spectate</button>
+  </div>`;
+}
+
+function rejoinAfterDeath(){_bossPhase="phase";renderBoss($("main"))}
 
 function bossClassPick(){
   return`<div class="card"><div class="ctitle">Choose Your Class</div>
-    <div class="class-grid">${[["assassin","🗡️","Swift strikes, hide & burst"],["tank","🛡️","Protect and taunt boss"],["supporter","✨","Heal and bless allies"],["mage","🔮","Arcane burst damage"]].map(([cls,ic,dc])=>`
+    <div class="class-grid">${[["assassin","ASN","Swift strikes, hide + burst"],["tank","TNK","Protect and taunt boss"],["supporter","SPT","Heal and bless allies"],["mage","MGE","Arcane burst damage"]].map(([cls,ic,dc])=>`
       <div class="class-btn" onclick="selCls('${cls}',this)">
         <span class="class-icon">${ic}</span>
         <div class="class-name">${cls}</div>
         <div class="class-desc">${dc}</div>
       </div>`).join("")}</div>
-    <button class="btn btn-primary" style="margin-top:.8rem;max-width:200px" onclick="joinBoss()">Join Raid →</button>
+    <button class="btn btn-primary" style="margin-top:.8rem;max-width:200px" onclick="joinBoss()">Join Raid</button>
   </div>`;
 }
 
 function bossMain(){
   const p=bossPlayer;
   if(!p)return bossClassPick();
-  const phases=[["harvest","🌿","Harvest"],["hunt","⚔️","Hunt Mobs"],["party","👥","Party"],["fight","💥","Fight Boss"]];
+  const phases=[["harvest","HAR","Harvest"],["hunt","HNT","Hunt Mobs"],["party","PTY","Party"],["fight","FGT","Fight Boss"]];
   const skillMap={
-    assassin:[["attack","⚔ Slash"],["hide","🌑 Hide"],["shadow_stab","🗡 Shadow Stab"],["shadow_dimension","🌀 Dim"]],
-    tank:[["attack","⚔ Slash"],["aggro","😤 Aggro"],["shield","🛡 Shield"],["damage_share","💪 Dmg Share"]],
-    supporter:[["attack","✨ Holy Fire"],["bless","💫 Bless"],["heal","💚 Heal"],["soothing_voice","🎵 Voice"]],
-    mage:[["fireball","🔥 Fireball"],["blizzard","❄ Blizzard"],["arcane_nova","✨ Nova"],["drink_mana_pot","🔵 Mana Pot"]],
-  }[p.class]||[["attack","⚔ Attack"]];
+    assassin:[["attack","Slash"],["hide","Hide"],["shadow_stab","Shadow Stab"],["shadow_dimension","Shadow Dim"]],
+    tank:[["attack","Slash"],["aggro","Aggro"],["shield","Shield"],["damage_share","Dmg Share"]],
+    supporter:[["attack","Holy Fire"],["bless","Bless"],["heal_target","Heal Target"],["soothing_voice","Soothing Voice"]],
+    mage:[["fireball","Fireball"],["blizzard","Blizzard"],["arcane_nova","Arcane Nova"],["drink_mana_pot","Mana Pot"]],
+  }[p.class]||[["attack","Attack"]];
 
   let phaseContent="";
-  if(_bossPhase==="harvest"||_bossPhase==="hunt"){
-    phaseContent=`<div class="card"><div class="ctitle">${_bossPhase==="harvest"?"🌿 Harvest Resources":"⚔️ Hunt Mobs"}</div>
-      <p style="color:var(--text2);font-size:.82rem;margin-bottom:.85rem">${_bossPhase==="harvest"?"Gather resources to gain XP and gold. 10 minute cooldown.":"Fight monsters to gain more XP and gold. 30 minute cooldown."}</p>
-      <button class="btn btn-primary" style="max-width:200px" onclick="bossAct('${_bossPhase==="harvest"?"gather":"farm_mobs"}')">
-        ${_bossPhase==="harvest"?"Harvest Now →":"Hunt Now →"}</button>
-    </div>`;
+  if(_bossPhase==="harvest"){
+    phaseContent=bossHarvestUI();
+  } else if(_bossPhase==="hunt"){
+    phaseContent=bossMobUI();
   } else if(_bossPhase==="party"){
-    phaseContent=`<div class="card"><div class="ctitle">👥 Build Party</div>
-      <p style="color:var(--text2);font-size:.82rem;margin-bottom:.75rem">Enter usernames of players to invite. They need to be joined already.</p>
-      <input class="ginput" id="party-in" placeholder="Player name" style="margin-bottom:.5rem">
-      <button class="btn btn-ghost btn-sm" onclick="addPartyMember()" style="margin-bottom:.85rem">Add →</button>
-      <div class="party-list" id="party-list">${_partyList.map((n,i)=>`<div class="party-member"><span class="pm-name">@${n}</span><button class="btn btn-danger btn-sm" onclick="removeParty(${i})">×</button></div>`).join("")}</div>
-      <button class="btn btn-primary" style="margin-top:.75rem;max-width:200px" onclick="bossAct('attack')">Fight Together →</button>
-    </div>`;
+    phaseContent=bossPartyUI();
   } else if(_bossPhase==="fight"){
-    phaseContent=`<div class="card"><div class="ctitle">⚔️ Actions</div>
+    phaseContent=`<div class="card"><div class="ctitle">Actions</div>
       <div class="act-grid">
-        ${skillMap.map(([a,l])=>`<button class="btn btn-ghost" onclick="bossAct('${a}')">${l}</button>`).join("")}
-        <button class="btn btn-ghost" onclick="bossAct('drink_hp_pot')">🍶 HP Pot</button>
-        <button class="btn btn-ghost" onclick="bossAct('buy_pot')">🛒 Buy Pot (50g)</button>
+        ${skillMap.map(([a,l])=>`<button class="btn btn-ghost" onclick="bossActWithCrit('${a}','${l}')">${l}</button>`).join("")}
+        <button class="btn btn-ghost" onclick="bossAct('drink_hp_pot')">HP Potion</button>
+        <button class="btn btn-ghost" onclick="bossAct('buy_pot')">Buy Pot (50g)</button>
       </div>
     </div>`;
-  } else {
-    _bossPhase="phase";
   }
 
-  return`<div class="card"><div class="ctitle">@${p.name} · <span class="tag tag-gold">${p.class}</span> · Lv.${p.level}</div>
+  return`<div class="card"><div class="ctitle">@${p.name} — <span class="tag tag-gold">${p.class}</span> — Lv.${p.level}</div>
     <div class="stat-row">
       <div class="sbar hp-c"><div class="sl">HP</div><div class="st"><div class="sf" style="width:${(p.hp/p.max_hp*100).toFixed(0)}%"></div></div><div class="sv">${p.hp}/${p.max_hp}</div></div>
       <div class="sbar mana-c"><div class="sl">Mana</div><div class="st"><div class="sf" style="width:${(p.mana/p.max_mana*100).toFixed(0)}%"></div></div><div class="sv">${p.mana}/${p.max_mana}</div></div>
       <div class="sbar stam-c"><div class="sl">Stamina</div><div class="st"><div class="sf" style="width:${(p.stamina/p.max_stamina*100).toFixed(0)}%"></div></div><div class="sv">${p.stamina}/${p.max_stamina}</div></div>
     </div>
-    <div style="font-size:.68rem;color:var(--text3);margin:.45rem 0;font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">⚗ HP Pots: ${p.hp_pots} &nbsp;|&nbsp; 💧 Mana Pots: ${p.mana_pots} &nbsp;|&nbsp; 💰 ${p.gold}g &nbsp;|&nbsp; XP: ${p.xp}</div>
+    <div style="font-size:.68rem;color:var(--text3);margin:.45rem 0;font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">HP Pots: ${p.hp_pots} | Mana Pots: ${p.mana_pots} | Gold: ${p.gold}g | XP: ${p.xp} | Participation: ${p.participation}</div>
     <div class="phase-grid">
       ${phases.map(([ph,ic,lb])=>`<div class="phase-btn ${_bossPhase===ph?"active":""}" onclick="setPhase('${ph}')">
         <span class="pi">${ic}</span><span class="pn">${lb}</span></div>`).join("")}
@@ -670,10 +767,88 @@ function bossMain(){
   ${phaseContent}`;
 }
 
-function setPhase(ph){_bossPhase=ph;renderBoss($("main"))}
-function selCls(cls,el){_selCls=cls;document.querySelectorAll(".class-btn").forEach(b=>b.classList.remove("sel"));el.classList.add("sel")}
-function addPartyMember(){const n=($("party-in")?.value||"").trim();if(n&&!_partyList.includes(n)){_partyList.push(n);renderBoss($("main"))}}
+// Harvest minigame: click the flashing nodes on canvas
+function bossHarvestUI(){
+  const now=Date.now();
+  const cdEnd=_bossRaid[`gc_${me.discord_id}`]||0;
+  const cdLeft=cdEnd-now;
+  if(cdLeft>0){
+    return`<div class="card"><div class="ctitle">Harvest Resources</div>
+      <p style="color:var(--text2);font-size:.82rem">Cooldown: ${Math.ceil(cdLeft/1000)}s remaining</p>
+    </div>`;
+  }
+  return`<div class="card"><div class="ctitle">Harvest Minigame</div>
+    <p style="color:var(--text2);font-size:.8rem;margin-bottom:.55rem">Click the glowing nodes before they vanish. More hits = more XP and gold.</p>
+    <canvas id="harvest-canvas" class="minigame-canvas" width="600" height="140"></canvas>
+    <div class="minigame-score" id="harvest-score">Score: 0</div>
+    <button class="btn btn-primary" style="max-width:180px;margin-top:.5rem" id="harvest-start-btn" onclick="startHarvestGame()">Start Harvest</button>
+  </div>`;
+}
+
+function bossMobUI(){
+  const now=Date.now();
+  const cdEnd=_bossRaid[`fc_${me.discord_id}`]||0;
+  const cdLeft=cdEnd-now;
+  if(cdLeft>0){
+    return`<div class="card"><div class="ctitle">Hunt Mobs</div>
+      <p style="color:var(--text2);font-size:.82rem">Cooldown: ${Math.ceil(cdLeft/1000)}s remaining</p>
+    </div>`;
+  }
+  return`<div class="card"><div class="ctitle">Hunt Minigame</div>
+    <p style="color:var(--text2);font-size:.8rem;margin-bottom:.55rem">Mash the attack button as fast as you can in 5 seconds!</p>
+    <div class="minigame-score" id="mob-hits">Hits: 0</div>
+    <div style="width:100%;height:8px;background:var(--border2);border-radius:2px;overflow:hidden;margin:.5rem 0"><div id="mob-timer-bar" style="height:100%;background:var(--red);border-radius:2px;width:100%;transition:none"></div></div>
+    <button class="btn btn-danger" style="max-width:180px;margin-top:.5rem" id="mob-btn" onclick="startMobGame(this)">Hunt Now!</button>
+  </div>`;
+}
+
+function bossPartyUI(){
+  return`<div class="card"><div class="ctitle">Build Party</div>
+    <p style="color:var(--text2);font-size:.82rem;margin-bottom:.75rem">Invite other players. They must accept before the fight.</p>
+    <input class="ginput" id="party-in" placeholder="Player name" style="margin-bottom:.5rem">
+    <button class="btn btn-ghost btn-sm" onclick="sendPartyInvite()" style="margin-bottom:.85rem">Send Invite</button>
+    <div class="party-list" id="party-list">${_partyList.map((n,i)=>`<div class="party-member">
+      <span class="pm-name">@${n.name}</span>
+      <span class="pm-class tag ${n.accepted?"tag-green":"tag-dim"}">${n.accepted?"Accepted":"Pending"}</span>
+      <button class="btn btn-danger btn-sm" onclick="removeParty(${i})">x</button>
+    </div>`).join("")}</div>
+    <button class="btn btn-primary" style="margin-top:.75rem;max-width:200px" onclick="setPhase('fight')">Enter Fight</button>
+  </div>`;
+}
+
+function sendPartyInvite(){
+  const n=($("party-in")?.value||"").trim();
+  if(!n)return;
+  if(_partyList.find(x=>x.name===n)){notify("Already invited","err");return}
+  _partyList.push({name:n,accepted:false});
+  // Simulate notification for local players (in real use you'd poll)
+  _pendingInvite={from:me.username,name:n};
+  $("invite-text").textContent=`@${me.username} wants you in their party`;
+  $("invite-notif").classList.add("show");
+  renderBoss($("main"));
+}
+
+function acceptInvite(){
+  if(!_pendingInvite)return;
+  const entry=_partyList.find(x=>x.name===_pendingInvite.name);
+  if(entry)entry.accepted=true;
+  $("invite-notif").classList.remove("show");
+  _pendingInvite=null;
+  notify("Party invite accepted");
+  renderBoss($("main"));
+}
+function declineInvite(){
+  if(!_pendingInvite)return;
+  _partyList=_partyList.filter(x=>x.name!==_pendingInvite.name);
+  $("invite-notif").classList.remove("show");
+  _pendingInvite=null;
+  notify("Invite declined","err");
+  renderBoss($("main"));
+}
+
 function removeParty(i){_partyList.splice(i,1);renderBoss($("main"))}
+function selCls(cls,el){_selCls=cls;document.querySelectorAll(".class-btn").forEach(b=>b.classList.remove("sel"));el.classList.add("sel")}
+function setPhase(ph){_bossPhase=ph;renderBoss($("main"))}
 
 async function joinBoss(){
   if(!_selCls){notify("Pick a class","err");return}
@@ -682,7 +857,7 @@ async function joinBoss(){
     bossPlayer={name:me.username,class:_selCls,hp:s.hp,max_hp:s.hp,mana:s.mana,max_mana:s.mana,stamina:s.stamina,max_stamina:s.stamina,xp:0,level:1,gold:200,dmg_base:s.dmg,hp_pots:2,mana_pots:2,buffs:[],hidden:false,arcane_nova_used:false,soothing_voice_used:false,participation:0};
     _bossRaid.players[me.discord_id]=bossPlayer;
     _bossRaid.log.push(`${me.username} joined as ${_selCls}! (Demo)`);
-    _bossPhase="phase";notify("Joined raid (demo)!");renderBoss($("main"));return;
+    _bossPhase="phase";notify("Joined raid!");renderBoss($("main"));return;
   }
   try{
     const r=await api("/boss/join","POST",{discord_id:me.discord_id,class:_selCls});
@@ -691,192 +866,472 @@ async function joinBoss(){
   }catch{notify("Failed","err")}
 }
 
-async function bossAct(action){
+// Critical hit minigame — type the attack name + target within 3 seconds
+function critHitGame(actionLabel){
+  return new Promise(resolve=>{
+    if(_critActive){resolve({crit:false});return}
+    _critActive=true;
+    _critResolve=resolve;
+    const targets=["THE VOID","DARKNESS","SHADOW","ABYSS","DEATH"];
+    const target=targets[Math.floor(Math.random()*targets.length)];
+    const prompt=`${actionLabel.toUpperCase()} ${target}`;
+    document.body.insertAdjacentHTML("beforeend",`
+      <div class="crit-modal" id="crit-modal">
+        <div class="crit-box">
+          <div class="crit-title">Critical Hit Chance!</div>
+          <div class="crit-prompt">Type this exactly within 3 seconds:</div>
+          <div class="crit-target">${prompt}</div>
+          <input class="crit-input" id="crit-in" type="text" placeholder="Type here..." autocomplete="off" spellcheck="false">
+          <div class="crit-timer" id="crit-timer">3</div>
+          <div class="crit-hint">Exact match = 2x damage bonus</div>
+        </div>
+      </div>`);
+    const input=$("crit-in");
+    if(input)input.focus();
+    let t=3;
+    _critTimer=setInterval(()=>{
+      t--;
+      if($("crit-timer"))$("crit-timer").textContent=t;
+      if(t<=0)finishCrit(prompt,false);
+    },1000);
+    if(input){
+      input.addEventListener("keydown",function handler(e){
+        if(e.key==="Enter"){
+          input.removeEventListener("keydown",handler);
+          finishCrit(prompt,input.value.trim().toUpperCase()===prompt);
+        }
+      });
+    }
+  });
+}
+function finishCrit(prompt,success){
+  clearInterval(_critTimer);_critActive=false;
+  const m=$("crit-modal");if(m)m.remove();
+  if(_critResolve)_critResolve({crit:success});
+  _critResolve=null;
+}
+
+async function bossActWithCrit(action,label){
+  const {crit}=await critHitGame(label);
+  bossAct(action,crit);
+}
+
+// Harvest game state
+let _harvestGame={active:false,nodes:[],score:0,timer:null,animFrame:null};
+function startHarvestGame(){
+  const btn=$("harvest-start-btn");
+  if(btn)btn.style.display="none";
+  const canvas=$("harvest-canvas");
+  if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  const W=canvas.offsetWidth||600,H=140;
+  canvas.width=W;
+  _harvestGame={active:true,nodes:[],score:0,timer:null,animFrame:null};
+  $("harvest-score").textContent="Score: 0";
+  // spawn nodes every 800ms
+  let spawnCount=0;
+  const spawn=setInterval(()=>{
+    if(spawnCount>=12){clearInterval(spawn);return}
+    spawnCount++;
+    _harvestGame.nodes.push({x:Math.random()*(W-40)+20,y:Math.random()*(H-30)+15,r:14,life:2.5,maxLife:2.5,color:`hsl(${60+Math.random()*60},90%,55%)`});
+  },600);
+  // click handler
+  canvas.onclick=(e)=>{
+    if(!_harvestGame.active)return;
+    const rect=canvas.getBoundingClientRect();
+    const cx=(e.clientX-rect.left)*(canvas.width/rect.width);
+    const cy=(e.clientY-rect.top)*(canvas.height/rect.height);
+    _harvestGame.nodes.forEach((n,i)=>{
+      const dist=Math.sqrt((n.x-cx)**2+(n.y-cy)**2);
+      if(dist<n.r+6){n.hit=true;_harvestGame.score+=Math.ceil(n.life/n.maxLife*10);}
+    });
+    $("harvest-score").textContent=`Score: ${_harvestGame.score}`;
+  };
+  // game loop
+  let last=performance.now();
+  const loop=(now)=>{
+    const dt=(now-last)/1000;last=now;
+    ctx.clearRect(0,0,W,H);
+    // draw bg
+    ctx.fillStyle="#0a1a06";ctx.fillRect(0,0,W,H);
+    // update+draw nodes
+    _harvestGame.nodes=_harvestGame.nodes.filter(n=>!n.hit&&n.life>0);
+    _harvestGame.nodes.forEach(n=>{
+      n.life-=dt;
+      const alpha=Math.max(0,n.life/n.maxLife);
+      const pulse=1+0.15*Math.sin(Date.now()/200);
+      ctx.save();
+      ctx.globalAlpha=alpha;
+      const grd=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*pulse);
+      grd.addColorStop(0,"rgba(245,196,0,.9)");grd.addColorStop(1,"rgba(245,196,0,0)");
+      ctx.fillStyle=grd;
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r*pulse*1.5,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=n.color;
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r*pulse,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;
+      ctx.restore();
+    });
+    if(spawnCount>=12&&_harvestGame.nodes.length===0){
+      endHarvestGame();return;
+    }
+    _harvestGame.animFrame=requestAnimationFrame(loop);
+  };
+  _harvestGame.animFrame=requestAnimationFrame(loop);
+  // auto-end after 12s
+  setTimeout(()=>{if(_harvestGame.active)endHarvestGame()},12000);
+}
+
+function endHarvestGame(){
+  if(!_harvestGame.active)return;
+  _harvestGame.active=false;
+  cancelAnimationFrame(_harvestGame.animFrame);
+  const score=_harvestGame.score;
+  const xp=50+score*5, g=20+score*2;
+  // Apply results
+  bossActGather(xp,g);
+}
+
+async function bossActGather(xpBonus,goldBonus){
   if(me?.demo){
-    // simulate locally
+    const p=bossPlayer;
+    p.xp+=(xpBonus||80);p.gold+=(goldBonus||35);
+    p.level=Math.min(20,1+Math.floor(p.xp/XP_PER_LEVEL));
+    _bossRaid[`gc_${me.discord_id}`]=Date.now()+GATHER_CD;
+    _bossRaid.log.push(`${p.name} harvested! (+${xpBonus}XP +${goldBonus}g)`);
+    notify(`Harvested! +${xpBonus}XP +${goldBonus}g`);
+    renderBoss($("main"));return;
+  }
+  try{
+    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action:"gather",xp_bonus:xpBonus});
+    if(r.error){notify(r.error,"err");return}
+    bossPlayer=r.player;renderBoss($("main"));
+  }catch{notify("Failed","err")}
+}
+
+// Mob mash game
+let _mobGame={active:false,hits:0,timer:null};
+function startMobGame(btn){
+  if(_mobGame.active)return;
+  _mobGame={active:true,hits:0,timer:null};
+  btn.textContent="Attack!";
+  btn.onclick=()=>{
+    if(!_mobGame.active)return;
+    _mobGame.hits++;
+    $("mob-hits").textContent=`Hits: ${_mobGame.hits}`;
+  };
+  let elapsed=0;
+  const bar=$("mob-timer-bar");
+  const tick=setInterval(()=>{
+    elapsed+=100;
+    if(bar)bar.style.width=`${Math.max(0,100-(elapsed/5000)*100)}%`;
+    if(elapsed>=5000){
+      clearInterval(tick);
+      endMobGame();
+    }
+  },100);
+  _mobGame.timer=tick;
+}
+function endMobGame(){
+  _mobGame.active=false;
+  const hits=_mobGame.hits;
+  const xp=150+hits*12, g=40+hits*5;
+  if(me?.demo){
+    const p=bossPlayer;
+    p.xp+=xp;p.gold+=g;
+    p.level=Math.min(20,1+Math.floor(p.xp/XP_PER_LEVEL));
+    _bossRaid[`fc_${me.discord_id}`]=Date.now()+FARM_CD;
+    _bossRaid.log.push(`${p.name} hunted mobs! (+${xp}XP +${g}g, ${hits} hits)`);
+    notify(`Hunted! +${xp}XP +${g}g (${hits} hits)`);
+    renderBoss($("main"));return;
+  }
+  api("/boss/action","POST",{discord_id:me.discord_id,action:"farm_mobs",hits}).then(r=>{
+    if(!r.error){bossPlayer=r.player;}
+    renderBoss($("main"));
+  });
+}
+
+async function bossAct(action,crit=false){
+  if(me?.demo){
     const p=bossPlayer;if(!p)return;
-    const pdmg=()=>Math.floor(p.dmg_base*(1+p.xp/5000)*(p.buffs?.some(b=>b.type==="bless")?1.5:1));
+    const pdmg=()=>{
+      let d=Math.floor(p.dmg_base*(1+p.xp/5000)*(p.buffs?.some(b=>b.type==="bless")?1.5:1));
+      if(crit)d=Math.floor(d*2);
+      return d;
+    };
     let msg="";
-    const cdCheck=(key,ms)=>{if(_bossRaid[key]&&Date.now()-_bossRaid[key]<ms){notify(`On cooldown — ${Math.ceil((ms-(Date.now()-_bossRaid[key]))/60000)}m left`,"err");return false}return true};
-    if(action==="attack"){const d=pdmg();_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`${p.name} attacked for ${d.toLocaleString()}!`;p.participation=(p.participation||0)+2}
-    else if(action==="hide"){p.hidden=true;msg=`${p.name} hides.`;p.participation=(p.participation||0)+1}
-    else if(action==="shadow_stab"){const d=Math.floor(pdmg()*(p.hidden?1.5:1));p.hidden=false;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`${p.name} shadow stabbed for ${d.toLocaleString()}!`;p.participation=(p.participation||0)+2}
-    else if(action==="shadow_dimension"){if(!p.shadow_dim_used){p.shadow_dim_used=true;p.hidden=true;msg=`${p.name} vanishes!`;p.participation=(p.participation||0)+1}}
-    else if(action==="bless"){p.buffs=[...(p.buffs||[]),{type:"bless",turns:2}];msg=`${p.name} blesses everyone!`;p.participation=(p.participation||0)+2}
-    else if(action==="heal"){const h=Math.floor(p.max_hp*.1);p.hp=Math.min(p.max_hp,p.hp+h);msg=`${p.name} healed ${h} HP.`;p.participation=(p.participation||0)+2}
-    else if(action==="soothing_voice"){if(!p.soothing_voice_used){p.hp=Math.min(p.max_hp,p.hp+Math.floor(p.max_hp*.5));p.mana=0;p.soothing_voice_used=true;msg="Soothing Voice! Healed 50%!";p.participation=(p.participation||0)+5}}
-    else if(action==="aggro"){msg=`${p.name} taunts!`;p.participation=(p.participation||0)+1}
-    else if(action==="shield"){msg=`${p.name} shields everyone!`;p.participation=(p.participation||0)+2}
-    else if(action==="fireball"){if(p.mana<80){notify("Need 80 mana","err");return}const d=Math.floor(pdmg()*1.8);p.mana-=80;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`Fireball for ${d.toLocaleString()}!`;p.participation=(p.participation||0)+2}
-    else if(action==="blizzard"){if(p.mana<100){notify("Need 100 mana","err");return}const d=Math.floor(pdmg()*1.4);p.mana-=100;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`Blizzard for ${d.toLocaleString()}!`;p.participation=(p.participation||0)+2}
-    else if(action==="arcane_nova"){if(p.arcane_nova_used){notify("Already used","err");return}if(p.mana<200){notify("Need 200 mana","err");return}const d=Math.floor(pdmg()*3);p.mana=0;p.arcane_nova_used=true;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`ARCANE NOVA — ${d.toLocaleString()}!!`;p.participation=(p.participation||0)+5}
-    else if(action==="gather"){if(!cdCheck(`gc_${me.discord_id}`,600000))return;const xp=50+Math.floor(Math.random()*100),g=20+Math.floor(Math.random()*40);p.xp+=xp;p.gold+=g;p.level=Math.min(20,1+Math.floor(p.xp/500));_bossRaid[`gc_${me.discord_id}`]=Date.now();msg=`Harvested (+${xp}XP +${g}g)`}
-    else if(action==="farm_mobs"){if(!cdCheck(`fc_${me.discord_id}`,1800000))return;const xp=200+Math.floor(Math.random()*200),g=50+Math.floor(Math.random()*50);p.xp+=xp;p.gold+=g;p.level=Math.min(20,1+Math.floor(p.xp/500));_bossRaid[`fc_${me.discord_id}`]=Date.now();msg=`Hunted mobs (+${xp}XP +${g}g)`}
+    const dmgActions=["attack","shadow_stab","fireball","blizzard","arcane_nova"];
+    if(action==="attack"){const d=pdmg();_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`${p.name} attacked for ${d.toLocaleString()}${crit?" [CRIT!]":""}!`;p.participation+=2}
+    else if(action==="hide"){p.hidden=true;msg=`${p.name} hides.`;p.participation+=1}
+    else if(action==="shadow_stab"){const d=Math.floor(pdmg()*(p.hidden?1.5:1));p.hidden=false;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`${p.name} shadow stabbed for ${d.toLocaleString()}${crit?" [CRIT!]":""}!`;p.participation+=2}
+    else if(action==="shadow_dimension"){if(!p.shadow_dim_used){p.shadow_dim_used=true;p.hidden=true;msg=`${p.name} vanishes!`;p.participation+=1}}
+    else if(action==="bless"){p.buffs=[...(p.buffs||[]),{type:"bless",turns:2}];msg=`${p.name} blesses everyone!`;p.participation+=2}
+    else if(action==="heal_target"){showHealTargetPicker();return}
+    else if(action==="heal"){
+      // used by heal target picker
+      const tid=_healTarget;if(!tid)return;
+      const tp=_bossRaid.players?.[tid]||p;
+      const h=Math.floor(tp.max_hp*.15);tp.hp=Math.min(tp.max_hp,tp.hp+h);
+      msg=`${p.name} healed ${tp.name} for ${h} HP.`;p.participation+=2;
+    }
+    else if(action==="soothing_voice"){if(!p.soothing_voice_used){p.hp=Math.min(p.max_hp,p.hp+Math.floor(p.max_hp*.5));p.mana=0;p.soothing_voice_used=true;msg="Soothing Voice! Healed 50%!";p.participation+=5}}
+    else if(action==="aggro"){msg=`${p.name} taunts!`;p.participation+=1}
+    else if(action==="shield"){msg=`${p.name} shields everyone!`;p.participation+=2}
+    else if(action==="fireball"){if(p.mana<80){notify("Need 80 mana","err");return}const d=pdmg()*1 ;const dd=Math.floor(pdmg()*1.8);p.mana-=80;_bossRaid.hp=Math.max(0,_bossRaid.hp-dd);msg=`Fireball for ${dd.toLocaleString()}${crit?" [CRIT!]":""}!`;p.participation+=2}
+    else if(action==="blizzard"){if(p.mana<100){notify("Need 100 mana","err");return}const d=Math.floor(pdmg()*1.4);p.mana-=100;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`Blizzard for ${d.toLocaleString()}${crit?" [CRIT!]":""}!`;p.participation+=2}
+    else if(action==="arcane_nova"){if(p.arcane_nova_used){notify("Already used","err");return}if(p.mana<200){notify("Need 200 mana","err");return}const d=Math.floor(pdmg()*3);p.mana=0;p.arcane_nova_used=true;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`ARCANE NOVA — ${d.toLocaleString()}${crit?" [CRIT!]":""}!!`;p.participation+=5}
     else if(action==="drink_hp_pot"){if(!p.hp_pots){notify("No HP pots","err");return}p.hp=Math.min(p.max_hp,p.hp+Math.floor(p.max_hp*.3));p.hp_pots--;msg="Drank HP pot."}
     else if(action==="drink_mana_pot"){if(!p.mana_pots){notify("No mana pots","err");return}p.mana=Math.min(p.max_mana,p.mana+Math.floor(p.max_mana*.3));p.mana_pots--;msg="Drank mana pot."}
     else if(action==="buy_pot"){if(p.gold<50){notify("Need 50g","err");return}p.gold-=50;p.hp_pots++;msg="Bought HP pot."}
+
     // Boss counterattack
-    if(["attack","shadow_stab","fireball","blizzard","arcane_nova"].includes(action)&&_bossRaid.hp>0){
+    if(dmgActions.includes(action)&&_bossRaid.hp>0){
       const bd=800+Math.floor(Math.random()*700);p.hp=Math.max(0,p.hp-bd);
       _bossRaid.log=[..._bossRaid.log,`Boss hits ${p.name} for ${bd.toLocaleString()}!`];
+      triggerBossFlinch();
     }
     p.buffs=(p.buffs||[]).map(b=>({...b,turns:b.turns-1})).filter(b=>b.turns>0);
     if(msg){_bossRaid.log=[..._bossRaid.log,msg]}
     _bossRaid.log=_bossRaid.log.slice(-60);
     _bossRaid.players[me.discord_id]=p;
     bossPlayer=p;
-    if(_bossRaid.hp<=0){_bossRaid.active=false;_bossRaid.log=[..._bossRaid.log,"BOSS DEFEATED! (Demo)"];notify("Boss defeated! (demo — +5 tickets not saved)")}
-    else if(msg) notify(msg);
+    if(p.hp<=0){
+      _bossPhase="dead";
+      notify("You have fallen!","err");
+    }
+    if(_bossRaid.hp<=0){_bossRaid.active=false;_bossRaid.log=[..._bossRaid.log,"BOSS DEFEATED! (Demo)"];notify("Boss defeated!")}
+    else if(msg)notify(msg);
     renderBoss($("main"));return;
   }
   try{
-    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action});
+    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action,crit});
     if(r.error){notify(r.error,"err");return}
     bossPlayer=r.player;_bossRaid={..._bossRaid,hp:r.boss_hp};
     if(r.log)_bossRaid.log=[...(_bossRaid.log||[]),...r.log];
-    if(r.defeated){await refreshTickets();notify("Boss defeated! +5 tickets 🎫")}
+    if(r.player?.hp<=0)_bossPhase="dead";
+    if(r.defeated){await refreshTickets();notify("Boss defeated! +5 tickets!")}
+    else{triggerBossFlinch()}
     renderBoss($("main"));
   }catch{notify("Failed","err")}
+}
+
+let _healTarget=null;
+function showHealTargetPicker(){
+  const players=Object.values(_bossRaid?.players||{});
+  if(!players.length){bossAct("heal");return}
+  const container=$("main");
+  const extra=document.createElement("div");
+  extra.className="card";
+  extra.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:800;width:300px;background:var(--panel);border:1px solid var(--gold)";
+  extra.innerHTML=`<div class="ctitle">Choose Heal Target</div>
+    <div class="heal-target-list">${players.map(pl=>`
+      <button class="heal-target-btn" onclick="pickHealTarget('${pl.name||pl.discord_id}')">
+        <span>${pl.name}</span>
+        <span class="htb-hp">${pl.hp}/${pl.max_hp} HP</span>
+      </button>`).join("")}
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="this.closest('.card').remove()">Cancel</button>`;
+  document.body.appendChild(extra);
+}
+function pickHealTarget(name){
+  document.querySelectorAll('.card[style*="z-index:800"]').forEach(e=>e.remove());
+  // find discord_id by name
+  const entry=Object.entries(_bossRaid?.players||{}).find(([,v])=>v.name===name);
+  _healTarget=entry?entry[0]:null;
+  bossAct("heal");
+}
+
+function triggerBossFlinch(){
+  _bossFlinch=true;
+  clearTimeout(_flinchTimer);
+  _flinchTimer=setTimeout(()=>{_bossFlinch=false},400);
 }
 
 async function pollBoss(){
   try{
     const r=await api("/boss/state");_bossRaid=r;bossPlayer=r.players?.[me.discord_id]??bossPlayer;
-    const f=$("bfill"),h=$("bhp"),b=$("blog");
+    const f=$("bfill"),b=$("blog");
     if(f)f.style.width=`${Math.max(0,r.hp/r.max_hp*100)}%`;
-    if(h)h.textContent=`${r.hp.toLocaleString()} / ${r.max_hp.toLocaleString()} HP${!r.active?" · DEFEATED":""}`;
     if(b)b.innerHTML=(r.log||[]).slice(-20).reverse().map(l=>`<div>${l}</div>`).join("");
   }catch{}
 }
 
-// ── BOSS SCENE CANVAS ─────────────────────────────────────
-function drawScene(){
+// ── BOSS CANVAS ───────────────────────────────────────────
+let _projectiles=[];
+let _effects=[];
+function startBossCanvas(){
   const wrap=$("boss-scene");if(!wrap)return;
   const canvas=document.createElement("canvas");
-  canvas.width=wrap.clientWidth||700;canvas.height=280;
   wrap.appendChild(canvas);
+  function resize(){canvas.width=wrap.clientWidth;canvas.height=wrap.clientHeight}
+  resize();window.addEventListener("resize",resize);
   const cx=canvas.getContext("2d");
-  const W=canvas.width,H=280;
+  let bossX,bossY;
+  function loop(){
+    _bossAnimFrame=requestAnimationFrame(loop);
+    const W=canvas.width,H=canvas.height;
+    bossX=W/2;bossY=H*.22;
+    cx.clearRect(0,0,W,H);
+    // Sky
+    const sky=cx.createLinearGradient(0,0,0,H*.6);
+    sky.addColorStop(0,"#050a1a");sky.addColorStop(1,"#0a1a0a");
+    cx.fillStyle=sky;cx.fillRect(0,0,W,H*.6);
+    // Ground
+    const gnd=cx.createLinearGradient(0,H*.55,0,H);
+    gnd.addColorStop(0,"#111800");gnd.addColorStop(1,"#060b00");
+    cx.fillStyle=gnd;cx.fillRect(0,H*.55,W,H*.45);
+    // Floor grid lines
+    cx.strokeStyle="rgba(40,50,0,.3)";cx.lineWidth=1;
+    for(let i=0;i<8;i++){
+      const y=H*.6+i*(H*.4/8);
+      cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();
+    }
 
-  // Sky gradient
-  const sky=cx.createLinearGradient(0,0,0,H*.55);
-  sky.addColorStop(0,"#0a2a0a");sky.addColorStop(1,"#1a4a1a");
-  cx.fillStyle=sky;cx.fillRect(0,0,W,H*.55);
+    // Draw boss (only in fight phase)
+    if(_bossPhase==="fight"||(_bossRaid&&!_bossRaid.active)){
+      drawBossSprite(cx,bossX,bossY,W,H);
+    }
 
-  // Ground
-  const ground=cx.createLinearGradient(0,H*.5,0,H);
-  ground.addColorStop(0,"#1a4a0a");ground.addColorStop(1,"#0a2a05");
-  cx.fillStyle=ground;cx.fillRect(0,H*.5,W,H*.5);
+    // Draw player's character only (or party members)
+    const partyNames=new Set([me.username,..._partyList.filter(x=>x.accepted).map(x=>x.name)]);
+    const partyPlayers=Object.values(_bossRaid?.players||{}).filter(pl=>partyNames.has(pl.name));
+    const showPlayers=_bossPhase==="fight"&&(partyPlayers.length>0?partyPlayers:[bossPlayer].filter(Boolean));
 
-  // Fog
-  cx.fillStyle="rgba(10,40,10,.4)";cx.fillRect(0,H*.45,W,40);
+    showPlayers.forEach((pl,i)=>{
+      if(!pl)return;
+      const total=showPlayers.length;
+      const x=W*(0.2+(i/(Math.max(1,total-1)))*0.6);
+      const y=H*.75;
+      drawPlayerSprite(cx,x,y,pl.class,pl===bossPlayer);
+    });
 
-  // Draw Cthulhu-style boss (center top)
-  drawBoss(cx,W/2,H*.08,W,H);
+    // Projectiles
+    _projectiles=_projectiles.filter(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.life--;
+      if(p.type==="fireball"){
+        const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,10);
+        g.addColorStop(0,"rgba(255,200,0,.9)");g.addColorStop(1,"rgba(255,60,0,0)");
+        cx.fillStyle=g;cx.beginPath();cx.arc(p.x,p.y,10,0,Math.PI*2);cx.fill();
+      } else if(p.type==="slash"){
+        cx.strokeStyle="rgba(245,196,0,"+p.life/20+")";cx.lineWidth=3;
+        cx.beginPath();cx.moveTo(p.x-12,p.y-12);cx.lineTo(p.x+12,p.y+12);cx.stroke();
+      } else {
+        cx.fillStyle=`rgba(0,200,255,${p.life/20})`;cx.beginPath();cx.arc(p.x,p.y,5,0,Math.PI*2);cx.fill();
+      }
+      return p.life>0;
+    });
 
-  // Draw player characters
-  const cls=bossPlayer?.class||null;
-  const chars=[
-    {cls:"tank",    x:W*.12, color:"#4488ff"},
-    {cls:"supporter",x:W*.3, color:"#ffcc44"},
-    {cls:"assassin",x:W*.7, color:"#aa44ff"},
-    {cls:"mage",    x:W*.88,color:"#ff4488"},
-  ];
-  chars.forEach(c=>{
-    const isPlayer=c.cls===cls;
-    drawCharacter(cx,c.x,H*.72,c.cls,c.color,isPlayer);
-  });
-
-  // HP bar overlay
-  const pct=Math.max(0,(_bossRaid?.hp??BOSS_MAX)/BOSS_MAX);
-  cx.fillStyle="rgba(0,0,0,.55)";cx.fillRect(W*.1,12,W*.8,16);
-  const hgr=cx.createLinearGradient(W*.1,0,W*.9,0);
-  hgr.addColorStop(0,"#7f0000");hgr.addColorStop(1,"#ff3344");
-  cx.fillStyle=hgr;cx.fillRect(W*.1,12,W*.8*pct,16);
-  cx.strokeStyle="#5a1010";cx.lineWidth=1;cx.strokeRect(W*.1,12,W*.8,16);
+    // Effects (flinch, hit sparks)
+    _effects=_effects.filter(e=>{
+      e.life--;
+      cx.globalAlpha=e.life/e.maxLife;
+      if(e.type==="spark"){
+        e.particles.forEach(p=>{
+          p.x+=p.vx;p.y+=p.vy;
+          cx.fillStyle=e.color||"var(--gold)";
+          cx.beginPath();cx.arc(p.x,p.y,2,0,Math.PI*2);cx.fill();
+        });
+      }
+      cx.globalAlpha=1;
+      return e.life>0;
+    });
+  }
+  loop();
 }
 
-function drawBoss(cx,x,y,W,H){
-  // Cthulhu-esque silhouette using paths
-  const s=Math.min(W,H)*.32;
-  cx.save();cx.translate(x,y+s*.6);
+function addProjectile(type,fromX,fromY,toX,toY){
+  const dx=toX-fromX,dy=toY-fromY,dist=Math.sqrt(dx*dx+dy*dy);
+  const speed=type==="fireball"?8:12;
+  _projectiles.push({type,x:fromX,y:fromY,vx:dx/dist*speed,vy:dy/dist*speed,life:Math.floor(dist/speed)});
+}
+function addHitEffect(x,y,color){
+  const particles=Array.from({length:8},()=>({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6}));
+  _effects.push({type:"spark",particles,life:20,maxLife:20,color});
+}
 
-  // Glowing aura
-  const aura=cx.createRadialGradient(0,0,s*.2,0,0,s*.9);
+function drawBossSprite(cx,x,y,W,H){
+  cx.save();
+  if(_bossFlinch){cx.translate(x+8,y);cx.filter="brightness(2) contrast(2)"}
+  else cx.translate(x,y);
+  const s=Math.min(W,H)*.28;
+  // Try image, fall back to drawn
+  const img=window._bossImg;
+  if(img&&img.complete&&img.naturalWidth>0){
+    cx.drawImage(img,_bossFlinch?6:-s/2,-s/2+(_bossFlinch?-6:0),s,s*1.4);
+  } else {
+    drawBossFallback(cx,s,_bossFlinch);
+  }
+  cx.restore();
+}
+
+function drawBossFallback(cx,s,flinch){
+  const shake=flinch?8:0;
+  // Aura
+  const aura=cx.createRadialGradient(shake,0,s*.2,shake,0,s*.9);
   aura.addColorStop(0,"rgba(255,0,50,.15)");aura.addColorStop(1,"rgba(255,0,50,0)");
-  cx.fillStyle=aura;cx.beginPath();cx.arc(0,0,s*.9,0,Math.PI*2);cx.fill();
-
+  cx.fillStyle=aura;cx.beginPath();cx.arc(shake,0,s*.9,0,Math.PI*2);cx.fill();
   // Body
-  cx.fillStyle="#1a0505";
-  cx.beginPath();cx.ellipse(0,0,s*.45,s*.6,0,0,Math.PI*2);cx.fill();
-
-  // Dark wings
-  cx.fillStyle="#0d0303";
+  cx.fillStyle=flinch?"#3a0a0a":"#1a0505";
+  cx.beginPath();cx.ellipse(shake,0,s*.45,s*.6,0,0,Math.PI*2);cx.fill();
+  // Wings
+  cx.fillStyle=flinch?"#1f0303":"#0d0303";
   for(let side of[-1,1]){
-    cx.beginPath();
-    cx.moveTo(0,-s*.2);
-    cx.bezierCurveTo(side*s*.8,-s*.5,side*s*1.1,-s*.1,side*s*.5,s*.2);
-    cx.bezierCurveTo(side*s*.3,s*.1,0,s*.05,0,0);
+    cx.beginPath();cx.moveTo(shake,-s*.2);
+    cx.bezierCurveTo(side*s*.8+shake,-s*.5,side*s*1.1+shake,-s*.1,side*s*.5+shake,s*.2);
+    cx.bezierCurveTo(side*s*.3+shake,s*.1,shake,s*.05,shake,0);
     cx.closePath();cx.fill();
   }
-
   // Tentacles
-  cx.strokeStyle="#2a0808";cx.lineWidth=s*.07;cx.lineCap="round";
+  cx.strokeStyle=flinch?"#5a1010":"#2a0808";cx.lineWidth=s*.07;cx.lineCap="round";
   for(let i=0;i<6;i++){
-    const angle=(i/6)*Math.PI-.5+Math.PI*.5;
-    const len=s*.5+Math.random()*s*.2;
-    const ox=Math.cos(angle)*s*.3,oy=s*.3+Math.sin(i)*10;
+    const ang=(i/6)*Math.PI-.5+Math.PI*.5,len=s*.45;
+    const ox=Math.cos(ang)*s*.3+shake,oy=s*.3;
     cx.beginPath();cx.moveTo(ox,oy);
-    cx.bezierCurveTo(ox+Math.cos(angle+.5)*len*.5,oy+Math.sin(angle+.5)*len*.5,ox+Math.cos(angle-.3)*len*.8,oy+Math.sin(angle-.3)*len*.8,ox+Math.cos(angle)*len,oy+Math.sin(angle)*len);
+    cx.bezierCurveTo(ox+Math.cos(ang+.5)*len*.5,oy+len*.5,ox+Math.cos(ang-.3)*len*.8,oy+len*.8,ox+Math.cos(ang)*len,oy+len);
     cx.stroke();
   }
-
   // Eyes
-  cx.fillStyle="#ff3344";
-  cx.shadowColor="#ff0000";cx.shadowBlur=12;
-  cx.beginPath();cx.arc(-s*.12,-s*.08,s*.06,0,Math.PI*2);cx.fill();
-  cx.beginPath();cx.arc(s*.12,-s*.08,s*.06,0,Math.PI*2);cx.fill();
-  cx.shadowBlur=0;cx.restore();
+  cx.fillStyle=flinch?"#ffffff":"#ff3344";
+  cx.shadowColor=flinch?"#ffffff":"#ff0000";cx.shadowBlur=flinch?20:12;
+  cx.beginPath();cx.arc(-s*.12+shake,-s*.08,s*.06,0,Math.PI*2);cx.fill();
+  cx.beginPath();cx.arc(s*.12+shake,-s*.08,s*.06,0,Math.PI*2);cx.fill();
+  cx.shadowBlur=0;
 }
 
-function drawCharacter(cx,x,y,cls,color,isPlayer){
+function drawPlayerSprite(cx,x,y,cls,isMe){
   cx.save();cx.translate(x,y);
-  const h=60,w=28;
-
-  // Highlight if player's class
-  if(isPlayer){
-    cx.fillStyle="rgba(245,196,0,.18)";cx.beginPath();cx.arc(0,0,36,0,Math.PI*2);cx.fill();
-    cx.strokeStyle=color;cx.lineWidth=1.5;cx.beginPath();cx.arc(0,0,36,0,Math.PI*2);cx.stroke();
+  const colors={assassin:"#aa44ff",tank:"#4488ff",supporter:"#ffcc44",mage:"#ff4488"};
+  const color=colors[cls]||"#aaaaaa";
+  const h=56,w=24;
+  if(isMe){
+    cx.fillStyle="rgba(245,196,0,.12)";cx.beginPath();cx.arc(0,0,34,0,Math.PI*2);cx.fill();
+    cx.strokeStyle=color;cx.lineWidth=1.5;cx.beginPath();cx.arc(0,0,34,0,Math.PI*2);cx.stroke();
   }
-
   // Legs
   cx.fillStyle=color+"33";
-  cx.fillRect(-w/2+4,10,w/2-6,22);cx.fillRect(4,10,w/2-6,22);
-
+  cx.fillRect(-w/2+4,8,w/2-6,20);cx.fillRect(4,8,w/2-6,20);
   // Body
   const bodyGr=cx.createLinearGradient(-w/2,-h/2,w/2,h/2);
   bodyGr.addColorStop(0,color);bodyGr.addColorStop(1,color+"88");
   cx.fillStyle=bodyGr;
-  if(cls==="tank"){cx.fillRect(-w/2,-h*.45,w,h*.55)}
-  else if(cls==="mage"){cx.beginPath();cx.moveTo(0,-h*.55);cx.lineTo(w/2,h*.1);cx.lineTo(-w/2,h*.1);cx.closePath();cx.fill()}
-  else{cx.fillRect(-w/2+3,-h*.45,w-6,h*.5)}
-
+  if(cls==="tank"){cx.fillRect(-w/2,-h*.4,w,h*.48)}
+  else if(cls==="mage"){cx.beginPath();cx.moveTo(0,-h*.5);cx.lineTo(w/2,h*.08);cx.lineTo(-w/2,h*.08);cx.closePath();cx.fill()}
+  else{cx.fillRect(-w/2+2,-h*.4,w-4,h*.44)}
   // Head
-  cx.fillStyle=color;cx.beginPath();cx.arc(0,-h*.52,w/2*.75,0,Math.PI*2);cx.fill();
-
-  // Class icon text
-  cx.fillStyle="#ffffff";cx.font=`bold ${isPlayer?14:11}px sans-serif`;cx.textAlign="center";cx.textBaseline="bottom";
-  const icons={assassin:"🗡",tank:"🛡",supporter:"✨",mage:"🔮"};
-  cx.font=`${isPlayer?16:13}px sans-serif`;cx.fillText(icons[cls]||"⚔",0,-h*.45);
-
-  // Name tag if player
-  if(isPlayer&&bossPlayer){
-    cx.fillStyle="rgba(0,0,0,.7)";cx.fillRect(-30,20,60,15);
-    cx.fillStyle=color;cx.font="bold 8px sans-serif";cx.textAlign="center";cx.textBaseline="middle";
-    cx.fillText(bossPlayer.name.slice(0,10),0,27);
+  cx.fillStyle=color;cx.beginPath();cx.arc(0,-h*.48,w/2*.72,0,Math.PI*2);cx.fill();
+  // Class label
+  cx.fillStyle="#fff";cx.font=`bold 8px 'Black Ops One', sans-serif`;cx.textAlign="center";cx.textBaseline="middle";
+  cx.fillText(cls.slice(0,3).toUpperCase(),0,-h*.48);
+  if(isMe&&bossPlayer){
+    cx.fillStyle="rgba(0,0,0,.7)";cx.fillRect(-26,18,52,13);
+    cx.fillStyle=color;cx.font="bold 7px sans-serif";cx.textBaseline="middle";
+    cx.fillText(bossPlayer.name.slice(0,10),0,24);
   }
   cx.restore();
 }
+
+// Preload boss image if available
+window._bossImg=new Image();
+window._bossImg.src="boss_cthulhu.png";
 
 // ── GUESSING ──────────────────────────────────────────────
 const GQS=[
@@ -891,6 +1346,7 @@ const GQS=[
   {id:8,q:"What is Sumnor's favorite game genre?"},
   {id:9,q:"What is Sumnor's favorite music type?"},
 ];
+
 async function renderGuess(m){
   const ev=EVENTS.find(e=>e.id==="guess");
   if(!isLive(ev)){m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Event starts in");startCd(ev.date);return}
@@ -901,25 +1357,55 @@ async function renderGuess(m){
   let html=evHdr(ev)+`<div class="card"><div class="ctitle">Rules</div>
     <p style="color:var(--text2);font-size:.82rem;margin-bottom:.8rem">Guess Sumnor's real answers. Contains the right word = counts.</p>
     <table class="rtable"><thead><tr><th>Rank</th><th>Tickets</th></tr></thead><tbody>
-      <tr><td>🥇 1st</td><td class="gold">+20</td></tr><tr><td>🥈 2nd</td><td class="gold">+10</td></tr>
-      <tr><td>🥉 3rd</td><td class="gold">+5</td></tr><tr><td>Participation</td><td class="gold">+1</td></tr>
+      <tr><td>1st</td><td class="gold">+20</td></tr><tr><td>2nd</td><td class="gold">+10</td></tr>
+      <tr><td>3rd</td><td class="gold">+5</td></tr><tr><td>Participation</td><td class="gold">+1</td></tr>
     </tbody></table></div>`;
   html+=GQS.map(q=>`<div class="qcard"><div class="qt">Q${q.id+1}. ${q.q}</div>
-    <input class="ginput" id="g${q.id}" placeholder="Your answer…"></div>`).join("");
-  html+=`<button class="btn btn-primary" style="margin-top:.8rem;max-width:220px" onclick="submitGuess()">Submit →</button>`;
+    <input class="ginput" id="g${q.id}" placeholder="Your answer..."></div>`).join("");
+  html+=`<button class="btn btn-primary" style="margin-top:.8rem;max-width:220px" onclick="submitGuess()">Submit</button>`;
   m.innerHTML=html;
 }
+
 async function submitGuess(){
   const answers={};GQS.forEach(q=>{answers[q.id]=($(`g${q.id}`)?.value||"").trim().toLowerCase()});
   const score=GQS.reduce((s,q)=>{const c=(GA[q.id]||"").toLowerCase();return s+(answers[q.id].includes(c)?1:0)},0);
+
+  // Compute top 3 most guessed (from submitted answers)
+  // In demo mode we simulate this
+  const topGuessesPerQ=GQS.map(q=>({
+    qid:q.id,
+    guess:answers[q.id],
+    correct:GA[q.id]
+  }));
+
   const showResults=(saved)=>{
     const ev=EVENTS.find(e=>e.id==="guess");
-    let html=evHdr(ev)+`<div class="card"><div class="ctitle">Results${saved?"":" (Demo)"} — ${score}/10</div>`;
-    GQS.forEach(q=>{const c=(GA[q.id]||"").toLowerCase();const hit=(answers[q.id]||"").includes(c);
-      html+=`<div style="display:flex;gap:.55rem;align-items:flex-start;padding:.38rem 0;border-bottom:1px solid var(--border)">
-        <span>${hit?"✅":"❌"}</span><div><div style="font-size:.78rem;color:var(--text2)">${q.q}</div>
-        <div style="font-size:.7rem;color:${hit?"var(--green)":"var(--red)"}">Answer: ${GA[q.id]}</div></div></div>`;
+    let html=evHdr(ev)+`<div class="card"><div class="ctitle">Your Results${saved?"":" (Demo)"} — ${score}/10</div>`;
+    html+=`<div class="grid2" style="margin-bottom:.85rem">`;
+    GQS.forEach(q=>{
+      const c=(GA[q.id]||"").toLowerCase();
+      const hit=(answers[q.id]||"").includes(c);
+      html+=`<div style="padding:.38rem 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;gap:.45rem;align-items:flex-start">
+          <span style="color:${hit?"var(--green)":"var(--red)"}">[ ${hit?"+":"-"} ]</span>
+          <div>
+            <div style="font-size:.78rem;color:var(--text2)">${q.q}</div>
+            <div style="font-size:.7rem;color:${hit?"var(--green)":"var(--red)"}">Answer: ${GA[q.id]}</div>
+            <div style="font-size:.68rem;color:var(--text3)">Your guess: ${answers[q.id]||"—"}</div>
+          </div>
+        </div>
+      </div>`;
     });
+    html+=`</div>`;
+    // Top 3 most guessed display
+    html+=`<div class="ctitle" style="margin-top:.85rem">Top Guessed Answers (Simulated)</div>
+    <table class="rtable"><thead><tr><th>Q</th><th>#1 Guess</th><th>#2 Guess</th><th>#3 Guess</th><th>Correct</th></tr></thead><tbody>
+    ${GQS.map(q=>`<tr>
+      <td style="color:var(--text3)">Q${q.id+1}</td>
+      <td>${GA[q.id]}</td><td style="color:var(--text3)">varies</td><td style="color:var(--text3)">varies</td>
+      <td class="gold">${GA[q.id]}</td>
+    </tr>`).join("")}
+    </tbody></table>`;
     html+=`<div style="margin-top:.85rem;color:${saved?"var(--gold)":"var(--text3)"};font-size:.78rem;font-weight:700">${saved?"+1 ticket awarded":"Demo — not saved"}</div></div>`;
     $("main").innerHTML=html;
   };
@@ -942,40 +1428,39 @@ function renderBreather(){
     <p style="color:var(--gold);font-weight:700;font-size:.85rem;margin-bottom:.5rem">I will send them to you — or my bot will, to be more exact.</p>
     <p style="color:var(--text2);font-size:.82rem;margin-bottom:.5rem">You have <strong style="color:var(--gold2)">5 minutes</strong> to redeem it.</p>
     <div class="divider"></div>
-    <p style="color:var(--text3);font-size:.72rem">Redeem codes via the Redeem tab. 1st code = 10 🎫 · 2nd = 7 · 3rd = 5 · 4th = 3</p>
-    <p style="color:var(--text3);font-size:.7rem;margin-top:.28rem;font-style:italic">Breather round while the final event is being prepared 🙂</p>
+    <p style="color:var(--text3);font-size:.72rem">Redeem via the Redeem tab. 1st code = 10 tickets / 2nd = 7 / 3rd = 5 / 4th = 3</p>
+    <p style="color:var(--text3);font-size:.7rem;margin-top:.28rem;font-style:italic">Breather round while the final event is being prepared</p>
   </div>`;
 }
 
 // ══════════════════════════════════════════════════════════
 // CASINO NIGHT
 // ══════════════════════════════════════════════════════════
-let casinoTab="coinflip";
 function renderCasino(){
   const ev=EVENTS.find(e=>e.id==="casino");
   if(!isLive(ev))return evHdr(ev)+cdHTML(ev.date,"Casino opens in");
-  const tabs=[["coinflip","🪙 Coin Flip"],["roulette","🔫 Roulette"],["slots","🎰 Slots"],["poker","🃏 Poker"]];
+  const tabs=[["coinflip","Coin Flip"],["roulette","Roulette"],["slots","Slots"],["poker","Poker"]];
   return evHdr(ev)+`
   <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;border-bottom:1px solid var(--border2);padding-bottom:.8rem">
-    ${tabs.map(([id,lb])=>`<button class="btn ${casinoTab===id?"btn-primary":"btn-ghost"} btn-sm" style="${casinoTab===id?"":"width:auto"}" onclick="setCasinoTab('${id}')">${lb}</button>`).join("")}
+    ${tabs.map(([id,lb])=>`<button class="btn ${_casinoTab===id?"btn-primary":"btn-ghost"} btn-sm" style="${_casinoTab===id?"":"width:auto"}" onclick="setCasinoTab('${id}')">${lb}</button>`).join("")}
   </div>
   <div id="casino-content">${renderCasinoTab()}</div>`;
 }
-function setCasinoTab(t){casinoTab=t;$("casino-content").innerHTML=renderCasinoTab()}
+function setCasinoTab(t){_casinoTab=t;$("casino-content").innerHTML=renderCasinoTab()}
 function renderCasinoTab(){
-  if(casinoTab==="coinflip")return renderCoinFlip();
-  if(casinoTab==="roulette")return renderRoulette();
-  if(casinoTab==="slots")return renderSlots();
-  if(casinoTab==="poker")return renderPoker();
+  if(_casinoTab==="coinflip")return renderCoinFlip();
+  if(_casinoTab==="roulette")return renderRoulette();
+  if(_casinoTab==="slots")return renderSlots();
+  if(_casinoTab==="poker")return renderPoker();
   return"";
 }
 
 // ── COIN FLIP ─────────────────────────────────────────────
 function renderCoinFlip(){
   return`<div class="cgame" style="max-width:380px;margin:0 auto">
-    <h3>🪙 Coin Flip</h3>
-    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.6rem">Exactly 50/50. Win = double your bet. Only works under 100 tickets.</p>
-    <div class="coin" id="coin">🪙</div>
+    <h3>Coin Flip</h3>
+    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.6rem">50/50. Win = double your bet. Only works under 100 tickets.</p>
+    <div class="coin" id="coin">FLIP</div>
     <div class="cresult" id="cfr">—</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.4rem">
       <span style="color:var(--text3);font-size:.78rem">Bet:</span>
@@ -987,112 +1472,236 @@ function renderCoinFlip(){
 }
 async function playCF(){
   const b=Math.max(1,parseInt($("cfb")?.value)||1);
-  const bal=me?.demo?me.tickets:me?.tickets??0;
+  const bal=me?.tickets??0;
   if(bal>=100){notify("Disabled above 100 tickets","err");return}
   if(bal<b){notify("Not enough tickets","err");return}
-  const won=Math.random()<0.5; // true 50/50
+  const won=Math.random()<0.5;
   const diff=won?b:-b;
   if(!me.demo){
     const r=await api("/casino/coinflip","POST",{discord_id:me.discord_id,bet:b});
     if(r.error){notify(r.error,"err");return}
     me.tickets=r.total;renderAuth();
     const c=$("coin");c.classList.add("flip");setTimeout(()=>c.classList.remove("flip"),900);
-    const w=r.won;
-    $("cfr").innerHTML=w?`<span class="ok">✅ Heads! +${b} (${r.total} total)</span>`:`<span class="err">❌ Tails. -${b} (${r.total} total)</span>`;
+    $("cfr").innerHTML=r.won?`<span class="ok">Heads! +${b} (${r.total} total)</span>`:`<span class="err">Tails. -${b} (${r.total} total)</span>`;
     if($("cf-bal"))$("cf-bal").textContent=r.total;
   } else {
     me.tickets=Math.max(0,(me.tickets||0)+diff);
     const c=$("coin");c.classList.add("flip");setTimeout(()=>c.classList.remove("flip"),900);
-    $("cfr").innerHTML=won?`<span class="ok">✅ Heads! +${b} (demo)</span>`:`<span class="err">❌ Tails. -${b} (demo)</span>`;
+    $("cfr").innerHTML=won?`<span class="ok">Heads! +${b} (demo)</span>`:`<span class="err">Tails. -${b} (demo)</span>`;
     if($("cf-bal"))$("cf-bal").textContent=me.tickets;
   }
 }
 
-// ── ROULETTE ──────────────────────────────────────────────
-let _rrMode="solo", _rrPlayers=[], _rrTurn=0, _rrBet=1, _rrPot=0, _rrAlive=[];
+// ══════════════════════════════════════════════════════════
+// RUSSIAN ROULETTE — Overhauled
+// Multipliers for solo: [1.1, 1.3, 1.6, 2.0, 2.5, 4.0]
+// ══════════════════════════════════════════════════════════
+const RR_MULTS=[1.1,1.3,1.6,2.0,2.5,4.0];
+
 function renderRoulette(){
   return`<div class="card" style="max-width:520px;margin:0 auto">
-    <h3 style="font-family:'Black Ops One',sans-serif;font-size:.85rem;letter-spacing:.07em;color:var(--gold);margin-bottom:.6rem">🔫 Russian Roulette</h3>
+    <h3 style="font-family:'Black Ops One',sans-serif;font-size:.85rem;letter-spacing:.07em;color:var(--gold);margin-bottom:.6rem">Russian Roulette</h3>
     <div style="display:flex;gap:.4rem;margin-bottom:.9rem">
       <button class="btn ${_rrMode==="solo"?"btn-primary":"btn-ghost"} btn-sm" style="width:auto" onclick="setRRMode('solo')">Solo</button>
+      <button class="btn ${_rrMode==="duo"?"btn-primary":"btn-ghost"} btn-sm" style="width:auto" onclick="setRRMode('duo')">Duo</button>
       <button class="btn ${_rrMode==="party"?"btn-primary":"btn-ghost"} btn-sm" style="width:auto" onclick="setRRMode('party')">Party</button>
     </div>
-    ${_rrMode==="solo"?renderRRSolo():renderRRParty()}
+    ${_rrMode==="solo"?renderRRSolo():_rrMode==="duo"?renderRRDuo():renderRRParty()}
   </div>`;
 }
-function setRRMode(m){_rrMode=m;_rrPlayers=[];_rrTurn=0;_rrPot=0;_rrAlive=[];$("casino-content").innerHTML=renderCasinoTab()}
+function setRRMode(m){_rrMode=m;_rrPlayers=[];_rrTurn=0;_rrPot=0;_rrAlive=[];_rrSoloCurrent=0;$("casino-content").innerHTML=renderCasinoTab()}
+
+// Solo: progressive chambers — each survived = next multiplier, die = lose bet
+let _rrSoloCurrent=0; // how many chambers survived so far
+let _rrSoloBet=0;
 
 function renderRRSolo(){
-  return`<p style="color:var(--text3);font-size:.72rem;margin-bottom:.7rem">Pick how many shots (1–5). Each shot = 1/6 chance of losing. Survive all = win 1.5× your bet.</p>
-    <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.65rem">
-      <span style="color:var(--text2);font-size:.78rem">Shots:</span>
-      ${[1,2,3,4,5].map(n=>`<button class="btn btn-ghost btn-sm" id="shot${n}" onclick="selShots(${n})" style="width:36px;padding:.25rem 0">${n}</button>`).join("")}
-      <span style="color:var(--text2);font-size:.78rem;margin-left:.4rem">Bet:</span>
-      <input class="binput" type="number" id="rr-bet" value="1" min="1" style="width:64px">
+  const started=_rrSoloCurrent>0&&_rrSoloCurrent<6;
+  return`<div>
+    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.75rem">Survive each chamber to increase your multiplier. Die and lose your bet. Cash out anytime.</p>
+    <div class="mult-track" id="rr-mult-track">
+      ${RR_MULTS.map((m,i)=>`<div class="mult-step ${i<_rrSoloCurrent?"done":""}" id="mstep${i}">
+        <span class="ms-val">${m}x</span>
+        <span class="ms-label">CH ${i+1}</span>
+      </div>`).join("")}
     </div>
-    <div class="chambers" id="rr-chambers">${Array.from({length:6},(_,i)=>`<div class="chamber" id="ch${i}">🔵</div>`).join("")}</div>
-    <div class="cresult" id="rrr">Pick shots and bet, then pull the trigger</div>
-    <button class="btn btn-danger" style="margin-top:.5rem;width:auto" onclick="playRRSolo()">🔫 Pull Trigger</button>`;
+    <div class="mult-display" id="rr-mult">Multiplier: ${_rrSoloCurrent>0?RR_MULTS[_rrSoloCurrent-1]:1}x</div>
+    <div class="chambers" id="rr-chambers">${Array.from({length:6},(_,i)=>`<div class="chamber ${i<_rrSoloCurrent?"safe":""}" id="ch${i}">${i<_rrSoloCurrent?"OK":i+1}</div>`).join("")}</div>
+    <div class="cresult" id="rrr">${started?"Surviving... pull again or cash out":"Pick a bet and pull"}</div>
+    ${!started?`
+    <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.6rem 0">
+      <span style="color:var(--text2);font-size:.78rem">Bet:</span>
+      <input class="binput" type="number" id="rr-bet" value="5" min="1" style="width:72px">
+    </div>`:`<p style="color:var(--text3);font-size:.72rem;text-align:center">Bet: ${_rrSoloBet} tickets</p>`}
+    <div style="display:flex;gap:.5rem;justify-content:center;margin-top:.6rem;flex-wrap:wrap">
+      <button class="btn btn-danger" style="width:auto" onclick="pullRRSolo()">Pull Trigger</button>
+      ${started?`<button class="btn btn-green btn-sm" onclick="cashOutRR()">Cash Out (${Math.floor(_rrSoloBet*RR_MULTS[_rrSoloCurrent-1])} tickets)</button>`:""}
+    </div>
+  </div>`;
 }
 
-let _selShots=1;
-function selShots(n){
-  _selShots=n;
-  for(let i=1;i<=5;i++){
-    const b=$(`shot${i}`);if(b)b.className=`btn btn-sm ${i<=n?"btn-danger":"btn-ghost"}`;
+async function pullRRSolo(){
+  if(_rrSoloCurrent===0){
+    const bet=Math.max(1,parseInt($("rr-bet")?.value)||5);
+    if((me?.tickets??0)<bet){notify("Not enough tickets","err");return}
+    _rrSoloBet=bet;
+    if(me?.demo){me.tickets-=bet}
+    else{
+      const r=await api("/casino/roulette","POST",{discord_id:me.discord_id,bet,shots:1,solo:true,action:"start"});
+      if(r.error){notify(r.error,"err");return}
+      me.tickets=r.total;renderAuth();
+    }
   }
-}
-
-async function playRRSolo(){
-  const bet=Math.max(1,parseInt($("rr-bet")?.value)||1);
-  if((me?.tickets??0)<bet){notify("Not enough tickets","err");return}
-  // Each shot: 1/6 chance death
-  let survived=true;let hitAt=-1;
-  for(let s=0;s<_selShots;s++){
-    if(Math.random()<1/6){survived=false;hitAt=s;break}
-  }
-  const won=survived;
-  const diff=won?Math.floor(bet*1.5):-bet;
-  // Animate chambers
-  document.querySelectorAll(".chamber").forEach((c,i)=>{c.className="chamber";c.textContent="🔵"});
-  if(!won&&hitAt>=0){
-    const ch=$(`ch${hitAt}`);if(ch){ch.classList.add("danger");ch.textContent="💥"}
+  if(_rrSoloCurrent>=6){notify("Max chambers!","err");return}
+  const dead=Math.random()<1/6;
+  const ch=$(`ch${_rrSoloCurrent}`);
+  if(dead){
+    if(ch){ch.className="chamber dead";ch.textContent="X"}
+    $("rrr").innerHTML=`<span class="err">Chamber ${_rrSoloCurrent+1} — you're dead. Lost ${_rrSoloBet} tickets.</span>`;
+    $("rr-mult").textContent=`Multiplier: DEAD`;
+    if(!me?.demo){
+      // tickets already deducted at start, nothing more needed
+    } else {
+      // already deducted
+    }
+    _rrSoloCurrent=0;_rrSoloBet=0;
+    setTimeout(()=>{$("casino-content").innerHTML=renderCasinoTab()},2000);
   } else {
-    for(let s=0;s<_selShots;s++){const ch=$(`ch${s}`);if(ch){ch.classList.add("safe");ch.textContent="✅"}}
+    if(ch){ch.className="chamber safe";ch.textContent="OK"}
+    _rrSoloCurrent++;
+    const mult=RR_MULTS[_rrSoloCurrent-1];
+    $("rr-mult").textContent=`Multiplier: ${mult}x`;
+    $("rrr").innerHTML=`<span class="ok">Survived chamber ${_rrSoloCurrent}! (${mult}x)</span>`;
+    // update mult track
+    document.querySelectorAll(".mult-step").forEach((el,i)=>{
+      if(i<_rrSoloCurrent)el.className="mult-step done";
+    });
+    if(_rrSoloCurrent===6){
+      // Auto cash out at max
+      await cashOutRR();
+    } else {
+      // re-render buttons
+      const cob=document.createElement("div");
+      cob.innerHTML=`<button class="btn btn-green btn-sm" onclick="cashOutRR()" style="margin-top:.5rem">Cash Out (${Math.floor(_rrSoloBet*mult)} tickets)</button>`;
+      const existBtn=document.querySelector(".btn-green");
+      if(!existBtn&&$("rrr"))$("rrr").after(cob.firstElementChild);
+    }
   }
+}
+
+async function cashOutRR(){
+  if(_rrSoloCurrent===0)return;
+  const mult=RR_MULTS[_rrSoloCurrent-1];
+  const winnings=Math.floor(_rrSoloBet*mult);
+  const profit=winnings-_rrSoloBet;
   if(!me?.demo){
-    const r=await api("/casino/roulette","POST",{discord_id:me.discord_id,bet,shots:_selShots,solo:true});
-    if(r.error){notify(r.error,"err");return}
-    me.tickets=r.total;renderAuth();
-    $("rrr").innerHTML=won?`<span class="ok">Survived ${_selShots} shots! +${Math.abs(diff)} (${r.total})</span>`:`<span class="err">💀 Shot ${hitAt+1} got you. -${bet} (${r.total})</span>`;
+    const r=await api("/casino/roulette","POST",{discord_id:me.discord_id,bet:_rrSoloBet,shots:_rrSoloCurrent,solo:true,action:"cashout",mult});
+    if(!r.error){me.tickets=r.total;renderAuth()}
   } else {
-    me.tickets=Math.max(0,(me.tickets||0)+diff);
-    $("rrr").innerHTML=won?`<span class="ok">Survived! +${Math.abs(diff)} (demo)</span>`:`<span class="err">💀 Dead. -${bet} (demo)</span>`;
+    me.tickets=(me.tickets||0)+winnings;
+  }
+  notify(`Cashed out! +${profit} profit (${winnings} total)`);
+  _rrSoloCurrent=0;_rrSoloBet=0;
+  setTimeout(()=>{$("casino-content").innerHTML=renderCasinoTab()},1500);
+}
+
+// Duo: both bet same amount, take turns, winner gets loser's bet
+let _rrDuoPlayers=[], _rrDuoBet=10, _rrDuoTurn=0, _rrDuoAlive=[], _rrDuoStarted=false;
+
+function renderRRDuo(){
+  if(!_rrDuoStarted){
+    return`<div>
+      <p style="color:var(--text3);font-size:.72rem;margin-bottom:.75rem">Both players bet the same amount. Take turns. Last one standing wins both bets.</p>
+      <div style="display:flex;gap:.4rem;margin-bottom:.55rem;flex-wrap:wrap">
+        <input class="ginput" id="duo-p-in" placeholder="Player 2 name" style="flex:1;min-width:100px">
+      </div>
+      <div style="margin-bottom:.7rem">Player 1: @${me?.username}</div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem">
+        <span style="color:var(--text2);font-size:.78rem">Bet each:</span>
+        <input class="binput" type="number" id="duo-bet" value="10" min="1" style="width:72px">
+      </div>
+      <button class="btn btn-primary" style="max-width:200px" onclick="startRRDuo()">Start Duel</button>
+    </div>`;
+  }
+  const cur=_rrDuoAlive[_rrDuoTurn%_rrDuoAlive.length];
+  const pot=_rrDuoBet*2;
+  return`<div>
+    <div style="text-align:center;margin-bottom:.6rem;font-family:'Black Ops One',sans-serif;color:var(--gold)">Pot: ${pot} tickets</div>
+    <div class="chambers">${Array.from({length:6},(_,i)=>`<div class="chamber" id="dch${i}">${i+1}</div>`).join("")}</div>
+    <p style="color:var(--text2);font-size:.82rem;text-align:center;margin:.55rem 0">@${cur}'s turn</p>
+    <div style="margin:.5rem 0;text-align:center">${_rrDuoPlayers.map(p=>`<span class="tag ${_rrDuoAlive.includes(p)?"tag-green":"tag-dim"}" style="margin:.2rem">${_rrDuoAlive.includes(p)?"[A]":"[X]"} @${p}</span>`).join("")}</div>
+    <div class="cresult" id="rrr">—</div>
+    <button class="btn btn-danger" style="width:auto;margin-top:.5rem" onclick="duoShoot()">Pull Trigger</button>
+  </div>`;
+}
+
+function startRRDuo(){
+  const p2=($("duo-p-in")?.value||"").trim();
+  if(!p2){notify("Enter Player 2 name","err");return}
+  _rrDuoBet=Math.max(1,parseInt($("duo-bet")?.value)||10);
+  if((me?.tickets??0)<_rrDuoBet){notify("Not enough tickets","err");return}
+  _rrDuoPlayers=[me.username,p2];
+  _rrDuoAlive=[me.username,p2];
+  _rrDuoTurn=0;_rrDuoStarted=true;
+  $("casino-content").innerHTML=renderCasinoTab();
+}
+
+async function duoShoot(){
+  const shooter=_rrDuoAlive[_rrDuoTurn%_rrDuoAlive.length];
+  const dead=Math.random()<1/6;
+  const hitCh=Math.floor(Math.random()*6);
+  document.querySelectorAll("[id^='dch']").forEach(c=>{c.className="chamber";c.textContent=c.id.replace("dch","")+""});
+  if(dead){
+    const ch=$(`dch${hitCh}`);if(ch){ch.className="chamber danger";ch.textContent="X"}
+    _rrDuoAlive=_rrDuoAlive.filter(p=>p!==shooter);
+    $("rrr").innerHTML=`<span class="err">@${shooter} is eliminated!</span>`;
+    if(_rrDuoAlive.length===1){
+      const winner=_rrDuoAlive[0];
+      const pot=_rrDuoBet*2;
+      $("rrr").innerHTML=`<span class="ok">@${winner} wins ${pot} tickets!</span>`;
+      if(winner===me?.username&&!me?.demo){
+        const r=await api("/casino/roulette","POST",{discord_id:me.discord_id,bet:pot,solo:false,action:"win"});
+        if(!r.error){me.tickets=r.total;renderAuth()}
+      } else if(winner===me?.username&&me?.demo){
+        me.tickets=(me.tickets||0)+_rrDuoBet;
+      }
+      setTimeout(()=>{_rrDuoStarted=false;_rrDuoPlayers=[];_rrDuoAlive=[];$("casino-content").innerHTML=renderCasinoTab()},3000);
+    }
+  } else {
+    const ch=$(`dch${hitCh}`);if(ch){ch.className="chamber safe";ch.textContent="OK"}
+    $("rrr").innerHTML=`<span class="ok">@${shooter} survived!</span>`;
+    _rrDuoTurn++;
+    setTimeout(()=>{$("casino-content").innerHTML=renderCasinoTab()},1000);
   }
 }
 
+// Party mode (unchanged)
 function renderRRParty(){
   const started=_rrAlive.length>0;
   if(!started){
-    return`<p style="color:var(--text3);font-size:.72rem;margin-bottom:.7rem">Add players, set a bet per person. Each player takes turns. Survivors split the pot.</p>
+    return`<div>
+      <p style="color:var(--text3);font-size:.72rem;margin-bottom:.7rem">Add 3+ players, each bets the same. Survivors split the pot equally.</p>
       <div style="display:flex;gap:.4rem;margin-bottom:.55rem;flex-wrap:wrap">
         <input class="ginput" id="rr-p-in" placeholder="Player name" style="flex:1;min-width:120px">
         <button class="btn btn-ghost btn-sm" onclick="addRRPlayer()">Add</button>
       </div>
-      <div style="margin-bottom:.7rem">${_rrPlayers.map((p,i)=>`<div style="display:flex;align-items:center;gap:.5rem;padding:.3rem 0;border-bottom:1px solid var(--border)"><span style="flex:1;font-size:.8rem">@${p}</span><button class="btn btn-danger btn-sm" onclick="removeRRPlayer(${i})">×</button></div>`).join("")}</div>
+      <div style="margin-bottom:.7rem">${_rrPlayers.map((p,i)=>`<div style="display:flex;align-items:center;gap:.5rem;padding:.3rem 0;border-bottom:1px solid var(--border)"><span style="flex:1;font-size:.8rem">@${p}</span><button class="btn btn-danger btn-sm" onclick="removeRRPlayer(${i})">x</button></div>`).join("")}</div>
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem">
         <span style="color:var(--text2);font-size:.78rem">Bet per player:</span>
         <input class="binput" type="number" id="rr-party-bet" value="5" min="1" style="width:64px">
       </div>
-      ${_rrPlayers.length>=2?`<button class="btn btn-primary" style="max-width:180px" onclick="startRRParty()">Start Game →</button>`:`<p style="color:var(--text3);font-size:.72rem">Add at least 2 players</p>`}`;
+      ${_rrPlayers.length>=3?`<button class="btn btn-primary" style="max-width:180px" onclick="startRRParty()">Start Game</button>`:`<p style="color:var(--text3);font-size:.72rem">Add at least 3 players</p>`}
+    </div>`;
   }
   const cur=_rrAlive[_rrTurn%_rrAlive.length];
-  return`<div class="poker-pot">💰 Pot: ${_rrPot} tickets</div>
-    <div class="chambers" id="rr-chambers">${Array.from({length:6},(_,i)=>`<div class="chamber" id="ch${i}">🔵</div>`).join("")}</div>
-    <p style="color:var(--text2);font-size:.82rem;text-align:center;margin:.5rem 0">🎯 @${cur}'s turn</p>
-    <div style="margin:.55rem 0">${_rrPlayers.map(p=>`<span class="tag ${_rrAlive.includes(p)?"tag-green":"tag-dim"}" style="margin:.2rem">${_rrAlive.includes(p)?"☑":"☠"} @${p}</span>`).join(" ")}</div>
+  return`<div>
+    <div style="font-family:'Black Ops One',sans-serif;font-size:.9rem;color:var(--gold);text-align:center;margin-bottom:.5rem">Pot: ${_rrPot} tickets</div>
+    <div class="chambers">${Array.from({length:6},(_,i)=>`<div class="chamber" id="ch${i}">${i+1}</div>`).join("")}</div>
+    <p style="color:var(--text2);font-size:.82rem;text-align:center;margin:.5rem 0">@${cur}'s turn</p>
+    <div style="margin:.55rem 0">${_rrPlayers.map(p=>`<span class="tag ${_rrAlive.includes(p)?"tag-green":"tag-dim"}" style="margin:.2rem">${_rrAlive.includes(p)?"[A]":"[X]"} @${p}</span>`).join("")}</div>
     <div class="cresult" id="rrr">—</div>
-    <button class="btn btn-danger" style="width:auto" onclick="partyRRShoot()">🔫 ${cur} pulls trigger</button>`;
+    <button class="btn btn-danger" style="width:auto" onclick="partyRRShoot()">@${cur} pulls trigger</button>
+  </div>`;
 }
 function addRRPlayer(){const n=($("rr-p-in")?.value||"").trim();if(n&&!_rrPlayers.includes(n)){_rrPlayers.push(n);$("casino-content").innerHTML=renderCasinoTab()}}
 function removeRRPlayer(i){_rrPlayers.splice(i,1);$("casino-content").innerHTML=renderCasinoTab()}
@@ -1104,21 +1713,20 @@ function startRRParty(){
 async function partyRRShoot(){
   const shooter=_rrAlive[_rrTurn%_rrAlive.length];
   const dead=Math.random()<1/6;
-  document.querySelectorAll(".chamber").forEach((c,i)=>{c.className="chamber";c.textContent="🔵"});
+  document.querySelectorAll(".chamber").forEach((c,i)=>{c.className="chamber";c.textContent=i+1});
   const hitCh=Math.floor(Math.random()*6);
   if(dead){
-    const ch=$(`ch${hitCh}`);if(ch){ch.classList.add("danger");ch.textContent="💥"}
+    const ch=$(`ch${hitCh}`);if(ch){ch.className="chamber danger";ch.textContent="X"}
     _rrAlive=_rrAlive.filter(p=>p!==shooter);
-    $("rrr").innerHTML=`<span class="err">💀 @${shooter} is eliminated!</span>`;
+    $("rrr").innerHTML=`<span class="err">@${shooter} is eliminated!</span>`;
   } else {
-    const ch=$(`ch${hitCh}`);if(ch){ch.classList.add("safe");ch.textContent="✅"}
-    $("rrr").innerHTML=`<span class="ok">@${shooter} survived this round!</span>`;
+    const ch=$(`ch${hitCh}`);if(ch){ch.className="chamber safe";ch.textContent="OK"}
+    $("rrr").innerHTML=`<span class="ok">@${shooter} survived!</span>`;
     _rrTurn++;
   }
   if(_rrAlive.length===1){
     const winner=_rrAlive[0];
-    $("rrr").innerHTML=`<span class="ok">🏆 @${winner} wins ${_rrPot} tickets!</span>`;
-    // If winner is the logged-in user
+    $("rrr").innerHTML=`<span class="ok">@${winner} wins ${_rrPot} tickets!</span>`;
     if(!me?.demo&&winner===me?.username){
       const r=await api("/casino/roulette","POST",{discord_id:me.discord_id,bet:_rrPot,solo:false});
       if(!r.error){me.tickets=r.total;renderAuth()}
@@ -1126,16 +1734,15 @@ async function partyRRShoot(){
     setTimeout(()=>{_rrAlive=[];_rrPlayers=[];_rrPot=0;_rrTurn=0;$("casino-content").innerHTML=renderCasinoTab()},3000);
     return;
   }
-  // refresh party panel
   setTimeout(()=>{$("casino-content").innerHTML=renderCasinoTab()},1200);
 }
 
 // ── SLOTS ─────────────────────────────────────────────────
 function renderSlots(){
   return`<div class="cgame" style="max-width:380px;margin:0 auto">
-    <h3>🎰 Slots</h3>
-    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.55rem">3 match = 3× · 💎💎💎 = 5× · 2 match = 0.5×</p>
-    <div class="reels"><div class="reel" id="sl0">🍒</div><div class="reel" id="sl1">🍋</div><div class="reel" id="sl2">🍊</div></div>
+    <h3>Slots</h3>
+    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.55rem">3 match = 3x / GEM GEM GEM = 5x / 2 match = 0.5x</p>
+    <div class="reels"><div class="reel" id="sl0">CH</div><div class="reel" id="sl1">LN</div><div class="reel" id="sl2">OR</div></div>
     <div class="cresult" id="slr">—</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:.5rem">
       <span style="color:var(--text3);font-size:.78rem">Bet:</span>
@@ -1144,14 +1751,14 @@ function renderSlots(){
     </div>
   </div>`;
 }
+const SLOT_SYMS=["CH","LN","OR","ST","GM","7S"];
 async function playSlots(){
   const b=Math.max(1,parseInt($("slb")?.value)||1);
   if((me?.tickets??0)<b){notify("Not enough tickets","err");return}
-  const syms=["🍒","🍋","🍊","⭐","💎","7️⃣"];
   for(let i=0;i<3;i++){const e=$(`sl${i}`);if(e){e.classList.add("spin");setTimeout(()=>e.classList.remove("spin"),400+i*100)}}
-  const reels=[0,1,2].map(()=>syms[Math.floor(Math.random()*syms.length)]);
+  const reels=[0,1,2].map(()=>SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)]);
   let diff;
-  if(reels[0]===reels[1]&&reels[1]===reels[2])diff=reels[0]==="💎"?b*5:b*3;
+  if(reels[0]===reels[1]&&reels[1]===reels[2])diff=reels[0]==="GM"?b*5:b*3;
   else if(reels[0]===reels[1]||reels[1]===reels[2])diff=Math.max(1,Math.floor(b*.5));
   else diff=-b;
   setTimeout(()=>{reels.forEach((v,i)=>{const e=$(`sl${i}`);if(e)e.textContent=v})},600);
@@ -1166,30 +1773,28 @@ async function playSlots(){
   }
 }
 
-// ── POKER ─────────────────────────────────────────────────
-const SUITS=["♠","♥","♦","♣"];
+// ── POKER — Fixed own-card visibility ─────────────────────
+const SUITS=["S","H","D","C"];
+const SUIT_SYMBOLS={S:"♠",H:"♥",D:"♦",C:"♣"};
 const RANKS=["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
-const RED_SUITS=["♥","♦"];
-let _poker={players:[],hands:{},community:[],deck:[],pot:0,phase:"setup",bet:5,turn:0,bets:{},folded:new Set(),started:false};
+const RED_SUITS=["H","D"];
 
 function freshDeck(){return SUITS.flatMap(s=>RANKS.map(r=>({r,s})))}
 function shuffle(d){for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
 function cardHTML(c,hidden){
-  if(hidden)return`<div class="card-widget" style="background:#1a0050;color:#8866cc;border-color:#4422aa"><span class="rank">?</span><span class="suit">🂠</span></div>`;
+  if(!c||hidden)return`<div class="card-widget back"><span class="rank">?</span><span class="suit">X</span></div>`;
   const red=RED_SUITS.includes(c.s);
-  return`<div class="card-widget ${red?"red":"black"}"><span class="rank">${c.r}</span><span class="suit">${c.s}</span></div>`;
+  return`<div class="card-widget ${red?"red":"black"}"><span class="rank">${c.r}</span><span class="suit">${SUIT_SYMBOLS[c.s]||c.s}</span></div>`;
 }
 
-// Hand evaluation (simplified ranking)
 function evalHand(cards){
-  // returns {rank: number, name: string} — higher is better
   const all=cards.map(c=>({r:RANKS.indexOf(c.r),s:c.s}));
   const ranks=all.map(c=>c.r).sort((a,b)=>b-a);
   const suits=all.map(c=>c.s);
   const counts={};ranks.forEach(r=>counts[r]=(counts[r]||0)+1);
   const vals=Object.values(counts).sort((a,b)=>b-a);
-  const isFlush=suits.every(s=>s===suits[0]);
-  const isStraight=ranks.length===5&&ranks[0]-ranks[4]===4&&new Set(ranks).size===5;
+  const isFlush=suits.length>=5&&suits.every(s=>s===suits[0]);
+  const isStraight=ranks.length>=5&&ranks[0]-ranks[4]===4&&new Set(ranks).size===5;
   if(isFlush&&isStraight&&ranks[0]===12)return{rank:9,name:"Royal Flush"};
   if(isFlush&&isStraight)return{rank:8,name:"Straight Flush"};
   if(vals[0]===4)return{rank:7,name:"Four of a Kind"};
@@ -1203,27 +1808,24 @@ function evalHand(cards){
 }
 
 function renderPoker(){
-  if(!_poker.started) return renderPokerSetup();
+  if(!_poker.started)return renderPokerSetup();
   return renderPokerTable();
 }
-
 function renderPokerSetup(){
   return`<div style="max-width:520px;margin:0 auto">
-    <div class="poker-room" style="background:transparent;border:none;padding:0">
-      <div class="card"><div class="ctitle">🃏 Poker — Multiplayer</div>
-        <p style="color:var(--text2);font-size:.82rem;margin-bottom:.85rem">Add all players, set the buy-in, then deal. Texas Hold'em rules. You play for each other's chips.</p>
-        <label class="llabel" style="display:block;margin-bottom:.35rem">Players (2–6)</label>
-        <div style="display:flex;gap:.4rem;margin-bottom:.5rem;flex-wrap:wrap">
-          <input class="ginput" id="poker-p-in" placeholder="Player name" style="flex:1;min-width:100px">
-          <button class="btn btn-ghost btn-sm" onclick="addPokerPlayer()">Add</button>
-        </div>
-        <div style="margin-bottom:.8rem">${(_poker.players||[]).map((p,i)=>`<div style="display:flex;align-items:center;gap:.5rem;padding:.28rem 0;border-bottom:1px solid var(--border)"><span style="flex:1;font-size:.8rem">@${p}</span><button class="btn btn-danger btn-sm" onclick="removePokerPlayer(${i})">×</button></div>`).join("")}</div>
-        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
-          <span style="color:var(--text2);font-size:.78rem">Buy-in (tickets):</span>
-          <input class="binput" type="number" id="poker-bet" value="10" min="2" style="width:72px">
-        </div>
-        ${(_poker.players||[]).length>=2?`<button class="btn btn-primary" style="max-width:200px" onclick="dealPoker()">Deal Cards →</button>`:`<p style="color:var(--text3);font-size:.72rem">Add at least 2 players</p>`}
+    <div class="card"><div class="ctitle">Poker — Texas Hold'em</div>
+      <p style="color:var(--text2);font-size:.82rem;margin-bottom:.85rem">Add all players, set the buy-in, deal. You always see YOUR own cards face-up.</p>
+      <label class="llabel" style="display:block;margin-bottom:.35rem">Players (2-6)</label>
+      <div style="display:flex;gap:.4rem;margin-bottom:.5rem;flex-wrap:wrap">
+        <input class="ginput" id="poker-p-in" placeholder="Player name" style="flex:1;min-width:100px">
+        <button class="btn btn-ghost btn-sm" onclick="addPokerPlayer()">Add</button>
       </div>
+      <div style="margin-bottom:.8rem">${(_poker.players||[]).map((p,i)=>`<div style="display:flex;align-items:center;gap:.5rem;padding:.28rem 0;border-bottom:1px solid var(--border)"><span style="flex:1;font-size:.8rem">@${p}${p===me?.username?" (You)":""}</span><button class="btn btn-danger btn-sm" onclick="removePokerPlayer(${i})">x</button></div>`).join("")}</div>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+        <span style="color:var(--text2);font-size:.78rem">Buy-in (tickets):</span>
+        <input class="binput" type="number" id="poker-bet" value="10" min="2" style="width:72px">
+      </div>
+      ${(_poker.players||[]).length>=2?`<button class="btn btn-primary" style="max-width:200px" onclick="dealPoker()">Deal Cards</button>`:`<p style="color:var(--text3);font-size:.72rem">Add at least 2 players</p>`}
     </div>
   </div>`;
 }
@@ -1243,7 +1845,7 @@ function renderPokerTable(){
         <div style="display:flex;gap:.35rem;justify-content:center;margin-bottom:.4rem">
           ${p.community.length?p.community.map(c=>cardHTML(c,false)).join(""):Array.from({length:5},()=>cardHTML(null,true)).join("")}
         </div>
-        <div class="poker-pot">Pot: ${p.pot} 🎫</div>
+        <div class="poker-pot">Pot: ${p.pot} [T]</div>
       </div>
     </div>
     <div class="player-seats">
@@ -1251,11 +1853,13 @@ function renderPokerTable(){
         const isActive=pl===curPlayer&&p.phase!=="showdown";
         const folded=p.folded.has(pl);
         const hand=p.hands[pl]||[];
+        // Show face-up only for the current logged-in user, or at showdown
         const isMe=pl===me?.username;
+        const showFaceUp=isMe||p.phase==="showdown";
         return`<div class="seat ${isActive?"active-seat":""} ${folded?"folded-seat":""}">
-          <div class="seat-name">${folded?"☠ ":""}@${pl}${isActive?" 🎯":""}</div>
-          <div class="seat-cards">${hand.map(c=>cardHTML(c,!isMe&&p.phase!=="showdown")).join("")}</div>
-          <div class="seat-chips">Bet: ${p.bets[pl]||0} 🎫</div>
+          <div class="seat-name">${folded?"[X] ":isMe?"[YOU] ":""}<strong>@${pl}</strong>${isActive?" <":" "}</div>
+          <div class="seat-cards">${hand.map(c=>cardHTML(c,!showFaceUp)).join("")}</div>
+          <div class="seat-chips">Bet: ${p.bets[pl]||0} [T]</div>
         </div>`;
       }).join("")}
     </div>
@@ -1272,7 +1876,7 @@ function renderPokerActions(cur){
       <button class="btn btn-ghost btn-sm" onclick="pokerAct('check')">Check / Call</button>
       <button class="btn btn-primary btn-sm" style="width:auto" onclick="pokerAct('raise')">Raise +${_poker.bet}</button>
     </div>
-    ${_poker.phase==="preflop"?"":`<button class="btn btn-danger btn-sm" style="margin-top:.5rem" onclick="advancePoker()">Next Phase →</button>`}
+    ${_poker.phase==="preflop"?"":`<button class="btn btn-danger btn-sm" style="margin-top:.5rem" onclick="advancePoker()">Next Phase</button>`}
   </div>`;
 }
 
@@ -1286,15 +1890,19 @@ function renderShowdown(){
   });
   const prize=_poker.pot;
   return`<div style="text-align:center;padding:1rem">
-    <div style="font-family:'Black Ops One',sans-serif;font-size:1.1rem;color:var(--gold);text-shadow:var(--glow-sm);margin-bottom:.5rem">🏆 @${winner||"?"} wins ${prize} tickets!</div>
-    <div style="color:var(--text2);font-size:.78rem;margin-bottom:.9rem">${alive.map(p=>{const h=[...(_poker.hands[p]||[]),..._poker.community].slice(0,5);const ev=evalHand(h);return`@${p}: ${ev.name}`}).join(" · ")}</div>
+    <div style="font-family:'Black Ops One',sans-serif;font-size:1.1rem;color:var(--gold);text-shadow:var(--glow-sm);margin-bottom:.5rem">@${winner||"?"} wins ${prize} tickets!</div>
+    <div style="color:var(--text2);font-size:.78rem;margin-bottom:.9rem">${alive.map(p=>{const h=[...(_poker.hands[p]||[]),..._poker.community].slice(0,5);const ev=evalHand(h);return`@${p}: ${ev.name}`}).join(" / ")}</div>
     <button class="btn btn-primary" style="max-width:180px" onclick="resetPoker()">New Game</button>
   </div>`;
 }
 
-function addPokerPlayer(){const n=($("poker-p-in")?.value||"").trim();if(n&&!_poker.players.includes(n)&&_poker.players.length<6){_poker.players.push(n);$("casino-content").innerHTML=renderCasinoTab()}}
+function addPokerPlayer(){
+  const n=($("poker-p-in")?.value||"").trim();
+  if(n&&!_poker.players.includes(n)&&_poker.players.length<6){
+    _poker.players.push(n);$("casino-content").innerHTML=renderCasinoTab()
+  }
+}
 function removePokerPlayer(i){_poker.players.splice(i,1);$("casino-content").innerHTML=renderCasinoTab()}
-
 function dealPoker(){
   const bet=Math.max(2,parseInt($("poker-bet")?.value)||10);
   const deck=shuffle(freshDeck());
@@ -1303,7 +1911,6 @@ function dealPoker(){
   _poker={..._poker,deck,hands,community:[],pot:_poker.players.length*bet,bet,phase:"preflop",turn:0,bets,folded:new Set(),started:true};
   $("casino-content").innerHTML=renderCasinoTab();
 }
-
 function pokerAct(action){
   const alive=_poker.players.filter(p=>!_poker.folded.has(p));
   const cur=alive[_poker.turn%alive.length];
@@ -1315,7 +1922,6 @@ function pokerAct(action){
   else if(_poker.turn%stillAlive.length===0&&_poker.turn>0){advancePoker();return}
   $("casino-content").innerHTML=renderCasinoTab();
 }
-
 function advancePoker(){
   const phases=["preflop","flop","turn","river","showdown"];
   const cur=phases.indexOf(_poker.phase);
@@ -1327,23 +1933,22 @@ function advancePoker(){
   }
   $("casino-content").innerHTML=renderCasinoTab();
 }
-
 function resetPoker(){_poker={players:[],hands:{},community:[],deck:[],pot:0,phase:"setup",bet:5,turn:0,bets:{},folded:new Set(),started:false};$("casino-content").innerHTML=renderCasinoTab()}
 
 // ── LEADERBOARD ───────────────────────────────────────────
 async function renderLB(m){
-  m.innerHTML=`<div class="evhdr"><div class="evtitle">🏆 Leaderboard</div></div><div class="loading">Loading…</div>`;
+  m.innerHTML=`<div class="evhdr"><div class="evtitle">Leaderboard</div></div><div class="loading">Loading...</div>`;
   try{
     const lb=await api("/tickets/leaderboard");
-    let html=`<div class="evhdr"><div class="evtitle">🏆 Leaderboard</div></div><div class="card">`;
+    let html=`<div class="evhdr"><div class="evtitle">Leaderboard</div></div><div class="card">`;
     if(!lb.length)html+=`<p style="color:var(--text3);font-size:.82rem;padding:.45rem">No entries yet.</p>`;
     lb.forEach((row,i)=>{
       const rc=i===0?"r1":i===1?"r2":i===2?"r3":"";
       const isMe=!me?.demo&&me?.discord_id===row.discord_id;
       html+=`<div class="lb-row" style="${isMe?"background:rgba(245,196,0,.03)":""}">
-        <div class="lb-rank ${rc}">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1}</div>
+        <div class="lb-rank ${rc}">${i===0?"[1]":i===1?"[2]":i===2?"[3]":i+1}</div>
         <div class="lb-name">${isMe?`<span class="gold">@${row.username}</span>`:row.username}${isMe?` <span class="tag tag-gold">You</span>`:""}</div>
-        <div class="lb-val">🎫 ${row.tickets}</div>
+        <div class="lb-val">[T] ${row.tickets}</div>
       </div>`;
     });
     m.innerHTML=html+`</div>`;
