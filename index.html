@@ -337,19 +337,10 @@ const DEMO_KEY = "INTRA-Q5KR-BC8F";
 
 // Events injected by server (filtered by date). In pure static mode, all events show.
 // The placeholder __SERVER_EVENTS__ is replaced by server.py at request time.
-const EVENTS = (()=>{
-  try{ return __SERVER_EVENTS__; }
-  catch{ return [
-    {id:"trivia",   title:"Trivia Night",           date:"2025-06-05T00:00:00Z", idx:0},
-    {id:"boss",     title:"Boss Raid",               date:"2025-06-10T00:00:00Z", idx:1},
-    {id:"guess",    title:"Guessing Games",          date:"2025-06-15T00:00:00Z", idx:2},
-    {id:"breather", title:"Breathe In, Breathe Out", date:"2025-06-20T00:00:00Z", idx:3},
-    {id:"casino",   title:"Casino Night",            date:"2025-06-25T00:00:00Z", idx:4},
-  ];}
-})();
+// Events injected by server — never hardcoded here
+const EVENTS = __SERVER_EVENTS__;
 
-// Sumnor's real answers (guess event)
-const GA = {0:"blue",1:"pizza",2:"japan",3:"coffee",4:"night owl",5:"cats",6:"winter",7:"pc",8:"rpg",9:"metal"};
+// Guessing answers are server-side only — not in this file.
 // ══════════════════════════════════════════════════════════
 
 async function api(path, method="GET", body=null){
@@ -549,18 +540,8 @@ async function handleRedeem(){
 // ══════════════════════════════════════════════════════════
 // TRIVIA — rules → questions → leaderboard
 // ══════════════════════════════════════════════════════════
-const TQS=[
-  {id:0,q:"What is the capital of France?",a:"Paris",choices:["London","Paris","Berlin","Madrid"],hard:false},
-  {id:1,q:"What is 12 × 12?",a:"144",choices:["132","144","156","168"],hard:false},
-  {id:2,q:"Which planet is closest to the Sun?",a:"Mercury",choices:["Venus","Earth","Mercury","Mars"],hard:false},
-  {id:3,q:"What year did World War II end?",a:"1945",choices:["1943","1944","1945","1946"],hard:false},
-  {id:4,q:"What is the chemical symbol for gold?",a:"Au",choices:["Go","Ag","Au","Gd"],hard:false},
-  {id:5,q:"Who wrote Romeo and Juliet?",a:"Shakespeare",choices:["Dickens","Shakespeare","Hemingway","Chaucer"],hard:false},
-  {id:6,q:"When was INTRA first founded?",a:"6/18/2025",choices:["1/1/2025","3/15/2025","6/18/2025","12/1/2024"],hard:true},
-  {id:7,q:"Which news outlet did INTRA code a bot for?",a:"OCN",choices:["RSN","OCN","El Dorado","Magnum Opus"],hard:true},
-  {id:8,q:"Who is the REAL owner of INTRA?",a:"Sumnor",choices:["Sumnor","Luna","SumTingWong","George Long"],hard:true},
-  {id:9,q:"How many planets are in our solar system?",a:"8",choices:["7","8","9","10"],hard:false},
-];
+// Trivia questions fetched from server — see /trivia/questions
+const TQS = []; // populated at runtime from server
 
 async function renderTrivia(m){
   const ev=EVENTS.find(e=>e.id==="trivia");
@@ -695,11 +676,11 @@ async function renderBoss(m){
   const xpInLevel=(bossPlayer?.xp||0)%XP_PER_LEVEL;
   const lvl=bossPlayer?.level||1;
 
-  const showScene=_bossPhase==="fight"||_bossPhase==="phase"||_bossPhase==="recovering";
+  const showScene=_bossPhase==="fight"||_bossPhase==="phase"||_bossPhase==="dead";
 
   let inner="";
   if(_bossPhase==="class")inner=bossClassPick();
-  else if(_bossPhase==="recovering")inner=bossRecovering();
+  else if(_bossPhase==="dead")inner=bossDead();
   else inner=bossMain();
 
   m.innerHTML=evHdr(ev)+`
@@ -731,22 +712,18 @@ async function renderBoss(m){
   }
 }
 
-function bossRecovering(){
+function bossDead(){
   return`<div class="card" style="text-align:center;padding:2rem">
     <div style="font-family:'Black Ops One',sans-serif;font-size:1.1rem;color:var(--red);margin-bottom:.6rem">You have fallen.</div>
     <p style="color:var(--text2);font-size:.82rem;margin-bottom:.85rem">Your HP is being restored. Wait a moment then rejoin.</p>
-    <button class="btn btn-primary" style="max-width:200px" onclick="rejoinBoss()">Rejoin Raid</button>
-    <button class="btn btn-ghost btn-sm" style="margin-left:.5rem" onclick="_bossPhase='phase';renderBoss($('main'))">Spectate</button>
+    
+    
   </div>`;
 }
 
-async function rejoinBoss(){
-  if(me?.demo){
-    bossPlayer.hp=bossPlayer.max_hp;bossPlayer.recovering=false;
-    _bossPhase="fight";renderBoss($("main"));return;
-  }
+
   try{
-    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action:"recover"});
+    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action:"noop"});
     if(r.error){notify(r.error,"err");return}
     bossPlayer=r.player;_bossPhase="fight";renderBoss($("main"));
   }catch{notify("Failed","err")}
@@ -1129,18 +1106,35 @@ async function pollBoss(){
 
 // ── BOSS CANVAS ──
 const _BOSS_IMGS={};
-function tryLoadImg(src){
-  if(_BOSS_IMGS[src]!==undefined)return _BOSS_IMGS[src];
-  const img=new Image();
-  img.src=src;
-  img.onload=()=>{_BOSS_IMGS[src]=img};
-  img.onerror=()=>{_BOSS_IMGS[src]=null};
-  _BOSS_IMGS[src]=img;
-  return img;
+// Sprites served by the server from ./sprites/ — names never exposed in HTML source
+const _BOSS_IMGS={};
+function loadSpr(key,files){
+  // Try each filename in order; server 404s if file doesn't exist
+  const try1=new Image();
+  try1.src="/sprites/"+files[0];
+  try1.onload=()=>{_BOSS_IMGS[key]=try1};
+  try1.onerror=()=>{
+    if(files.length>1){const try2=new Image();try2.src="/sprites/"+files[1];try2.onload=()=>{_BOSS_IMGS[key]=try2};try2.onerror=()=>{_BOSS_IMGS[key]=null}}
+    else _BOSS_IMGS[key]=null;
+  };
 }
-const BOSS_FRAMES={idle:tryLoadImg("boss_idle.gif")||tryLoadImg("boss_idle.png"),flinch:tryLoadImg("boss_flinch.gif")||tryLoadImg("boss_flinch.png"),attack:tryLoadImg("boss_attack.gif")||tryLoadImg("boss_attack.png"),dead:tryLoadImg("boss_dead.png")};
-const FX_IMGS={attack:tryLoadImg("fx_slash.gif")||tryLoadImg("fx_slash.png"),fireball:tryLoadImg("fx_fireball.gif")||tryLoadImg("fx_fireball.png"),blizzard:tryLoadImg("fx_blizzard.gif")||tryLoadImg("fx_blizzard.png"),arcane_nova:tryLoadImg("fx_nova.gif")||tryLoadImg("fx_nova.png"),bless:tryLoadImg("fx_bless.gif")||tryLoadImg("fx_bless.png"),heal_target:tryLoadImg("fx_heal.gif")||tryLoadImg("fx_heal.png"),shield:tryLoadImg("fx_shield.gif")||tryLoadImg("fx_shield.png")};
-const CLASS_IMGS={assassin:tryLoadImg("class_assassin.png"),tank:tryLoadImg("class_tank.png"),supporter:tryLoadImg("class_supporter.png"),mage:tryLoadImg("class_mage.png")};
+function getSpr(key){const img=_BOSS_IMGS[key];return(img&&img.naturalWidth>0)?img:null}
+// Load all sprites from server at boot
+loadSpr("boss_idle",   ["boss_idle.gif","boss_idle.png"]);
+loadSpr("boss_flinch", ["boss_flinch.gif","boss_flinch.png"]);
+loadSpr("boss_attack", ["boss_attack.gif","boss_attack.png"]);
+loadSpr("boss_dead",   ["boss_dead.png"]);
+loadSpr("fx_attack",   ["fx_slash.gif","fx_slash.png"]);
+loadSpr("fx_fireball", ["fx_fireball.gif","fx_fireball.png"]);
+loadSpr("fx_blizzard", ["fx_blizzard.gif","fx_blizzard.png"]);
+loadSpr("fx_arcane_nova",["fx_nova.gif","fx_nova.png"]);
+loadSpr("fx_bless",    ["fx_bless.gif","fx_bless.png"]);
+loadSpr("fx_heal_target",["fx_heal.gif","fx_heal.png"]);
+loadSpr("fx_shield",   ["fx_shield.gif","fx_shield.png"]);
+loadSpr("class_assassin",["class_assassin.png"]);
+loadSpr("class_tank",    ["class_tank.png"]);
+loadSpr("class_supporter",["class_supporter.png"]);
+loadSpr("class_mage",    ["class_mage.png"]);
 
 let _projectiles=[],_effects=[];
 function startBossCanvas(){
@@ -1306,18 +1300,8 @@ function drawPlayerSprite(cx,x,y,cls,isMe,pl){
 // ══════════════════════════════════════════════════════════
 // GUESSING — rules → questions → leaderboard
 // ══════════════════════════════════════════════════════════
-const GQS=[
-  {id:0,q:"What is Sumnor's favorite color?"},
-  {id:1,q:"What is Sumnor's favorite food?"},
-  {id:2,q:"If Sumnor could visit one country, where?"},
-  {id:3,q:"What is Sumnor's go-to drink?"},
-  {id:4,q:"Morning person or night owl?"},
-  {id:5,q:"Cats or dogs?"},
-  {id:6,q:"What is Sumnor's favorite season?"},
-  {id:7,q:"PC or console?"},
-  {id:8,q:"What is Sumnor's favorite game genre?"},
-  {id:9,q:"What is Sumnor's favorite music type?"},
-];
+// Guess questions fetched from server — see /guessing/questions
+const GQS = []; // populated at runtime from server
 
 async function renderGuess(m){
   const ev=EVENTS.find(e=>e.id==="guess");
