@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTRA — Events Room</title>
+<title>INTRA — Events</title>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -15,487 +15,2041 @@
   --glow:0 0 28px rgba(245,196,0,.35);--glow-sm:0 0 12px rgba(245,196,0,.2);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
 body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden}
-#app{display:flex;flex-direction:column;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:repeating-linear-gradient(-55deg,rgba(245,196,0,.015) 0,rgba(245,196,0,.015) 1px,transparent 1px,transparent 40px)}
+#app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh}
 
-/* LOGIN WALL */
-#login-wall{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center}
+/* LOGIN */
+#login-wall{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1rem}
 #login-wall.gone{display:none}
-.lbox{width:100%;max-width:400px;background:var(--panel);border:1px solid var(--border3);padding:2rem;text-align:center;box-shadow:var(--glow)}
-.llogo{font-family:'Black Ops One',sans-serif;font-size:2.5rem;color:var(--gold)}
-.linput{width:100%;background:var(--bg2);border:1px solid var(--border2);color:#fff;padding:.6rem;margin:.8rem 0;font-size:1rem;text-align:center}
+.lbox{width:100%;max-width:400px;background:var(--panel);border:1px solid var(--border3);border-radius:4px;padding:2.5rem 2rem;text-align:center;box-shadow:var(--glow);position:relative}
+.lbox::before{content:'';position:absolute;top:-1px;left:-1px;width:14px;height:14px;border-width:2px 0 0 2px;border-color:var(--gold);border-style:solid}
+.lbox::after{content:'';position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;border-width:0 2px 2px 0;border-color:var(--gold);border-style:solid}
+.llogo{font-family:'Black Ops One',sans-serif;font-size:3rem;letter-spacing:.1em;color:var(--gold);text-shadow:var(--glow);line-height:1}
+.lsub{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.4em;color:var(--text3);text-transform:uppercase;margin-top:.3rem;margin-bottom:1.75rem}
+.llabel{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text3);text-align:left;display:block;margin-bottom:.45rem}
+.linput{width:100%;background:var(--bg2);border:1px solid var(--border2);color:var(--gold2);border-radius:2px;padding:.65rem 1rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.8rem;transition:border-color .2s}
+.linput:focus{outline:none;border-color:var(--gold);box-shadow:var(--glow-sm)}
+.linput::placeholder{color:var(--text3)}
+#lerr{color:var(--red);font-size:.76rem;min-height:1em;margin-bottom:.55rem;font-weight:600}
+.name-step{display:none}
 
-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border2);background:var(--bg2)}
-.hdr-logo{font-family:'Black Ops One',sans-serif;font-size:1.5rem;color:var(--gold)}
-nav.tabs{display:flex;background:var(--panel);border-bottom:1px solid var(--border2);padding:0 2rem}
-.tab-btn{padding:.8rem 1.2rem;background:none;border:none;color:var(--text3);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer}
-.tab-btn.active{color:var(--gold);border-bottom:2px solid var(--gold)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.38rem;padding:.44rem 1rem;border-radius:2px;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:.83rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;transition:all .14s;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--gold);color:#080700;justify-content:center;padding:.65rem 1rem}
+.btn-primary:hover{background:var(--gold2);box-shadow:var(--glow)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{color:var(--gold);border-color:var(--gold3)}
+.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{filter:brightness(1.1)}
+.btn-green{background:var(--green);color:#050f00}.btn-green:hover{filter:brightness(1.05)}
+.btn-sm{padding:.28rem .65rem;font-size:.74rem}
+.btn-full{width:100%}
+.btn:disabled{opacity:.3;cursor:not-allowed}
 
-main{flex:1;padding:2rem;max-width:1100px;margin:0 auto;width:100%}
-.card{background:var(--panel);border:1px solid var(--border2);padding:1.5rem;margin-bottom:1.5rem;position:relative}
-.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1.75rem;border-bottom:1px solid var(--border2);background:rgba(8,7,0,.92);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100}
+.hdr-l{display:flex;align-items:center;gap:.9rem}
+#hdr-img{height:30px;object-fit:contain}
+.hdr-logo{font-family:'Black Ops One',sans-serif;font-size:1.25rem;letter-spacing:.1em;color:var(--gold);text-shadow:var(--glow-sm)}
+.hdr-sep{width:1px;height:20px;background:var(--border2)}
+#auth-bar{display:flex;align-items:center;gap:.6rem}
+.upill{display:flex;align-items:center;gap:.5rem;background:var(--panel);border:1px solid var(--border2);border-radius:2px;padding:.24rem .7rem .24rem .38rem}
+.uav{width:22px;height:22px;border-radius:1px;background:var(--gold3);display:flex;align-items:center;justify-content:center;font-family:'Black Ops One',sans-serif;font-size:.6rem;color:var(--bg)}
+.uname{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.78rem;color:var(--text2);letter-spacing:.05em}
+.tbadge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;color:var(--gold);letter-spacing:.04em}
+.demo-bar{background:rgba(245,196,0,.06);border-bottom:1px solid rgba(245,196,0,.18);padding:.35rem 1.75rem;font-size:.7rem;color:var(--gold3);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;display:none;text-align:center}
+.demo-bar.show{display:block}
 
-/* RULE PAGE SETUP */
-.rules-container{text-align:center;padding:2rem 1rem}
-.rules-title{font-family:'Black Ops One',sans-serif;font-size:1.8rem;color:var(--gold);margin-bottom:1rem}
-.rules-text{color:var(--text2);font-size:1.05rem;line-height:1.6;margin-bottom:2rem;max-width:600px;margin-left:auto;margin-right:auto}
+/* TABS */
+nav.tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--border2);background:var(--bg2);padding:0 1.75rem;scrollbar-width:none;flex-shrink:0}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab-btn{padding:.65rem 1.1rem;background:none;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);border-bottom:2px solid transparent;transition:all .14s;white-space:nowrap}
+.tab-btn:hover{color:var(--text2)}.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.edate{font-size:.6rem;display:block;font-weight:400;margin-top:.05rem;letter-spacing:.05em}
+.tab-btn.active .edate{color:var(--gold3)}
 
-/* QUESTIONS & WINDOW CARDS */
-.qcard{background:var(--panel2);border:1px solid var(--border2);padding:1.5rem;border-radius:4px;margin-top:1rem}
-.choices-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem}
-.choice-btn{background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:.75rem;font-weight:600;cursor:pointer;text-align:left}
-.choice-btn:hover{border-color:var(--gold)}
-.choice-btn.selected{background:rgba(245,196,0,0.15);border-color:var(--gold)}
+main{flex:1;padding:1.75rem;max-width:1100px;margin:0 auto;width:100%}
 
-/* MULTI WINDOW CASINO ROOM ARCHITECTURE */
-.casino-dashboard{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-top:1rem}
-@media(max-width:768px){.casino-dashboard{grid-template-columns:1fr}}
-.game-window{background:var(--panel2);border:1px solid var(--border3);padding:1.2rem;position:relative}
-.game-window h4{font-family:'Black Ops One',sans-serif;color:var(--gold);margin-bottom:.5rem;border-bottom:1px solid var(--border2);padding-bottom:.3rem}
-.game-action-row{margin-top:1rem;display:flex;gap:.5rem;align-items:center}
+/* CARDS */
+.card{background:var(--panel);border:1px solid var(--border2);border-radius:2px;padding:1.2rem;margin-bottom:1rem;position:relative}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold3);border-radius:2px 0 0 2px}
+.ctitle{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold3);margin-bottom:.85rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+@media(max-width:680px){.grid2,.grid3{grid-template-columns:1fr}}
 
-.btn{padding:.5rem 1rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;cursor:pointer;border:none}
-.btn-primary{background:var(--gold);color:#000}.btn-primary:hover{background:var(--gold2)}
-.btn-secondary{background:var(--border3);color:#fff}
-.input-num{background:var(--bg);border:1px solid var(--border2);color:var(--gold);padding:.4rem;width:70px;text-align:center}
-.feedback{font-size:.85rem;margin-top:.5rem;color:var(--cyan);min-height:1.2rem}
+/* EVENT HEADER */
+.evhdr{padding:1.4rem 0 1rem;border-bottom:1px solid var(--border2);margin-bottom:1.4rem}
+.evtitle{font-family:'Black Ops One',sans-serif;font-size:clamp(1.4rem,3.5vw,2rem);letter-spacing:.05em;color:var(--gold);text-shadow:var(--glow-sm);margin-bottom:.2rem}
+.evdate{color:var(--text3);font-size:.72rem;letter-spacing:.15em;font-family:'Barlow Condensed',sans-serif;font-weight:600;text-transform:uppercase}
+
+/* COUNTDOWN */
+.cd-wrap{text-align:center;padding:3rem 1rem}
+.cd-label{font-family:'Black Ops One',sans-serif;font-size:.95rem;letter-spacing:.1em;color:var(--text2);margin-bottom:1.1rem}
+.cd-utc{font-size:.68rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;margin-bottom:1.1rem}
+.cd-timer{display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap}
+.cd-unit{background:var(--panel);border:1px solid var(--border2);border-radius:2px;padding:.9rem 1.3rem;min-width:66px;position:relative}
+.cd-unit::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold3)}
+.cdn{font-family:'Black Ops One',sans-serif;font-size:1.9rem;color:var(--gold);display:block;line-height:1;text-shadow:var(--glow-sm)}
+.cdl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.2em;display:block;margin-top:.15rem}
+
+/* TABLES */
+.rtable{width:100%;border-collapse:collapse}
+.rtable th{text-align:left;color:var(--text3);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:.35rem .55rem;border-bottom:1px solid var(--border2);font-family:'Barlow Condensed',sans-serif;font-weight:700}
+.rtable td{padding:.42rem .55rem;border-bottom:1px solid var(--border);font-size:.82rem}
+.rtable tr:last-child td{border-bottom:none}
+.gold{color:var(--gold);font-weight:700}
+
+/* TRIVIA / GUESS */
+.qcard{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.95rem;margin-bottom:.7rem}
+.qt{font-weight:700;margin-bottom:.55rem;line-height:1.5;font-size:.86rem}
+.hard-tag{font-size:.6rem;background:rgba(255,170,0,.12);color:var(--amber);border:1px solid rgba(255,170,0,.28);border-radius:2px;padding:.07rem .3rem;margin-left:.3rem;vertical-align:middle;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em}
+.choices-row{display:flex;gap:.35rem;flex-wrap:wrap}
+.choice{background:var(--panel);border:1px solid var(--border2);color:var(--text);border-radius:2px;padding:.44rem .75rem;cursor:pointer;font-family:'Barlow',sans-serif;font-size:.8rem;text-align:left;transition:all .13s;min-width:120px}
+.choice:hover:not(:disabled){border-color:var(--gold3);color:var(--gold2)}
+.choice.sel{border-color:var(--gold);color:var(--gold);background:rgba(245,196,0,.07)}
+.choice.correct{border-color:var(--green) !important;color:var(--green) !important;background:rgba(68,255,136,.07) !important}
+.choice.wrong{border-color:var(--red) !important;color:var(--red) !important;background:rgba(255,51,68,.07) !important}
+.q-progress{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.65rem}
+.q-nav{display:flex;align-items:center;gap:.65rem;margin-top:.85rem}
+.answer-reveal{margin-top:.6rem;padding:.55rem .75rem;border-radius:2px;font-size:.78rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em}
+.answer-reveal.ok{background:rgba(68,255,136,.08);border:1px solid rgba(68,255,136,.25);color:var(--green)}
+.answer-reveal.bad{background:rgba(255,51,68,.08);border:1px solid rgba(255,51,68,.25);color:var(--red)}
+
+/* BOSS */
+.scene-wrap{position:relative;width:100%;height:340px;border:1px solid var(--border2);border-radius:2px;overflow:hidden;margin-bottom:1rem}
+.scene-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+.boss-name-lbl{font-family:'Black Ops One',sans-serif;font-size:1.1rem;letter-spacing:.06em;color:var(--red);text-align:center;margin-bottom:.35rem;text-shadow:0 0 20px rgba(255,51,68,.4)}
+.xp-track-wrap{margin-bottom:.75rem}
+.xp-row{display:flex;justify-content:space-between;align-items:center;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.22rem}
+.xp-track{width:100%;height:7px;background:var(--border2);border-radius:2px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:2px;transition:width .4s}
+.phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin:.85rem 0}
+.phase-btn{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.9rem .5rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;text-align:center;transition:all .15s;color:var(--text2)}
+.phase-btn:hover{border-color:var(--gold3);color:var(--gold2)}
+.phase-btn .pi{font-size:.95rem;display:block;margin-bottom:.3rem;font-family:'Black Ops One',sans-serif}
+.phase-btn .pn{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.phase-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(245,196,0,.06)}
+.class-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.65rem 0}
+.class-btn{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.85rem;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .14s;text-align:center}
+.class-btn:hover{border-color:var(--gold3)}.class-btn.sel{border-color:var(--gold);box-shadow:var(--glow-sm)}
+.class-icon{font-size:1rem;display:block;margin-bottom:.28rem;font-family:'Black Ops One',sans-serif;color:var(--gold3)}
+.class-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.class-desc{font-size:.67rem;color:var(--text2);margin-top:.1rem}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.65rem 0}
+.sbar{background:var(--bg2);border-radius:2px;padding:.55rem}
+.sl{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.18rem;font-family:'Barlow Condensed',sans-serif;font-weight:700}
+.st{height:5px;background:var(--border2);border-radius:2px;overflow:hidden}
+.sf{height:100%;border-radius:2px;transition:width .3s}
+.hp-c .sf{background:var(--green)}.mana-c .sf{background:var(--cyan)}.stam-c .sf{background:var(--gold)}
+.sv{font-size:.66rem;color:var(--text2);margin-top:.18rem}
+.act-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.36rem;margin-top:.8rem}
+.blog{background:var(--bg2);border:1px solid var(--border);border-radius:2px;height:140px;overflow-y:auto;padding:.7rem;font-size:.72rem;color:var(--text2);line-height:1.62}
+.blog div{border-bottom:1px solid rgba(245,196,0,.04);padding:.04rem 0}
+.party-list{display:flex;flex-direction:column;gap:.45rem;margin:.7rem 0}
+.party-member{display:flex;align-items:center;gap:.7rem;background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.55rem .85rem;font-size:.83rem}
+.party-member .pm-name{flex:1;font-weight:600}
+.party-member .pm-class{font-size:.7rem;color:var(--text2);font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.heal-target-list{display:flex;flex-direction:column;gap:.3rem;margin:.5rem 0}
+.heal-target-btn{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.45rem .75rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;text-align:left;transition:all .14s;display:flex;align-items:center;gap:.5rem;color:var(--text2)}
+.heal-target-btn:hover{border-color:var(--green);color:var(--green)}
+.htb-hp{font-size:.65rem;color:var(--text3);margin-left:auto}
+
+/* CRITICAL HIT MINIGAME */
+.crit-modal{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center}
+.crit-box{background:var(--panel);border:2px solid var(--gold);border-radius:4px;padding:1.75rem;max-width:420px;width:90%;text-align:center;box-shadow:var(--glow)}
+.crit-title{font-family:'Black Ops One',sans-serif;font-size:1.1rem;color:var(--gold);letter-spacing:.07em;margin-bottom:.5rem}
+.crit-timer{font-family:'Black Ops One',sans-serif;font-size:2.4rem;color:var(--red);margin:.5rem 0}
+.crit-prompt{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;color:var(--text2);margin-bottom:.75rem;letter-spacing:.05em}
+.crit-target{font-family:'Black Ops One',sans-serif;font-size:1.3rem;color:var(--gold2);margin-bottom:.75rem;letter-spacing:.1em;background:var(--bg2);padding:.5rem;border-radius:2px}
+.crit-input{width:100%;background:var(--bg2);border:1px solid var(--border2);color:var(--gold2);border-radius:2px;padding:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.14em;text-transform:uppercase;text-align:center}
+.crit-input:focus{outline:none;border-color:var(--gold)}
+
+/* INVITE */
+.invite-notif{position:fixed;top:4rem;right:1.2rem;z-index:999;background:var(--panel);border:1px solid var(--border3);border-left:3px solid var(--gold);border-radius:2px;padding:.85rem 1rem;max-width:260px;font-family:'Barlow Condensed',sans-serif;display:none;animation:nsin .22s ease;box-shadow:var(--glow-sm)}
+.invite-notif.show{display:block}
+.invite-title{font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem}
+.invite-text{font-size:.8rem;color:var(--text2);margin-bottom:.65rem}
+.invite-btns{display:flex;gap:.45rem}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:.8rem;padding:.52rem .8rem;border-bottom:1px solid var(--border)}
+.lb-row:hover{background:rgba(245,196,0,.015)}
+.lb-rank{width:24px;font-family:'Black Ops One',sans-serif;font-size:.8rem;color:var(--text3);text-align:center}
+.lb-rank.r1{color:var(--gold)}.lb-rank.r2{color:#b0a080}.lb-rank.r3{color:#8a6a30}
+.lb-name{flex:1;font-size:.83rem;font-weight:600}.lb-val{color:var(--gold);font-weight:700;font-size:.83rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em}
+
+/* CASINO ROOMS */
+.casino-rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin:1rem 0}
+.casino-room{background:var(--panel);border:1px solid var(--border2);border-radius:4px;padding:1.5rem 1rem;cursor:pointer;text-align:center;transition:all .18s;position:relative;overflow:hidden}
+.casino-room::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold3);border-radius:2px 0 0 2px}
+.casino-room:hover{border-color:var(--gold3);transform:translateY(-2px);box-shadow:var(--glow-sm)}
+.casino-room .room-icon{font-size:2rem;display:block;margin-bottom:.65rem}
+.casino-room .room-name{font-family:'Black Ops One',sans-serif;font-size:.9rem;letter-spacing:.06em;color:var(--gold);margin-bottom:.3rem}
+.casino-room .room-desc{font-size:.7rem;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em}
+.casino-back{display:flex;align-items:center;gap:.5rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.78rem;color:var(--text2);letter-spacing:.1em;text-transform:uppercase;padding:.5rem 0;margin-bottom:1rem;border:none;background:none}
+.casino-back:hover{color:var(--gold)}
+
+/* CASINO GAME CONTAINER */
+.cgame{background:var(--panel);border:1px solid var(--border2);border-radius:2px;padding:1.5rem;max-width:520px;margin:0 auto;position:relative}
+.cgame::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold3);border-radius:2px 0 0 2px}
+.cgame h3{font-family:'Black Ops One',sans-serif;font-size:.85rem;letter-spacing:.07em;color:var(--gold);margin-bottom:.6rem}
+.cresult{font-size:.92rem;font-weight:700;min-height:1.4em;display:flex;align-items:center;justify-content:center;margin:.45rem 0;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
+.binput{background:var(--bg2);border:1px solid var(--border2);color:var(--gold2);border-radius:2px;padding:.3rem .55rem;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;text-align:center;width:80px}
+
+/* COIN */
+.coin{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold2),var(--gold3));margin:.7rem auto;font-family:'Black Ops One',sans-serif;font-size:.85rem;color:var(--bg);display:flex;align-items:center;justify-content:center;box-shadow:var(--glow-sm)}
+.coin.flip{animation:cflip .8s ease}
+@keyframes cflip{0%{transform:rotateY(0)}50%{transform:rotateY(900deg)}100%{transform:rotateY(1080deg)}}
+
+/* SLOTS */
+.reels{display:flex;gap:.5rem;justify-content:center;margin:.65rem 0}
+.reel{width:58px;height:58px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.75rem;transition:transform .2s}
+.reel.spin{animation:rspin .5s ease}
+@keyframes rspin{0%{transform:rotateX(0)}50%{transform:rotateX(180deg)scale(.8)}100%{transform:rotateX(360deg)}}
+
+/* ROULETTE TABLE */
+.roulette-wheel-wrap{text-align:center;margin:.75rem 0}
+.roulette-number{font-family:'Black Ops One',sans-serif;font-size:2.5rem;width:80px;height:80px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin:0 auto;border:3px solid;transition:all .4s}
+.rn-red{background:rgba(200,0,0,.25);border-color:#cc0000;color:#ff6666}
+.rn-black{background:rgba(20,20,20,.8);border-color:#555;color:#ccc}
+.rn-green{background:rgba(0,150,0,.25);border-color:#00aa00;color:var(--green)}
+.roulette-bets{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin:.75rem 0}
+.roulette-bet-btn{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:.55rem;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:center;transition:all .14s;color:var(--text2)}
+.roulette-bet-btn:hover{border-color:var(--gold3);color:var(--gold)}
+.roulette-bet-btn.sel{border-color:var(--gold);color:var(--gold);background:rgba(245,196,0,.06)}
+.roulette-bet-btn.red-btn{border-color:#cc000055;color:#ff6666}
+.roulette-bet-btn.red-btn.sel{border-color:#cc0000;background:rgba(200,0,0,.12)}
+.roulette-bet-btn.black-btn{border-color:#55555555;color:#aaa}
+.roulette-bet-btn.black-btn.sel{border-color:#888;background:rgba(80,80,80,.2)}
+.roulette-bet-btn.green-btn{border-color:#00aa0055;color:var(--green)}
+.roulette-bet-btn.green-btn.sel{border-color:#00aa00;background:rgba(0,150,0,.12)}
+
+/* RUSSIAN ROULETTE */
+.chambers{display:flex;justify-content:center;gap:.4rem;margin:.75rem 0;flex-wrap:wrap}
+.chamber{width:46px;height:46px;border-radius:50%;border:1px solid var(--border2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--text3);transition:all .3s;cursor:pointer;position:relative}
+.chamber:hover{border-color:var(--gold3)}
+.chamber.selected{border-color:var(--gold);background:rgba(245,196,0,.1);color:var(--gold);box-shadow:var(--glow-sm)}
+.chamber.danger{background:var(--red);border-color:var(--red);color:#fff;animation:bang .3s ease}
+.chamber.safe{background:var(--green);border-color:var(--green);color:#000}
+.chamber.bullet{background:rgba(255,51,68,.08);border-color:rgba(255,51,68,.4)}
+@keyframes bang{0%{transform:scale(1.4)}100%{transform:scale(1)}}
+.mult-track{display:flex;gap:.3rem;justify-content:center;margin:.5rem 0;flex-wrap:wrap}
+.mult-step{min-width:40px;height:42px;border-radius:2px;border:1px solid var(--border2);background:var(--panel2);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;color:var(--text3);transition:all .3s;flex-direction:column;gap:1px;padding:.2rem}
+.mult-step.done{border-color:var(--green);background:rgba(68,255,136,.08);color:var(--green)}
+.mult-step.dead{border-color:var(--red);background:rgba(255,51,68,.08);color:var(--red)}
+.mult-step.current{border-color:var(--gold);background:rgba(245,196,0,.07);color:var(--gold)}
+.mult-step .ms-label{font-size:.55rem;letter-spacing:.06em;text-transform:uppercase}
+.mult-step .ms-val{font-size:.82rem;font-weight:900}
+.mult-display{font-family:'Black Ops One',sans-serif;font-size:1.5rem;color:var(--gold);text-align:center;margin:.5rem 0;text-shadow:var(--glow-sm)}
+
+/* BLACKJACK */
+.bj-table{background:radial-gradient(ellipse at 50% 50%,#0a2a0a,#051205);border:2px solid #1a5a1a;border-radius:12px;padding:1.2rem;margin:.75rem 0}
+.bj-hand{display:flex;gap:.3rem;justify-content:center;flex-wrap:wrap;min-height:62px;margin:.5rem 0}
+.bj-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);text-align:center;margin-bottom:.3rem}
+.card-widget{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:38px;height:54px;border-radius:4px;border:1px solid #555;font-weight:700;font-family:'Barlow Condensed',sans-serif;cursor:default;user-select:none;font-size:.88rem}
+.card-widget.red{background:#fff;color:#cc0000}.card-widget.black{background:#fff;color:#111}
+.card-widget.back{background:linear-gradient(135deg,#1a0050,#3a00a0);color:#8866cc;border-color:#4422aa}
+.card-widget .rank{font-size:.78rem;line-height:1}.card-widget .suit{font-size:1rem;line-height:1}
+
+/* POKER */
+.poker-room{background:radial-gradient(ellipse at 50% 50%,#0d2a0d,#050f05);border:1px solid #1a4a1a;border-radius:4px;padding:1.2rem}
+.poker-table{background:radial-gradient(ellipse at 50% 50%,#1a4a1a,#0d2a0d);border:3px solid #2a6a2a;border-radius:50%;width:100%;max-width:480px;height:180px;margin:0 auto .9rem;position:relative;display:flex;align-items:center;justify-content:center}
+.player-seats{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-top:.65rem}
+.seat{background:rgba(0,0,0,.4);border:1px solid #1a4a1a;border-radius:3px;padding:.55rem;text-align:center}
+.seat.active-seat{border-color:var(--gold);box-shadow:var(--glow-sm)}.seat.folded-seat{opacity:.4}
+.seat-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.08em;color:var(--text2);margin-bottom:.3rem}
+.seat-cards{display:flex;gap:.2rem;justify-content:center;margin-bottom:.25rem}
+.seat-chips{font-size:.68rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700}
+.poker-pot{font-family:'Black Ops One',sans-serif;font-size:.9rem;color:var(--gold);text-align:center;letter-spacing:.06em;margin:.4rem 0}
+.poker-actions{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin-top:.65rem}
+
+/* MISC */
+.ok{color:var(--green)}.err{color:var(--red)}
+.tag{display:inline-block;font-size:.63rem;font-weight:700;border-radius:2px;padding:.1rem .35rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.tag-gold{background:rgba(245,196,0,.09);color:var(--gold);border:1px solid rgba(245,196,0,.22)}
+.tag-dim{background:rgba(90,80,48,.18);color:var(--text3);border:1px solid var(--border2)}
+.tag-green{background:rgba(68,255,136,.1);color:var(--green);border:1px solid rgba(68,255,136,.25)}
+.divider{border:none;border-top:1px solid var(--border2);margin:.9rem 0}
+.loading{color:var(--text3);text-align:center;padding:2rem;font-size:.8rem;font-style:italic;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em}
+.notif{position:fixed;bottom:1.2rem;right:1.2rem;z-index:999;background:var(--panel);border:1px solid var(--border2);border-left:3px solid var(--gold);border-radius:2px;padding:.65rem 1rem;font-size:.78rem;font-weight:700;max-width:260px;display:none;animation:nsin .22s ease;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
+.notif.show{display:block}.notif.ok{border-left-color:var(--green);color:var(--green)}.notif.err{border-left-color:var(--red);color:var(--red)}
+@keyframes nsin{from{transform:translateX(110%)}to{transform:translateX(0)}}
+.ginput{width:100%;background:var(--panel);border:1px solid var(--border2);color:var(--text);border-radius:2px;padding:.42rem .75rem;font-family:'Barlow',sans-serif;font-size:.82rem;transition:border-color .2s}
+.ginput:focus{outline:none;border-color:var(--gold)}
+.minigame-canvas{display:block;width:100%;height:150px;background:var(--bg2);border:1px solid var(--border);border-radius:2px;cursor:pointer}
 </style>
 </head>
 <body>
 
-<div id="app">
-  <div id="login-wall">
-    <div class="lbox">
-      <div class="llogo">INTRA</div>
-      <div style="color:var(--text3); font-size:.8rem; margin-bottom:1rem">SECURE ACCESS HUB</div>
-      <input type="text" id="passkey" class="linput" placeholder="ENTER ACCESS KEY (OR 'DEMO')" value="DEMO">
-      <button class="btn btn-primary" onclick="attemptLogin()">INITIALIZE ACCESS</button>
-      <p id="lerr" style="color:var(--red); font-size:.8rem; margin-top:.5rem"></p>
+<div id="login-wall">
+  <div class="lbox">
+    <img id="llogo-img" src="logo.png" alt="INTRA" style="max-height:64px;max-width:200px;object-fit:contain;display:block;margin:0 auto 0"
+         onerror="this.style.display='none';document.getElementById('llogo-txt').style.display='block'">
+    <div class="llogo" id="llogo-txt" style="display:none">INTRA</div>
+    <div class="lsub">Events Portal</div>
+    <div id="step-key">
+      <label class="llabel" for="key-in">Access Key</label>
+      <input class="linput" id="key-in" type="text" placeholder="INTRA-XXXX-XXXX" maxlength="15" autocomplete="off" spellcheck="false">
+      <div id="lerr"></div>
+      <button class="btn btn-primary btn-full" onclick="doLogin()">Enter</button>
+    </div>
+    <div id="step-name" class="name-step">
+      <label class="llabel" for="name-in">Choose a display name</label>
+      <input class="linput" id="name-in" type="text" placeholder="Your name (max 20 chars)" maxlength="20" autocomplete="off">
+      <div id="nerr" style="color:var(--red);font-size:.76rem;min-height:1em;margin-bottom:.55rem"></div>
+      <button class="btn btn-primary btn-full" onclick="confirmName()">Set Name</button>
     </div>
   </div>
+</div>
 
+<div id="app">
   <header>
-    <div class="hdr-logo">INTRA SYSTEM</div>
-    <div style="display:flex; gap:1.5rem; align-items:center">
-      <div id="user-display" class="gold">Connecting...</div>
-      <div id="tickets-display" style="color:var(--cyan)">[T] --</div>
+    <div class="hdr-l">
+      <img id="hdr-img" src="logo.png" alt="INTRA"
+           onerror="this.style.display='none';document.getElementById('hdr-txt').style.display='block'">
+      <div class="hdr-logo" id="hdr-txt" style="display:none">INTRA</div>
+      <div class="hdr-sep"></div>
     </div>
+    <div id="auth-bar"></div>
   </header>
+  <div class="demo-bar" id="demo-bar">DEMO MODE — all events playable, nothing saves</div>
+  <nav class="tabs" id="tabs"></nav>
+  <main id="main"><div class="loading">Loading...</div></main>
+</div>
 
-  <nav class="tabs" id="event-tabs"></nav>
-
-  <main id="main-content">
-    <div style="text-align:center; padding:4rem; color:var(--text3)">Please select an active module tab above.</div>
-  </main>
+<div class="notif" id="notif"></div>
+<div class="invite-notif" id="invite-notif">
+  <div class="invite-title" id="invite-title">Party Invite</div>
+  <div class="invite-text" id="invite-text"></div>
+  <div class="invite-btns">
+    <button class="btn btn-green btn-sm" onclick="acceptInvite()">Accept</button>
+    <button class="btn btn-danger btn-sm" onclick="declineInvite()">Decline</button>
+  </div>
 </div>
 
 <script>
-let API_URL = window.location.origin; // Dynamically binds locally or through workers tunnels proxy
-let me = null;
-let activeEventId = null;
-let visibleEvents = [];
+// ══════════════════════════════════════════════════════════
+const WORKER   = "https://your-worker.your-subdomain.workers.dev";
+const DEMO_KEY = "INTRA-Q5KR-BC8F";
 
-// Pagination state variables for rule templates and questions sequence tracking
-let triviaState = { stage: 'rules', currentIdx: 0, questions: [], selectedAnswer: null };
-let guessState = { stage: 'rules', currentIdx: 0, questions: [], currentInput: '' };
+// Events injected by server (filtered by date). In pure static mode, all events show.
+// The placeholder __SERVER_EVENTS__ is replaced by server.py at request time.
+// Events injected by server — never hardcoded here
+const EVENTS = __SERVER_EVENTS__;
 
-// Sprites extension tracking object configuration loaded dynamically
-let spriteConfig = {};
+// Guessing answers are server-side only — not in this file.
+// ══════════════════════════════════════════════════════════
 
-async function attemptLogin() {
-  const key = document.getElementById("passkey").value;
-  try {
-    const res = await fetch(`${API_URL}/api/auth`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key })
-    });
-    if(!res.ok) throw new Error("Unauthorized token ring context.");
-    me = await res.json();
-    document.getElementById("login-wall").classList.add("gone");
-    document.getElementById("user-display").innerText = `@${me.username}`;
-    document.getElementById("tickets-display").innerText = `[T] ${me.tickets}`;
-    
-    // Once authorized, load up dynamically populated non-spoiled events list
-    await fetchActiveEvents();
-  } catch(e) {
-    document.getElementById("lerr").innerText = e.message;
-  }
+async function api(path, method="GET", body=null){
+  const opts={method,headers:{"Content-Type":"application/json"}};
+  if(body) opts.body=JSON.stringify(body);
+  const r=await fetch(WORKER+path,opts);
+  return r.json();
 }
 
-async function fetchActiveEvents() {
-  const url = `${API_URL}/api/events?demo=${me.demo ? 'true' : 'false'}`;
-  const res = await fetch(url);
-  visibleEvents = await res.json();
-  
-  // Also fetch the asset paths dynamically to understand extensions config (.gif vs .png fallbacks)
-  const spriteRes = await fetch(`${API_URL}/api/boss/config`);
-  spriteConfig = await spriteRes.json();
-  
-  renderTabs();
+let me=null, activeTab=null;
+let triviaAns={}, triviaQIdx=0, guessAns={};
+let bossPlayer=null, bossTimer=null, cdTick=null;
+let _selCls=null, _bossPhase="class", _bossRaid=null, _partyList=[];
+let _pendingInvite=null;
+let _casinoRoom=null; // null = lobby, else room id
+let _poker={players:[],hands:{},community:[],deck:[],pot:0,phase:"setup",bet:5,turn:0,bets:{},folded:new Set(),started:false};
+let _rrSoloCurrent=0, _rrSoloBet=0, _rrSelectedChamber=null;
+let _rrDuoPlayers=[], _rrDuoBet=10, _rrDuoTurn=0, _rrDuoAlive=[], _rrDuoStarted=false;
+let _bjState=null;
+let _rlBetOn=null, _rlBet=5;
+let _critActive=false, _critTimer=null, _critResolve=null;
+let _bossFlinch=false, _flinchTimer=null, _bossAnimFrame=null;
+let _bossAttackFx=null, _fxTimer=null;
+let _triviaPhase="rules"; // "rules" | "playing" | "done"
+let _guessPhase="rules";  // "rules" | "playing" | "done"
+
+const $=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function notify(msg,type="ok"){
+  const n=$("notif");n.textContent=msg;n.className=`notif show ${type}`;
+  clearTimeout(n._t);n._t=setTimeout(()=>n.className="notif",3500);
+}
+function fmtDate(d){return new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric",timeZone:"UTC"})}
+function fmtUTC(d){return new Date(d).toUTCString().replace("GMT","UTC")}
+function timeUntil(ds){
+  const diff=new Date(ds)-Date.now();if(diff<=0)return null;
+  return{d:Math.floor(diff/86400000),h:Math.floor(diff%86400000/3600000),m:Math.floor(diff%3600000/60000),s:Math.floor(diff%60000/1000)};
+}
+function cdHTML(ds,label){
+  const t=timeUntil(ds);if(!t)return"";
+  return`<div class="cd-wrap"><div class="cd-label">${label}</div>
+    <div class="cd-utc">Starts ${fmtUTC(ds)}</div>
+    <div class="cd-timer">
+      <div class="cd-unit"><span class="cdn" id="cd-d">${t.d}</span><span class="cdl">Days</span></div>
+      <div class="cd-unit"><span class="cdn" id="cd-h">${t.h}</span><span class="cdl">Hrs</span></div>
+      <div class="cd-unit"><span class="cdn" id="cd-m">${t.m}</span><span class="cdl">Min</span></div>
+      <div class="cd-unit"><span class="cdn" id="cd-s">${t.s}</span><span class="cdl">Sec</span></div>
+    </div></div>`;
+}
+function startCd(ds){
+  clearInterval(cdTick);
+  cdTick=setInterval(()=>{
+    const t=timeUntil(ds);if(!t){clearInterval(cdTick);return}
+    ["d","h","m","s"].forEach(u=>{if($(`cd-${u}`))$(`cd-${u}`).textContent=t[u]});
+  },1000);
+}
+function evHdr(ev){
+  return`<div class="evhdr"><div class="evtitle">${ev.title}</div>
+    <div class="evdate">${fmtDate(ev.date)} UTC</div></div>`;
+}
+function isLive(ev){return me?.demo||!timeUntil(ev.date)}
+
+// ── LOGIN ─────────────────────────────────────────────────
+async function doLogin(){
+  const key=($("key-in")?.value||"").trim().toUpperCase();
+  if(!key){$("lerr").textContent="Enter your key.";return}
+  if(key===DEMO_KEY){
+    me={discord_id:"DEMO",username:"demo_user",tickets:999,demo:true};
+    localStorage.setItem("intra_sess",JSON.stringify({key,discord_id:"DEMO",username:"demo_user",demo:true}));
+    launch();return;
+  }
+  $("lerr").textContent="Checking...";
+  try{
+    const r=await api("/auth/validate","POST",{key});
+    if(!r.valid){$("lerr").textContent=r.error||"Invalid key.";return}
+    if(!r.username||r.username===r.discord_id){
+      localStorage.setItem("intra_sess",JSON.stringify({key,discord_id:r.discord_id,username:r.discord_id,demo:false,pending_name:true}));
+      me={discord_id:r.discord_id,username:r.discord_id,tickets:r.tickets,demo:false};
+      $("step-key").style.display="none";$("step-name").style.display="block";return;
+    }
+    me={discord_id:r.discord_id,username:r.username,tickets:r.tickets,demo:false};
+    localStorage.setItem("intra_sess",JSON.stringify({key,discord_id:r.discord_id,username:r.username,demo:false}));
+    launch();
+  }catch(e){$("lerr").textContent="Server unreachable.";}
+}
+async function confirmName(){
+  const name=($("name-in")?.value||"").trim();
+  if(name.length<2){$("nerr").textContent="At least 2 characters.";return}
+  $("nerr").textContent="Saving...";
+  try{
+    const r=await api("/auth/set_name","POST",{discord_id:me.discord_id,name});
+    if(r.error){$("nerr").textContent=r.error;return}
+    me.username=name;
+    const sess=JSON.parse(localStorage.getItem("intra_sess")||"{}");
+    sess.username=name;sess.pending_name=false;
+    localStorage.setItem("intra_sess",JSON.stringify(sess));
+    launch();
+  }catch{$("nerr").textContent="Failed, try again.";}
+}
+function doLogout(){
+  me=null;localStorage.removeItem("intra_sess");
+  $("login-wall").classList.remove("gone");
+  $("key-in").value="";$("lerr").textContent="";
+  $("step-key").style.display="block";$("step-name").style.display="none";
+}
+async function restoreSession(){
+  const raw=localStorage.getItem("intra_sess");if(!raw)return false;
+  try{
+    const s=JSON.parse(raw);
+    if(s.demo){me={discord_id:"DEMO",username:"demo_user",tickets:999,demo:true};return true}
+    if(s.pending_name){
+      me={discord_id:s.discord_id,username:s.discord_id,tickets:0,demo:false};
+      $("step-key").style.display="none";$("step-name").style.display="block";
+      return false;
+    }
+    const r=await api("/auth/validate","POST",{key:s.key});
+    if(!r.valid){localStorage.removeItem("intra_sess");return false}
+    me={discord_id:r.discord_id,username:r.username,tickets:r.tickets,demo:false};
+    return true;
+  }catch{return false}
+}
+function launch(){
+  $("login-wall").classList.add("gone");
+  if(me?.demo)$("demo-bar").classList.add("show");
+  renderAuth();buildTabs();
+  const first=EVENTS[0];
+  showTab(first?first.id:"trivia");
+}
+function renderAuth(){
+  if(!me){$("auth-bar").innerHTML="";return}
+  const ini=me.username.slice(0,2).toUpperCase();
+  const badge=me.demo?`<span class="tag tag-dim">Demo</span>`:`<span class="tbadge">[T] ${me.tickets}</span>`;
+  $("auth-bar").innerHTML=`<div class="upill"><div class="uav">${ini}</div><div class="uname">@${me.username}</div></div>${badge}<button class="btn btn-ghost btn-sm" onclick="doLogout()">Logout</button>`;
+}
+async function refreshTickets(){
+  if(!me||me.demo)return;
+  const r=await api(`/tickets/${me.discord_id}`);
+  me.tickets=r.tickets??me.tickets;renderAuth();
+}
+function buildTabs(){
+  $("tabs").innerHTML=
+    `<button class="tab-btn ${activeTab==="redeem"?"active":""}" onclick="showTab('redeem')">[T] Redeem</button>`
+    +EVENTS.map(e=>`<button class="tab-btn ${activeTab===e.id?"active":""}" onclick="showTab('${e.id}')">
+      ${e.title}<span class="edate">${fmtDate(e.date)}</span></button>`).join("")
+    +`<button class="tab-btn ${activeTab==="lb"?"active":""}" onclick="showTab('lb')">[#] Leaderboard</button>`;
+}
+function showTab(id){
+  activeTab=id;buildTabs();
+  clearInterval(bossTimer);clearInterval(cdTick);
+  if(_bossAnimFrame){cancelAnimationFrame(_bossAnimFrame);_bossAnimFrame=null}
+  const m=$("main");
+  ({
+    redeem:  ()=>{m.innerHTML=renderRedeem()},
+    trivia:  ()=>renderTrivia(m),
+    boss:    ()=>renderBoss(m),
+    guess:   ()=>renderGuess(m),
+    breather:()=>{m.innerHTML=renderBreather()},
+    casino:  ()=>{m.innerHTML=renderCasinoLobby()},
+    lb:      ()=>renderLB(m),
+  }[id]||(() => m.innerHTML="<p>Coming soon.</p>"))();
 }
 
-function renderTabs() {
-  const tabsContainer = document.getElementById("event-tabs");
-  tabsContainer.innerHTML = "";
-  visibleEvents.forEach(ev => {
-    const btn = document.createElement("button");
-    btn.className = `tab-btn ${activeEventId === ev.id ? 'active' : ''}`;
-    btn.innerText = ev.title;
-    btn.onclick = () => switchModule(ev.id);
-    tabsContainer.appendChild(btn);
-  });
-  if(visibleEvents.length && !activeEventId) {
-    switchModule(visibleEvents[0].id);
-  }
-}
-
-function switchModule(id) {
-  activeEventId = id;
-  renderTabs();
-  
-  const container = document.getElementById("main-content");
-  container.innerHTML = "";
-  
-  if(id === "trivia") {
-    renderTriviaModule(container);
-  } else if(id === "guess") {
-    renderGuessModule(container);
-  } else if(id === "boss") {
-    renderBossModule(container);
-  } else if(id === "casino") {
-    renderCasinoModule(container);
-  } else {
-    container.innerHTML = `<div class="card"><h3>${id.toUpperCase()}</h3><p style='color:var(--text2); margin-top:0.5rem'>Module layout workspace initialization complete.</p></div>`;
-  }
-}
-
-// ── 4. TRIVIA ARCHITECTURE: PAGE 1 RULES -> PAGE PRO QUESTION WITH REVEALS ──
-async function renderTriviaModule(m) {
-  if(triviaState.questions.length === 0) {
-    const res = await fetch(`${API_URL}/api/trivia/questions`);
-    triviaState.questions = await res.json();
-  }
-  
-  if(triviaState.stage === 'rules') {
-    m.innerHTML = `
-      <div class="card rules-container">
-        <div class="rules-title">Trivia Night Regulations</div>
-        <p class="rules-text">Welcome to the Arena. You will face a sequence of challenging multiple choice questions. Standard tier awards 50 points; Elite Hard tier grants 100 points. No turning back once loaded.</p>
-        <button class="btn btn-primary" onclick="triviaState.stage='quiz'; switchModule('trivia')">ACCEPT & BEGIN</button>
-      </div>`;
-    return;
-  }
-  
-  const q = triviaState.questions[triviaState.currentIdx];
-  if(!q) {
-    m.innerHTML = `<div class="card" style="text-align:center"><h3>Trivia Complete!</h3><p style="margin-top:1rem; color:var(--text2)">All answers successfully processed by centralized backend logging.</p></div>`;
-    return;
-  }
-  
-  m.innerHTML = `
-    <div class="card">
-      <div style="font-size:0.8rem; color:var(--text3)">QUESTION ${triviaState.currentIdx + 1} OF ${triviaState.questions.length} ${q.hard ? '<span style="color:var(--amber)">[HARD]</span>':''}</div>
-      <div class="qcard">
-        <h3 style="font-family:'Barlow'; font-size:1.2rem; color:#fff">${q.q}</h3>
-        <div class="choices-grid" id="trivia-options"></div>
-      </div>
-      <div id="trivia-feedback" class="feedback"></div>
-      <div class="game-action-row" style="justify-content:flex-end">
-        <button class="btn btn-primary" id="trivia-submit-btn" disabled onclick="submitTriviaChoice(${q.id})">Lock Answer</button>
-        <button class="btn btn-secondary" style="display:none" id="trivia-next-btn" onclick="triviaState.currentIdx++; triviaState.selectedAnswer=null; switchModule('trivia')">Next Question ➔</button>
-      </div>
-    </div>`;
-    
-  const optsContainer = document.getElementById("trivia-options");
-  q.choices.forEach(choice => {
-    const b = document.createElement("button");
-    b.className = "choice-btn";
-    b.innerText = choice;
-    b.onclick = () => {
-      document.querySelectorAll(".choice-btn").forEach(el => el.classList.remove("selected"));
-      b.classList.add("selected");
-      triviaState.selectedAnswer = choice;
-      document.getElementById("trivia-submit-btn").removeAttribute("disabled");
-    };
-    optsContainer.appendChild(b);
-  });
-}
-
-async function submitTriviaChoice(qid) {
-  document.getElementById("trivia-submit-btn").style.display = "none";
-  const choice = triviaState.selectedAnswer;
-  
-  const res = await fetch(`${API_URL}/api/trivia/submit`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ qid, answer: choice, discord_id: me.discord_id })
-  });
-  const data = await res.json();
-  if(!me.demo) { me.tickets = data.total; document.getElementById("tickets-display").innerText = `[T] ${me.tickets}`; }
-  
-  const fb = document.getElementById("trivia-feedback");
-  if(data.correct) {
-    fb.innerHTML = `<span style="color:var(--green)">CORRECT! +${data.reward} Tickets logged.</span>`;
-  } else {
-    fb.innerHTML = `<span style="color:var(--red)">INCORRECT. Real Answer: ${data.correct_answer}. +${data.reward} participation tokens added.</span>`;
-  }
-  document.getElementById("trivia-next-btn").style.display = "inline-block";
-}
-
-// ── 4. GUESS THE ANSWER ARCHITECTURE: RULES PAGE -> PAGE PRO QUESTION WITH TOP GUESS STATS ──
-async function renderGuessModule(m) {
-  if(guessState.questions.length === 0) {
-    const res = await fetch(`${API_URL}/api/guess/questions`);
-    guessState.questions = await res.json();
-  }
-  
-  if(guessState.stage === 'rules') {
-    m.innerHTML = `
-      <div class="card rules-container">
-        <div class="rules-title">Guessing Game Protocol</div>
-        <p class="rules-text">Can you see through thoughts? Input your text submission guess directly into the query string parameter handler. It reveals the exact correct matching index accompanied by global telemetry polling charts.</p>
-        <button class="btn btn-primary" onclick="guessState.stage='quiz'; switchModule('guess')">BOOT INTERFACE</button>
-      </div>`;
-    return;
-  }
-  
-  const q = guessState.questions[guessState.currentIdx];
-  if(!q) {
-    m.innerHTML = `<div class="card" style="text-align:center"><h3>Guesses Complete!</h3><p style="margin-top:1rem; color:var(--text2)">Telemetries fully aligned with parameters storage pool database.</p></div>`;
-    return;
-  }
-  
-  m.innerHTML = `
-    <div class="card">
-      <div style="font-size:0.8rem; color:var(--text3)">QUERY STEP ${guessState.currentIdx + 1} OF ${guessState.questions.length}</div>
-      <div class="qcard">
-        <h3 style="font-family:'Barlow'; font-size:1.1rem; color:var(--gold2)">${q.q}</h3>
-        <input type="text" id="guess-input-field" class="linput" style="text-align:left; padding-left:1rem; margin-top:1.2rem; margin-bottom:0px" placeholder="Type answer here..." value="${guessState.currentInput}">
-      </div>
-      <div id="guess-feedback" class="feedback" style="margin-top:1rem"></div>
-      <div class="game-action-row" style="justify-content:flex-end">
-        <button class="btn btn-primary" id="guess-submit-btn" onclick="submitGuessQuery(${q.id})">Transmit Analysis</button>
-        <button class="btn btn-secondary" style="display:none" id="guess-next-btn" onclick="guessState.currentIdx++; guessState.currentInput=''; switchModule('guess')">Next Prompt ➔</button>
-      </div>
-    </div>`;
-}
-
-async function submitGuessQuery(qid) {
-  const val = document.getElementById("guess-input-field").value.trim();
-  if(!val) return;
-  guessState.currentInput = val;
-  document.getElementById("guess-submit-btn").style.display = "none";
-  
-  const res = await fetch(`${API_URL}/api/guess/submit`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ qid, answer: val, discord_id: me.discord_id })
-  });
-  const data = await res.json();
-  if(!me.demo) { me.tickets = data.total; document.getElementById("tickets-display").innerText = `[T] ${me.tickets}`; }
-  
-  const fb = document.getElementById("guess-feedback");
-  let statsHtml = `<div style="margin-top:0.6rem; color:var(--text2); font-size:0.8rem"><b>Most Guessed Answers For This Prompt:</b><br/>` + data.top_guesses.join(" | ") + `</div>`;
-  
-  if(data.correct) {
-    fb.innerHTML = `<span style="color:var(--green)">EXACT MATCH! Perfect score +${data.reward} Tickets.</span>` + statsHtml;
-  } else {
-    fb.innerHTML = `<span style="color:var(--red)">NO MATCH. Target baseline configuration was: <b>${data.correct_answer}</b>. Saved submission.</span>` + statsHtml;
-  }
-  document.getElementById("guess-next-btn").style.display = "inline-block";
-}
-
-// ── 1. ANIMATION CANVAS MANAGER (.gif & .png asset fallbacks for Cthulhu and Characters) ──
-function renderBossModule(m) {
-  m.innerHTML = `
-    <div class="card">
-      <div class="rules-title" style="text-align:left; font-size:1.3rem; margin-bottom:0.5rem">Boss Raid Environment Monitoring</div>
-      <p style="color:var(--text2); font-size:0.85rem; margin-bottom:1rem">Rendering live frames pipeline directly matching loaded fallback tags config maps.</p>
-      
-      <div style="background:#020202; border:1px solid var(--border3); height:240px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative">
-         <img id="boss-sprite-frame" src="${spriteConfig.boss_idle}" style="height:140px; object-fit:contain; transition:transform 0.1s">
-         <img id="cthulhu-sprite-frame" src="${spriteConfig.cthulhu_idle}" style="height:140px; object-fit:contain; display:none">
-         <div id="fx-layer" style="position:absolute; inset:0; pointer-events:none; display:none; background-size:cover"></div>
-         <div id="boss-hp-tag" style="margin-top:1rem; color:var(--red); font-family:'Black Ops One'; font-size:1.1rem">500,000 / 500,000 HP</div>
-      </div>
-      
-      <div class="choices-grid" style="grid-template-columns: repeat(3, 1fr); margin-top:1rem">
-        <button class="btn btn-secondary" onclick="triggerVisualEffect('attack')">EXECUTE ATTACK</button>
-        <button class="btn btn-secondary" onclick="triggerVisualEffect('flinch')">TRIGGER FLINCH</button>
-        <button class="btn btn-secondary" onclick="toggleCthulhuTarget()">SWAP TO CTHULHU</button>
-      </div>
-    </div>`;
-}
-
-function triggerVisualEffect(type) {
-  const isCthulhu = document.getElementById("cthulhu-sprite-frame").style.display === "block";
-  const frame = document.getElementById(isCthulhu ? "cthulhu-sprite-frame" : "boss-sprite-frame");
-  
-  if(type === 'flinch') {
-    frame.src = isCthulhu ? spriteConfig.cthulhu_flinch : spriteConfig.boss_flinch;
-    setTimeout(() => {
-      frame.src = isCthulhu ? spriteConfig.cthulhu_idle : spriteConfig.boss_idle;
-    }, 800);
-  } else if(type === 'attack') {
-    frame.src = isCthulhu ? spriteConfig.cthulhu_attack : spriteConfig.boss_attack;
-    const fx = document.getElementById("fx-layer");
-    fx.style.backgroundImage = `url('${spriteConfig.fx_slash}')`;
-    fx.style.display = "block";
-    setTimeout(() => {
-      frame.src = isCthulhu ? spriteConfig.cthulhu_idle : spriteConfig.boss_idle;
-      fx.style.display = "none";
-    }, 700);
-  }
-}
-
-function toggleCthulhuTarget() {
-  const b = document.getElementById("boss-sprite-frame");
-  const c = document.getElementById("cthulhu-sprite-frame");
-  if(c.style.display === "none") {
-    b.style.display = "none"; c.style.display = "block";
-  } else {
-    b.style.display = "block"; c.style.display = "none";
-  }
-}
-
-// ── 5 & 6. CASINO NIGHT INTERFACE ARCHITECTURE: MULTIPLE WINDOW PANELS ──
-function renderCasinoModule(m) {
-  m.innerHTML = `
-    <div class="evhdr" style="padding-top:0px">
-      <div class="evtitle">Casino Night Dashboard</div>
-      <div class="evdate">Multi-Game Concurrent Windows Active (Invited by Default to all rooms)</div>
+// ── REDEEM ────────────────────────────────────────────────
+function renderRedeem(){
+  return`<div class="evhdr"><div class="evtitle">Redeem Code</div><div class="evdate">Enter a code to claim your tickets</div></div>
+  <div style="max-width:480px;margin:0 auto">
+    <div class="card" style="text-align:center;padding:2.5rem 2rem">
+      <div class="ctitle" style="margin-bottom:1.5rem">Code Redemption</div>
+      <input class="linput" id="code-in" type="text" placeholder="ENTER CODE" maxlength="20" style="text-align:center;font-size:1.1rem;letter-spacing:.18em;margin-bottom:1rem">
+      <div id="redeem-msg" style="min-height:1.2em;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82rem;margin-bottom:.9rem"></div>
+      <button class="btn btn-primary btn-full" onclick="handleRedeem()">Redeem</button>
     </div>
+    <div class="card"><div class="ctitle">Where to find codes</div>
+      <ul style="color:var(--text2);font-size:.82rem;line-height:2;padding-left:1rem">
+        <li>Hidden in event announcements</li>
+        <li>On the INTRA nation page</li>
+        <li>Sent via DM during Event 4</li>
+        <li>Dropped during Trivia Night</li>
+      </ul>
+    </div>
+  </div>`;
+}
+async function handleRedeem(){
+  if(me?.demo){notify("Demo mode — no saves","err");return}
+  const code=($("code-in")?.value||"").trim().toUpperCase();
+  if(!code)return;
+  const msg=$("redeem-msg");msg.textContent="Checking...";msg.className="";
+  try{
+    const r=await api("/codes/redeem","POST",{code,discord_id:me.discord_id});
+    if(r.error){msg.textContent=`! ${r.error}`;msg.className="err";return}
+    msg.textContent=`+${r.reward} tickets!`;msg.className="ok";
+    notify(`+${r.reward} tickets!`);me.tickets=r.total;renderAuth();
+    $("code-in").value="";
+  }catch{msg.textContent="! Error";msg.className="err"}
+}
+
+// ══════════════════════════════════════════════════════════
+// TRIVIA — rules → questions → leaderboard
+// ══════════════════════════════════════════════════════════
+// Trivia questions fetched from server — see /trivia/questions
+const TQS = []; // populated at runtime from server
+
+async function renderTrivia(m){
+  const ev=EVENTS.find(e=>e.id==="trivia");
+  if(!isLive(ev)){m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Event starts in");startCd(ev.date);return}
+  if(_triviaPhase==="rules"){
+    m.innerHTML=evHdr(ev)+triviaRulesHTML();return;
+  }
+  if(_triviaPhase==="done"||(_triviaPhase!=="playing"&&!me?.demo)){
+    if(!me?.demo){
+      const st=await api(`/trivia/status/${me.discord_id}`);
+      if(st.done){_triviaPhase="done";renderTriviaLeaderboard(m,ev);return}
+    }
+  }
+  renderTriviaQuestion(m,ev);
+}
+
+function triviaRulesHTML(){
+  return`<div class="card">
+    <div class="ctitle">Trivia Night — Rules</div>
+    <p style="color:var(--text2);font-size:.85rem;line-height:1.7;margin-bottom:.9rem">
+      Answer all 10 questions. Each correct answer is revealed immediately after you click.
+      Once you answer a question you can't change it. Complete all 10 then submit.
+    </p>
+    <table class="rtable" style="margin-bottom:1rem"><thead><tr><th>Rank</th><th>Bonus Tickets</th></tr></thead><tbody>
+      <tr><td>1st place</td><td class="gold">+20</td></tr>
+      <tr><td>2nd place</td><td class="gold">+15</td></tr>
+      <tr><td>3rd place</td><td class="gold">+10</td></tr>
+      <tr><td>Top 10</td><td class="gold">+5</td></tr>
+      <tr><td>Participation</td><td class="gold">+2</td></tr>
+    </tbody></table>
+    <button class="btn btn-primary" style="max-width:200px" onclick="_triviaPhase='playing';renderTrivia($('main'))">Start Trivia</button>
+  </div>`;
+}
+
+function renderTriviaQuestion(m,ev){
+  const q=TQS[triviaQIdx];
+  const answered=triviaAns[q.id]!==undefined;
+  const isLast=triviaQIdx===TQS.length-1;
+  const score=TQS.reduce((s,qq)=>s+(triviaAns[qq.id]===qq.a?1:0),0);
+  const allAnswered=Object.keys(triviaAns).length===TQS.length;
+
+  m.innerHTML=evHdr(ev)+`<div class="qcard">
+    <div class="q-progress">Question ${triviaQIdx+1} / ${TQS.length} &nbsp;|&nbsp; Score so far: ${score}</div>
+    <div class="qt">Q${triviaQIdx+1}. ${q.q}${q.hard?`<span class="hard-tag">Hard</span>`:""}</div>
+    <div class="choices-row">
+      ${q.choices.map(c=>{
+        let cls="choice";
+        if(answered){cls+=" "+((c===q.a)?"correct":(c===triviaAns[q.id]?"wrong":""))}
+        return`<button class="${cls}" onclick="${answered?"":"selTrivia("+q.id+",\""+c+"\")"}" ${answered?"disabled":""}>${c}</button>`;
+      }).join("")}
+    </div>
+    ${answered?`<div class="answer-reveal ${triviaAns[q.id]===q.a?"ok":"bad"}">${triviaAns[q.id]===q.a?"✓ Correct!":"✗ Wrong — Answer: "+q.a}</div>`:""}
+    <div class="q-nav">
+      ${triviaQIdx>0?`<button class="btn btn-ghost btn-sm" onclick="triviaNav(-1)">← Back</button>`:""}
+      ${answered&&!isLast?`<button class="btn btn-primary btn-sm" onclick="triviaNav(1)">Next →</button>`:""}
+      ${answered&&isLast&&allAnswered?`<button class="btn btn-primary" style="max-width:200px" onclick="submitTrivia()">Submit All</button>`:""}
+    </div>
+  </div>
+  ${triviaQIdx>0?`<div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.5rem">
+    ${TQS.map((qq,i)=>`<div onclick="triviaQIdx=${i};renderTriviaQuestion($('main'),EVENTS.find(e=>e.id==='trivia'))" style="width:28px;height:28px;border-radius:2px;border:1px solid ${triviaAns[qq.id]===undefined?'var(--border2)':triviaAns[qq.id]===qq.a?'var(--green)':'var(--red)'};cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--text3);background:${i===triviaQIdx?'rgba(245,196,0,.08)':'var(--panel2)'}">${i+1}</div>`).join("")}
+  </div>`:""}`;
+}
+
+function triviaNav(dir){
+  triviaQIdx=Math.max(0,Math.min(TQS.length-1,triviaQIdx+dir));
+  renderTriviaQuestion($("main"),EVENTS.find(e=>e.id==="trivia"));
+}
+function selTrivia(qid,val){
+  triviaAns[qid]=val;
+  renderTriviaQuestion($("main"),EVENTS.find(e=>e.id==="trivia"));
+}
+async function submitTrivia(){
+  if(Object.keys(triviaAns).length<TQS.length){notify("Answer all questions first","err");return}
+  const score=TQS.reduce((s,q)=>s+(triviaAns[q.id]===q.a?1:0),0);
+  if(me?.demo){notify(`Demo: ${score}/10 — not saved`);_triviaPhase="done";renderTriviaLeaderboard($("main"),EVENTS.find(e=>e.id==="trivia"));return}
+  try{
+    const r=await api("/trivia/submit","POST",{discord_id:me.discord_id,score});
+    if(r.error){notify(r.error,"err");return}
+    me.tickets=r.total;renderAuth();notify(`Submitted! ${score}/10 — +2 tickets`);
+    _triviaPhase="done";
+    renderTriviaLeaderboard($("main"),EVENTS.find(e=>e.id==="trivia"));
+  }catch{notify("Save failed","err")}
+}
+
+async function renderTriviaLeaderboard(m,ev){
+  const score=TQS.reduce((s,q)=>s+(triviaAns[q.id]===q.a?1:0),0);
+  m.innerHTML=evHdr(ev)+`<div class="card"><div class="ctitle">Your Score</div>
+    <p style="font-size:1.2rem;font-family:'Black Ops One',sans-serif;color:var(--gold);margin-bottom:.5rem">${score} / 10</p>
+    <p style="color:var(--text2);font-size:.82rem">Bonus tickets are awarded at the end of the event based on ranking.</p>
+  </div>
+  <div class="card" id="trivia-lb"><div class="ctitle">Leaderboard</div><div class="loading">Loading...</div></div>`;
+  if(!me?.demo){
+    try{
+      const lb=await api("/trivia/leaderboard");
+      let html="";
+      lb.forEach((row,i)=>{
+        const rc=i===0?"r1":i===1?"r2":i===2?"r3":"";
+        const isMe=me?.discord_id===row.discord_id;
+        html+=`<div class="lb-row" style="${isMe?"background:rgba(245,196,0,.03)":""}">
+          <div class="lb-rank ${rc}">${i+1}</div>
+          <div class="lb-name">${isMe?`<span class="gold">@${row.username}</span>`:row.username}</div>
+          <div class="lb-val">${row.score}/10</div>
+        </div>`;
+      });
+      $("trivia-lb").innerHTML=`<div class="ctitle">Leaderboard</div>`+html;
+    }catch{}
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// BOSS RAID
+// ══════════════════════════════════════════════════════════
+const BOSS_MAX=500000;
+const XP_PER_LEVEL=200;
+const GATHER_CD=60000;
+const FARM_CD=120000;
+const CLS_STATS={assassin:{hp:800,mana:600,stamina:700,dmg:120},tank:{hp:2000,mana:400,stamina:1200,dmg:60},supporter:{hp:900,mana:1200,stamina:500,dmg:40},mage:{hp:700,mana:1500,stamina:400,dmg:100}};
+
+async function renderBoss(m){
+  const ev=EVENTS.find(e=>e.id==="boss");
+  if(!isLive(ev)){m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Raid begins in");startCd(ev.date);return}
+  try{
+    _bossRaid=me.demo?(_bossRaid||{hp:BOSS_MAX,max_hp:BOSS_MAX,players:{},log:[],active:true,turn:0}):await api("/boss/state");
+  }catch{_bossRaid={hp:BOSS_MAX,max_hp:BOSS_MAX,players:{},log:[],active:true,turn:0}}
+  bossPlayer=_bossRaid.players?.[me.discord_id]??null;
+  if(bossPlayer&&_bossPhase==="class")_bossPhase="phase";
+  if(bossPlayer?.recovering&&_bossPhase==="fight")_bossPhase="recovering";
+
+  const hp=_bossRaid.hp,maxhp=_bossRaid.max_hp||BOSS_MAX;
+  const pct=Math.max(0,(hp/maxhp)*100);
+  const xpPct=bossPlayer?Math.min(100,(((bossPlayer.xp||0)%XP_PER_LEVEL)/XP_PER_LEVEL)*100):0;
+  const xpInLevel=(bossPlayer?.xp||0)%XP_PER_LEVEL;
+  const lvl=bossPlayer?.level||1;
+
+  const showScene=_bossPhase==="fight"||_bossPhase==="phase"||_bossPhase==="dead";
+
+  let inner="";
+  if(_bossPhase==="class")inner=bossClassPick();
+  else if(_bossPhase==="dead")inner=bossDead();
+  else inner=bossMain();
+
+  m.innerHTML=evHdr(ev)+`
+    <div class="boss-name-lbl">Drak'Thul the Undying</div>
+    <div style="margin-bottom:.55rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--red);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.22rem">
+        <span>Boss HP</span><span>${hp.toLocaleString()} / ${maxhp.toLocaleString()}${!_bossRaid.active?" — DEFEATED":""}</span>
+      </div>
+      <div style="width:100%;height:14px;background:rgba(0,0,0,.6);border-radius:2px;overflow:hidden;border:1px solid #5a1010">
+        <div id="bfill" style="height:100%;background:linear-gradient(90deg,#7f0000,#ff3344);border-radius:2px;transition:width .6s;width:${pct}%"></div>
+      </div>
+    </div>
+    ${bossPlayer?`<div class="xp-track-wrap">
+      <div class="xp-row">
+        <span>Level ${lvl} / 20</span>
+        <span style="color:var(--text2)">${xpInLevel} / ${XP_PER_LEVEL} XP <span style="color:var(--text3)">(${bossPlayer.xp} total)</span></span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" style="width:${xpPct}%"></div></div>
+    </div>`:""}
+    ${showScene?`<div class="scene-wrap" id="boss-scene"></div>`:""}
+    ${inner}
+    <div class="card" style="margin-top:.85rem"><div class="ctitle">Battle Log</div>
+      <div class="blog" id="blog">${(_bossRaid.log||[]).slice(-20).reverse().map(l=>`<div>${l}</div>`).join("")||'<div style="color:var(--text3)">No actions yet...</div>'}</div>
+    </div>`;
+
+  if(showScene)startBossCanvas();
+  if(_bossPhase!=="class"&&_bossPhase!=="recovering"){
+    bossTimer=setInterval(()=>{if(!me?.demo)pollBoss()},6000);
+  }
+}
+
+function bossDead(){
+  return`<div class="card" style="text-align:center;padding:2rem">
+    <div style="font-family:'Black Ops One',sans-serif;font-size:1.1rem;color:var(--red);margin-bottom:.6rem">You have fallen.</div>
+    <p style="color:var(--text2);font-size:.82rem;margin-bottom:.85rem">Your HP is being restored. Wait a moment then rejoin.</p>
     
-    <div class="casino-dashboard">
-      <div class="game-window" id="win-russian">
-        <h4>☠ Russian Roulette</h4>
-        <div style="font-size:0.75rem; color:var(--text3); margin-bottom:0.5rem">Solo multiplier goes up to x4 (5 bullets max)</div>
-        
-        <div style="margin-bottom:0.6rem">
-          <label style="font-size:0.7rem; display:block; color:var(--text2)">MODE:</label>
-          <select id="rr-mode" class="linput" style="padding:.3rem; font-size:.8rem; margin: .2rem 0" onchange="toggleRRBulletsDisplay()">
-            <option value="solo">Solo Execution (Pick Chamber Count)</option>
-            <option value="duo">Duo Showdown (Trigger Pulling Duel)</option>
-          </select>
+    
+  </div>`;
+}
+
+
+  try{
+    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action:"noop"});
+    if(r.error){notify(r.error,"err");return}
+    bossPlayer=r.player;_bossPhase="fight";renderBoss($("main"));
+  }catch{notify("Failed","err")}
+}
+
+function bossClassPick(){
+  return`<div class="card"><div class="ctitle">Choose Your Class</div>
+    <div class="class-grid">${[["assassin","ASN","Swift strikes, shadow bursts"],["tank","TNK","Protect and taunt boss"],["supporter","SPT","Heal and bless allies"],["mage","MGE","Arcane damage dealer"]].map(([cls,ic,dc])=>`
+      <div class="class-btn" onclick="selCls('${cls}',this)">
+        <span class="class-icon">${ic}</span>
+        <div class="class-name">${cls}</div>
+        <div class="class-desc">${dc}</div>
+      </div>`).join("")}</div>
+    <button class="btn btn-primary" style="margin-top:.8rem;max-width:200px" onclick="joinBoss()">Join Raid</button>
+  </div>`;
+}
+
+function bossMain(){
+  const p=bossPlayer;if(!p)return bossClassPick();
+  const phases=[["harvest","HAR","Harvest"],["hunt","HNT","Hunt Mobs"],["party","PTY","Party"],["fight","FGT","Fight Boss"]];
+  const skillMap={
+    assassin:[["attack","Slash"],["hide","Hide"],["shadow_stab","Shadow Stab"],["shadow_dimension","Shadow Dim"]],
+    tank:[["attack","Slash"],["aggro","Aggro"],["shield","Shield"],["damage_share","Dmg Share"]],
+    supporter:[["attack","Holy Fire"],["bless","Bless"],["heal_target","Heal Target"],["soothing_voice","Soothing Voice"]],
+    mage:[["fireball","Fireball"],["blizzard","Blizzard"],["arcane_nova","Arcane Nova"],["drink_mana_pot","Mana Pot"]],
+  }[p.class]||[["attack","Attack"]];
+
+  let phaseContent="";
+  if(_bossPhase==="harvest")phaseContent=bossHarvestUI();
+  else if(_bossPhase==="hunt")phaseContent=bossMobUI();
+  else if(_bossPhase==="party")phaseContent=bossPartyUI();
+  else if(_bossPhase==="fight")phaseContent=`<div class="card"><div class="ctitle">Actions</div>
+    <div class="act-grid">
+      ${skillMap.map(([a,l])=>`<button class="btn btn-ghost" onclick="bossActWithCrit('${a}','${l}')">${l}</button>`).join("")}
+      <button class="btn btn-ghost" onclick="bossAct('drink_hp_pot')">HP Potion</button>
+      <button class="btn btn-ghost" onclick="bossAct('buy_pot')">Buy Pot (50g)</button>
+    </div></div>`;
+
+  return`<div class="card"><div class="ctitle">@${p.name} — <span class="tag tag-gold">${p.class}</span> — Lv.${p.level}</div>
+    <div class="stat-row">
+      <div class="sbar hp-c"><div class="sl">HP</div><div class="st"><div class="sf" style="width:${Math.max(0,(p.hp/p.max_hp*100)).toFixed(0)}%"></div></div><div class="sv">${p.hp}/${p.max_hp}</div></div>
+      <div class="sbar mana-c"><div class="sl">Mana</div><div class="st"><div class="sf" style="width:${Math.max(0,(p.mana/p.max_mana*100)).toFixed(0)}%"></div></div><div class="sv">${p.mana}/${p.max_mana}</div></div>
+      <div class="sbar stam-c"><div class="sl">Stamina</div><div class="st"><div class="sf" style="width:${Math.max(0,(p.stamina/p.max_stamina*100)).toFixed(0)}%"></div></div><div class="sv">${p.stamina}/${p.max_stamina}</div></div>
+    </div>
+    <div style="font-size:.68rem;color:var(--text3);margin:.35rem 0;font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">
+      HP Pots: ${p.hp_pots} | Mana Pots: ${p.mana_pots} | Gold: ${p.gold}g | Participation: ${p.participation}
+    </div>
+    <div class="phase-grid">
+      ${phases.map(([ph,ic,lb])=>`<div class="phase-btn ${_bossPhase===ph?"active":""}" onclick="setPhase('${ph}')">
+        <span class="pi">${ic}</span><span class="pn">${lb}</span></div>`).join("")}
+    </div>
+  </div>${phaseContent}`;
+}
+
+function bossHarvestUI(){
+  const now=Date.now();
+  const cdEnd=_bossRaid[`gc_${me.discord_id}`]?(_bossRaid[`gc_${me.discord_id}`]*1000):0;
+  const cdLeft=cdEnd-now;
+  if(cdLeft>0)return`<div class="card"><div class="ctitle">Harvest</div><p style="color:var(--text2);font-size:.82rem">Cooldown: ${Math.ceil(cdLeft/1000)}s</p></div>`;
+  return`<div class="card"><div class="ctitle">Harvest Minigame</div>
+    <p style="color:var(--text2);font-size:.8rem;margin-bottom:.55rem">Click glowing nodes before they vanish!</p>
+    <canvas id="harvest-canvas" class="minigame-canvas" width="600" height="150"></canvas>
+    <div style="font-family:'Black Ops One',sans-serif;font-size:.9rem;color:var(--gold);text-align:center;margin:.45rem 0" id="harvest-score">Score: 0</div>
+    <button class="btn btn-primary" style="max-width:180px" id="harvest-btn" onclick="startHarvestGame()">Start Harvest</button>
+  </div>`;
+}
+
+function bossMobUI(){
+  const now=Date.now();
+  const cdEnd=_bossRaid[`fc_${me.discord_id}`]?(_bossRaid[`fc_${me.discord_id}`]*1000):0;
+  const cdLeft=cdEnd-now;
+  if(cdLeft>0)return`<div class="card"><div class="ctitle">Hunt Mobs</div><p style="color:var(--text2);font-size:.82rem">Cooldown: ${Math.ceil(cdLeft/1000)}s</p></div>`;
+  return`<div class="card"><div class="ctitle">Hunt Minigame — Mash Attack!</div>
+    <p style="color:var(--text2);font-size:.8rem;margin-bottom:.55rem">Hit the button as fast as possible in 5 seconds!</p>
+    <div style="font-family:'Black Ops One',sans-serif;font-size:.9rem;color:var(--gold);text-align:center;margin:.4rem 0" id="mob-hits">Hits: 0</div>
+    <div style="width:100%;height:8px;background:var(--border2);border-radius:2px;overflow:hidden;margin:.5rem 0">
+      <div id="mob-timer-bar" style="height:100%;background:var(--red);border-radius:2px;width:100%;transition:none"></div>
+    </div>
+    <button class="btn btn-danger btn-full" id="mob-btn" onclick="startMobGame(this)">Hunt Now!</button>
+  </div>`;
+}
+
+function bossPartyUI(){
+  // Auto-add current player
+  const myEntry={name:me.username,accepted:true,isMe:true};
+  const allMembers=[myEntry,..._partyList.filter(x=>x.name!==me.username)];
+  return`<div class="card"><div class="ctitle">Build Party</div>
+    <p style="color:var(--text2);font-size:.82rem;margin-bottom:.75rem">Invite players. They'll see a notification to accept or decline.</p>
+    <div style="display:flex;gap:.4rem;margin-bottom:.75rem">
+      <input class="ginput" id="party-in" placeholder="Player name" style="flex:1">
+      <button class="btn btn-ghost btn-sm" onclick="sendPartyInvite()">Invite</button>
+    </div>
+    <div class="party-list">
+      ${allMembers.map((n,i)=>`<div class="party-member">
+        <span class="pm-name">@${n.name}${n.isMe?" (You)":""}</span>
+        <span class="tag ${n.accepted?"tag-green":"tag-dim"}">${n.accepted?"Accepted":"Pending"}</span>
+        ${!n.isMe?`<button class="btn btn-danger btn-sm" onclick="removeParty(${i-1})">×</button>`:""}
+      </div>`).join("")}
+    </div>
+    <button class="btn btn-primary" style="margin-top:.75rem;max-width:200px" onclick="setPhase('fight')">Enter Fight</button>
+  </div>`;
+}
+
+function sendPartyInvite(){
+  const n=($("party-in")?.value||"").trim();
+  if(!n)return;
+  if(n===me.username){notify("That's you!","err");return}
+  if(_partyList.find(x=>x.name===n)){notify("Already invited","err");return}
+  _partyList.push({name:n,accepted:false});
+  _pendingInvite={from:me.username,toName:n};
+  $("invite-title").textContent="Party Invite";
+  $("invite-text").textContent=`@${me.username} wants you in their party`;
+  $("invite-notif").classList.add("show");
+  renderBoss($("main"));
+}
+function acceptInvite(){
+  if(!_pendingInvite)return;
+  const entry=_partyList.find(x=>x.name===_pendingInvite.toName);
+  if(entry)entry.accepted=true;
+  $("invite-notif").classList.remove("show");_pendingInvite=null;
+  notify("Party invite accepted!");renderBoss($("main"));
+}
+function declineInvite(){
+  if(!_pendingInvite)return;
+  _partyList=_partyList.filter(x=>x.name!==_pendingInvite.toName);
+  $("invite-notif").classList.remove("show");_pendingInvite=null;
+  notify("Invite declined","err");renderBoss($("main"));
+}
+function removeParty(i){_partyList.splice(i,1);renderBoss($("main"))}
+function selCls(cls,el){_selCls=cls;document.querySelectorAll(".class-btn").forEach(b=>b.classList.remove("sel"));el.classList.add("sel")}
+function setPhase(ph){_bossPhase=ph;renderBoss($("main"))}
+
+async function joinBoss(){
+  if(!_selCls){notify("Pick a class","err");return}
+  if(me?.demo){
+    const s=CLS_STATS[_selCls];
+    bossPlayer={name:me.username,class:_selCls,hp:s.hp,max_hp:s.hp,mana:s.mana,max_mana:s.mana,stamina:s.stamina,max_stamina:s.stamina,xp:0,level:1,gold:200,dmg_base:s.dmg,hp_pots:2,mana_pots:2,buffs:[],hidden:false,arcane_nova_used:false,soothing_voice_used:false,participation:0,recovering:false};
+    _bossRaid.players[me.discord_id]=bossPlayer;
+    _bossRaid.log.push(`${me.username} joined as ${_selCls}!`);
+    _bossPhase="phase";notify("Joined raid!");renderBoss($("main"));return;
+  }
+  try{
+    const r=await api("/boss/join","POST",{discord_id:me.discord_id,class:_selCls});
+    if(r.error){notify(r.error,"err");return}
+    bossPlayer=r.player;_bossPhase="phase";notify("Joined!");renderBoss($("main"));
+  }catch{notify("Failed","err")}
+}
+
+// Critical hit minigame
+function critHitGame(actionLabel){
+  return new Promise(resolve=>{
+    if(_critActive){resolve({crit:false});return}
+    _critActive=true;_critResolve=resolve;
+    const targets=["THE VOID","DARKNESS","SHADOW","ABYSS","DEATH"];
+    const target=targets[Math.floor(Math.random()*targets.length)];
+    const prompt=`${actionLabel.toUpperCase()} ${target}`;
+    document.body.insertAdjacentHTML("beforeend",`
+      <div class="crit-modal" id="crit-modal">
+        <div class="crit-box">
+          <div class="crit-title">⚡ Critical Hit Chance!</div>
+          <div class="crit-prompt">Type this exactly within 3 seconds:</div>
+          <div class="crit-target">${prompt}</div>
+          <input class="crit-input" id="crit-in" type="text" placeholder="Type here..." autocomplete="off" spellcheck="false">
+          <div class="crit-timer" id="crit-timer">3</div>
+          <div style="font-size:.7rem;color:var(--text3);margin-top:.45rem">Exact match = 2× damage</div>
         </div>
-        
-        <div id="rr-bullets-wrap" style="margin-bottom:0.6rem">
-          <label style="font-size:0.7rem; display:block; color:var(--text2)">BULLETS TO LOAD (1-5):</label>
-          <input type="number" id="rr-bullets" class="input-num" style="width:100%" value="1" min="1" max="5">
-        </div>
-        
+      </div>`);
+    const input=$("crit-in");if(input)input.focus();
+    let t=3;
+    _critTimer=setInterval(()=>{t--;if($("crit-timer"))$("crit-timer").textContent=t;if(t<=0)finishCrit(prompt,false)},1000);
+    if(input)input.addEventListener("keydown",function h(e){if(e.key==="Enter"){input.removeEventListener("keydown",h);finishCrit(prompt,input.value.trim().toUpperCase()===prompt)}});
+  });
+}
+function finishCrit(prompt,success){
+  clearInterval(_critTimer);_critActive=false;
+  const m=$("crit-modal");if(m)m.remove();
+  if(_critResolve)_critResolve({crit:success});_critResolve=null;
+}
+
+// Harvest minigame
+let _harvestGame={active:false,nodes:[],score:0,animFrame:null};
+function startHarvestGame(){
+  const btn=$("harvest-btn");if(btn)btn.style.display="none";
+  const canvas=$("harvest-canvas");if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  const W=canvas.offsetWidth||600,H=150;
+  canvas.width=W;
+  _harvestGame={active:true,nodes:[],score:0,animFrame:null};
+  $("harvest-score").textContent="Score: 0";
+  let spawned=0;
+  const spawnInterval=setInterval(()=>{
+    if(spawned>=14){clearInterval(spawnInterval);return}
+    spawned++;
+    _harvestGame.nodes.push({x:Math.random()*(W-40)+20,y:Math.random()*(H-30)+15,r:13,life:2.5,maxLife:2.5,color:`hsl(${50+Math.random()*50},90%,55%)`});
+  },500);
+  canvas.onclick=(e)=>{
+    if(!_harvestGame.active)return;
+    const rect=canvas.getBoundingClientRect();
+    const cx=(e.clientX-rect.left)*(W/rect.width),cy=(e.clientY-rect.top)*(H/rect.height);
+    _harvestGame.nodes.forEach(n=>{
+      if(!n.hit&&Math.sqrt((n.x-cx)**2+(n.y-cy)**2)<n.r+8){n.hit=true;_harvestGame.score+=Math.ceil(n.life/n.maxLife*10)}
+    });
+    $("harvest-score").textContent=`Score: ${_harvestGame.score}`;
+  };
+  let last=performance.now();
+  const loop=(now)=>{
+    const dt=(now-last)/1000;last=now;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="#0a1a06";ctx.fillRect(0,0,W,H);
+    _harvestGame.nodes=_harvestGame.nodes.filter(n=>!n.hit&&n.life>0);
+    _harvestGame.nodes.forEach(n=>{
+      n.life-=dt;
+      const alpha=Math.max(0,n.life/n.maxLife);
+      const pulse=1+0.18*Math.sin(Date.now()/180);
+      ctx.save();ctx.globalAlpha=alpha;
+      const grd=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*pulse*2);
+      grd.addColorStop(0,"rgba(245,196,0,.9)");grd.addColorStop(1,"rgba(245,196,0,0)");
+      ctx.fillStyle=grd;ctx.beginPath();ctx.arc(n.x,n.y,n.r*pulse*1.8,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=n.color;ctx.beginPath();ctx.arc(n.x,n.y,n.r*pulse,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;ctx.restore();
+    });
+    if(spawned>=14&&_harvestGame.nodes.length===0){endHarvestGame();return}
+    _harvestGame.animFrame=requestAnimationFrame(loop);
+  };
+  _harvestGame.animFrame=requestAnimationFrame(loop);
+  setTimeout(()=>{if(_harvestGame.active)endHarvestGame()},14000);
+}
+function endHarvestGame(){
+  if(!_harvestGame.active)return;
+  _harvestGame.active=false;
+  cancelAnimationFrame(_harvestGame.animFrame);
+  const xp=50+_harvestGame.score*5,g=20+_harvestGame.score*2;
+  bossActGather(xp,g);
+}
+async function bossActGather(xpBonus,goldBonus){
+  if(me?.demo){
+    const p=bossPlayer;p.xp+=xpBonus;p.gold+=goldBonus;
+    p.level=Math.min(20,1+Math.floor(p.xp/XP_PER_LEVEL));
+    _bossRaid[`gc_${me.discord_id}`]=(Date.now()+GATHER_CD)/1000;
+    _bossRaid.log.push(`${p.name} harvested! (+${xpBonus}XP +${goldBonus}g)`);
+    notify(`+${xpBonus}XP +${goldBonus}g`);renderBoss($("main"));return;
+  }
+  try{
+    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action:"gather",xp_bonus:xpBonus,gold_bonus:goldBonus});
+    if(r.error){notify(r.error,"err");return}
+    bossPlayer=r.player;renderBoss($("main"));
+  }catch{notify("Failed","err")}
+}
+
+// Mob mash
+let _mobGame={active:false,hits:0};
+function startMobGame(btn){
+  if(_mobGame.active)return;
+  _mobGame={active:true,hits:0};
+  btn.textContent="Attack!";
+  btn.onclick=()=>{if(!_mobGame.active)return;_mobGame.hits++;$("mob-hits").textContent=`Hits: ${_mobGame.hits}`};
+  let elapsed=0;
+  const bar=$("mob-timer-bar");
+  const tick=setInterval(()=>{
+    elapsed+=100;if(bar)bar.style.width=`${Math.max(0,100-(elapsed/5000)*100)}%`;
+    if(elapsed>=5000){clearInterval(tick);endMobGame()}
+  },100);
+}
+function endMobGame(){
+  _mobGame.active=false;
+  const hits=_mobGame.hits,xp=150+hits*12,g=40+hits*5;
+  if(me?.demo){
+    const p=bossPlayer;p.xp+=xp;p.gold+=g;
+    p.level=Math.min(20,1+Math.floor(p.xp/XP_PER_LEVEL));
+    _bossRaid[`fc_${me.discord_id}`]=(Date.now()+FARM_CD)/1000;
+    _bossRaid.log.push(`${p.name} hunted! (+${xp}XP +${g}g, ${hits} hits)`);
+    notify(`Hunted! +${xp}XP +${g}g`);renderBoss($("main"));return;
+  }
+  api("/boss/action","POST",{discord_id:me.discord_id,action:"farm_mobs",hits}).then(r=>{
+    if(!r.error){bossPlayer=r.player}renderBoss($("main"));
+  });
+}
+
+async function bossActWithCrit(action,label){
+  const {crit}=await critHitGame(label);
+  // show attack FX
+  _bossAttackFx=action;clearTimeout(_fxTimer);
+  _fxTimer=setTimeout(()=>{_bossAttackFx=null},1000);
+  bossAct(action,crit);
+}
+
+async function bossAct(action,crit=false){
+  if(me?.demo){
+    const p=bossPlayer;if(!p)return;
+    const pdmg=()=>{
+      let d=Math.floor(p.dmg_base*(1+p.xp/2000)*(p.buffs?.some(b=>b.type==="bless")?1.5:1));
+      if(crit)d=Math.floor(d*2);return d;
+    };
+    let msg="";
+    if(action==="attack"){const d=pdmg();_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`${p.name} attacked for ${d.toLocaleString()}${crit?" [CRIT!]":""}!`;p.participation+=2}
+    else if(action==="hide"){p.hidden=true;msg=`${p.name} hides.`;p.participation+=1}
+    else if(action==="shadow_stab"){const d=Math.floor(pdmg()*(p.hidden?1.5:1));p.hidden=false;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`Shadow Stab ${d.toLocaleString()}${crit?" [CRIT!]":""}!`;p.participation+=2}
+    else if(action==="shadow_dimension"){if(!p.shadow_dim_used){p.shadow_dim_used=true;p.hidden=true;msg="Vanished!";p.participation+=1}}
+    else if(action==="bless"){p.buffs=[...(p.buffs||[]),{type:"bless",turns:2}];msg="Blessed everyone!";p.participation+=2}
+    else if(action==="heal_target"){showHealTargetPicker();return}
+    else if(action==="soothing_voice"){if(!p.soothing_voice_used){p.hp=Math.min(p.max_hp,p.hp+Math.floor(p.max_hp*.5));p.mana=0;p.soothing_voice_used=true;msg="Soothing Voice! +50% HP!";p.participation+=5}}
+    else if(action==="aggro"){msg=`${p.name} taunts!`;p.participation+=1}
+    else if(action==="shield"){msg="Shield raised!";p.participation+=2}
+    else if(action==="fireball"){if(p.mana<80){notify("Need 80 mana","err");return}const d=Math.floor(pdmg()*1.8);p.mana-=80;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`Fireball! ${d.toLocaleString()}${crit?" [CRIT!]":""}`;p.participation+=2}
+    else if(action==="blizzard"){if(p.mana<100){notify("Need 100 mana","err");return}const d=Math.floor(pdmg()*1.4);p.mana-=100;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`Blizzard! ${d.toLocaleString()}${crit?" [CRIT!]":""}`;p.participation+=2}
+    else if(action==="arcane_nova"){if(p.arcane_nova_used){notify("Already used","err");return}if(p.mana<200){notify("Need 200 mana","err");return}const d=Math.floor(pdmg()*3);p.mana=0;p.arcane_nova_used=true;_bossRaid.hp=Math.max(0,_bossRaid.hp-d);msg=`ARCANE NOVA ${d.toLocaleString()}${crit?" [CRIT!]":""}!!`;p.participation+=5}
+    else if(action==="drink_hp_pot"){if(!p.hp_pots){notify("No HP pots","err");return}p.hp=Math.min(p.max_hp,p.hp+Math.floor(p.max_hp*.3));p.hp_pots--;msg="Drank HP pot."}
+    else if(action==="drink_mana_pot"){if(!p.mana_pots){notify("No mana pots","err");return}p.mana=Math.min(p.max_mana,p.mana+Math.floor(p.max_mana*.3));p.mana_pots--;msg="Drank mana pot."}
+    else if(action==="buy_pot"){if(p.gold<50){notify("Need 50g","err");return}p.gold-=50;p.hp_pots++;msg="Bought HP pot."}
+    // boss counterattack
+    const dmgActions=["attack","shadow_stab","fireball","blizzard","arcane_nova"];
+    if(dmgActions.includes(action)&&_bossRaid.hp>0){
+      const bd=500+Math.floor(Math.random()*700);p.hp=Math.max(0,p.hp-bd);
+      _bossRaid.log.push(`Boss hits ${p.name} for ${bd.toLocaleString()}!`);
+      triggerBossFlinch();
+    }
+    p.buffs=(p.buffs||[]).map(b=>({...b,turns:b.turns-1})).filter(b=>b.turns>0);
+    if(msg)_bossRaid.log.push(msg);
+    _bossRaid.log=_bossRaid.log.slice(-60);
+    _bossRaid.players[me.discord_id]=p;bossPlayer=p;
+    if(p.hp<=0){p.recovering=true;_bossPhase="recovering";notify("You have fallen!","err")}
+    if(_bossRaid.hp<=0){_bossRaid.active=false;_bossRaid.log.push("BOSS DEFEATED! (Demo)");notify("Boss defeated!")}
+    else if(msg)notify(msg);
+    renderBoss($("main"));return;
+  }
+  try{
+    const r=await api("/boss/action","POST",{discord_id:me.discord_id,action,crit});
+    if(r.error){notify(r.error,"err");return}
+    bossPlayer=r.player;_bossRaid={..._bossRaid,hp:r.boss_hp};
+    if(r.log)_bossRaid.log=[...(_bossRaid.log||[]),...r.log];
+    if(r.player?.recovering){_bossPhase="recovering"}
+    if(r.defeated){await refreshTickets();notify("Boss defeated! +5 tickets!")}
+    else{triggerBossFlinch()}
+    renderBoss($("main"));
+  }catch{notify("Failed","err")}
+}
+
+let _healTarget=null;
+function showHealTargetPicker(){
+  const players=Object.values(_bossRaid?.players||{});
+  const modal=document.createElement("div");
+  modal.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:800;width:300px;background:var(--panel);border:1px solid var(--gold);border-radius:4px;padding:1rem";
+  modal.innerHTML=`<div class="ctitle">Choose Heal Target</div>
+    <div class="heal-target-list">${players.map(pl=>`
+      <button class="heal-target-btn" onclick="pickHealTarget('${pl.name||pl.discord_id}',this.closest('[style*=z-index]'))">
+        <span>${pl.name}</span><span class="htb-hp">${pl.hp}/${pl.max_hp}</span>
+      </button>`).join("")}
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:.5rem" onclick="this.closest('[style*=z-index]').remove()">Cancel</button>`;
+  document.body.appendChild(modal);
+}
+function pickHealTarget(name,modal){
+  if(modal)modal.remove();
+  const entry=Object.entries(_bossRaid?.players||{}).find(([,v])=>v.name===name);
+  _healTarget=entry?entry[0]:null;
+  if(me?.demo){
+    const p=bossPlayer,tp=_bossRaid.players[_healTarget]||p;
+    const h=Math.floor(tp.max_hp*.25);tp.hp=Math.min(tp.max_hp,tp.hp+h);
+    _bossRaid.log.push(`${p.name} healed ${tp.name} for ${h} HP.`);
+    bossPlayer=p;renderBoss($("main"));return;
+  }
+  api("/boss/action","POST",{discord_id:me.discord_id,action:"heal_target",target_id:_healTarget}).then(r=>{
+    if(!r.error){bossPlayer=r.player}renderBoss($("main"));
+  });
+}
+
+function triggerBossFlinch(){
+  _bossFlinch=true;clearTimeout(_flinchTimer);
+  _flinchTimer=setTimeout(()=>{_bossFlinch=false},500);
+}
+
+async function pollBoss(){
+  try{
+    const r=await api("/boss/state");_bossRaid=r;bossPlayer=r.players?.[me.discord_id]??bossPlayer;
+    const f=$("bfill"),b=$("blog");
+    if(f)f.style.width=`${Math.max(0,r.hp/r.max_hp*100)}%`;
+    if(b)b.innerHTML=(r.log||[]).slice(-20).reverse().map(l=>`<div>${l}</div>`).join("");
+  }catch{}
+}
+
+// ── BOSS CANVAS ──
+const _BOSS_IMGS={};
+// Sprites served by the server from ./sprites/ — names never exposed in HTML source
+const _BOSS_IMGS={};
+function loadSpr(key,files){
+  // Try each filename in order; server 404s if file doesn't exist
+  const try1=new Image();
+  try1.src="/sprites/"+files[0];
+  try1.onload=()=>{_BOSS_IMGS[key]=try1};
+  try1.onerror=()=>{
+    if(files.length>1){const try2=new Image();try2.src="/sprites/"+files[1];try2.onload=()=>{_BOSS_IMGS[key]=try2};try2.onerror=()=>{_BOSS_IMGS[key]=null}}
+    else _BOSS_IMGS[key]=null;
+  };
+}
+function getSpr(key){const img=_BOSS_IMGS[key];return(img&&img.naturalWidth>0)?img:null}
+// Load all sprites from server at boot
+loadSpr("boss_idle",   ["boss_idle.gif","boss_idle.png"]);
+loadSpr("boss_flinch", ["boss_flinch.gif","boss_flinch.png"]);
+loadSpr("boss_attack", ["boss_attack.gif","boss_attack.png"]);
+loadSpr("boss_dead",   ["boss_dead.png"]);
+loadSpr("fx_attack",   ["fx_slash.gif","fx_slash.png"]);
+loadSpr("fx_fireball", ["fx_fireball.gif","fx_fireball.png"]);
+loadSpr("fx_blizzard", ["fx_blizzard.gif","fx_blizzard.png"]);
+loadSpr("fx_arcane_nova",["fx_nova.gif","fx_nova.png"]);
+loadSpr("fx_bless",    ["fx_bless.gif","fx_bless.png"]);
+loadSpr("fx_heal_target",["fx_heal.gif","fx_heal.png"]);
+loadSpr("fx_shield",   ["fx_shield.gif","fx_shield.png"]);
+loadSpr("class_assassin",["class_assassin.png"]);
+loadSpr("class_tank",    ["class_tank.png"]);
+loadSpr("class_supporter",["class_supporter.png"]);
+loadSpr("class_mage",    ["class_mage.png"]);
+
+let _projectiles=[],_effects=[];
+function startBossCanvas(){
+  const wrap=$("boss-scene");if(!wrap)return;
+  const canvas=document.createElement("canvas");
+  wrap.appendChild(canvas);
+  function resize(){canvas.width=wrap.clientWidth;canvas.height=wrap.clientHeight}
+  resize();window.addEventListener("resize",resize);
+  const cx=canvas.getContext("2d");
+
+  // Determine which players to show in the scene
+  function getVisiblePlayers(){
+    if(_bossPhase!=="fight")return[];
+    const partyNames=new Set([me.username,..._partyList.filter(x=>x.accepted).map(x=>x.name)]);
+    const all=Object.values(_bossRaid?.players||{});
+    if(all.length===0&&bossPlayer)return[bossPlayer];
+    if(_partyList.length===0)return[bossPlayer].filter(Boolean);
+    return all.filter(pl=>pl&&partyNames.has(pl.name));
+  }
+
+  function loop(){
+    _bossAnimFrame=requestAnimationFrame(loop);
+    const W=canvas.width,H=canvas.height;
+    const bossX=W/2,bossY=H*.22;
+    cx.clearRect(0,0,W,H);
+    // Background
+    const sky=cx.createLinearGradient(0,0,0,H*.6);sky.addColorStop(0,"#050a1a");sky.addColorStop(1,"#0a1a0a");
+    cx.fillStyle=sky;cx.fillRect(0,0,W,H*.6);
+    const gnd=cx.createLinearGradient(0,H*.55,0,H);gnd.addColorStop(0,"#111800");gnd.addColorStop(1,"#060b00");
+    cx.fillStyle=gnd;cx.fillRect(0,H*.55,W,H*.45);
+    cx.strokeStyle="rgba(40,50,0,.3)";cx.lineWidth=1;
+    for(let i=0;i<8;i++){const y=H*.6+i*(H*.4/8);cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke()}
+
+    // Boss sprite
+    if(_bossPhase==="fight"||!_bossRaid?.active){
+      drawBossSprite(cx,bossX,bossY,W,H);
+    }
+
+    // Attack FX overlay
+    if(_bossAttackFx){
+      const fxImg=FX_IMGS[_bossAttackFx];
+      if(fxImg&&fxImg.complete&&fxImg.naturalWidth>0){
+        const fw=Math.min(W*.4,200),fh=fw*1.2;
+        cx.globalAlpha=0.85;
+        cx.drawImage(fxImg,bossX-fw/2,bossY-fh*.6,fw,fh);
+        cx.globalAlpha=1;
+      } else {
+        // drawn FX fallback
+        drawFxFallback(cx,_bossAttackFx,bossX,bossY,W,H);
+      }
+    }
+
+    // Players
+    const players=getVisiblePlayers();
+    players.forEach((pl,i)=>{
+      if(!pl)return;
+      const total=Math.max(1,players.length);
+      const x=W*(0.2+(i/(total))*0.6+(0.3/total));
+      const y=H*.78;
+      drawPlayerSprite(cx,x,y,pl.class,pl.discord_id===me.discord_id||pl.name===me.username,pl);
+    });
+
+    // Projectiles
+    _projectiles=_projectiles.filter(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.life--;
+      if(p.type==="fireball"){
+        const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,10);
+        g.addColorStop(0,"rgba(255,200,0,.9)");g.addColorStop(1,"rgba(255,60,0,0)");
+        cx.fillStyle=g;cx.beginPath();cx.arc(p.x,p.y,10,0,Math.PI*2);cx.fill();
+      } else {
+        cx.fillStyle=`rgba(245,196,0,${p.life/20})`;cx.beginPath();cx.arc(p.x,p.y,5,0,Math.PI*2);cx.fill();
+      }
+      return p.life>0;
+    });
+  }
+  loop();
+}
+
+function drawFxFallback(cx,action,x,y,W,H){
+  const colors={fireball:"#ff8800",blizzard:"#00ccff",arcane_nova:"#cc44ff",attack:"#f5c400",bless:"#44ff88",heal_target:"#44ff88",shield:"#4488ff"};
+  const c=colors[action]||"#ffffff";
+  const r=Math.min(W,H)*.15;
+  const grd=cx.createRadialGradient(x,y,0,x,y,r);
+  grd.addColorStop(0,c+"cc");grd.addColorStop(1,c+"00");
+  cx.fillStyle=grd;cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
+}
+
+function drawBossSprite(cx,x,y,W,H){
+  cx.save();
+  const shake=_bossFlinch?6:0;
+  if(_bossFlinch){cx.translate(x+shake,y);cx.filter="brightness(2) contrast(1.5)"}
+  else cx.translate(x,y);
+  const s=Math.min(W,H)*.3;
+  const frameKey=!_bossRaid?.active?"dead":_bossFlinch?"flinch":"idle";
+  const img=BOSS_FRAMES[frameKey];
+  if(img&&img.complete&&img.naturalWidth>0){
+    cx.drawImage(img,-s/2,-s*.6,s,s*1.4);
+  } else drawBossFallback(cx,s,_bossFlinch);
+  cx.restore();
+}
+function drawBossFallback(cx,s,flinch){
+  const shake=flinch?8:0;
+  const aura=cx.createRadialGradient(shake,0,s*.2,shake,0,s*.9);
+  aura.addColorStop(0,"rgba(255,0,50,.18)");aura.addColorStop(1,"rgba(255,0,50,0)");
+  cx.fillStyle=aura;cx.beginPath();cx.arc(shake,0,s*.9,0,Math.PI*2);cx.fill();
+  cx.fillStyle=flinch?"#3a0a0a":"#1a0505";
+  cx.beginPath();cx.ellipse(shake,0,s*.45,s*.6,0,0,Math.PI*2);cx.fill();
+  cx.fillStyle=flinch?"#1f0303":"#0d0303";
+  for(let side of[-1,1]){
+    cx.beginPath();cx.moveTo(shake,-s*.2);
+    cx.bezierCurveTo(side*s*.8+shake,-s*.5,side*s*1.1+shake,-s*.1,side*s*.5+shake,s*.2);
+    cx.bezierCurveTo(side*s*.3+shake,s*.1,shake,s*.05,shake,0);
+    cx.closePath();cx.fill();
+  }
+  cx.strokeStyle=flinch?"#5a1010":"#2a0808";cx.lineWidth=s*.07;cx.lineCap="round";
+  for(let i=0;i<6;i++){
+    const ang=(i/6)*Math.PI-.5+Math.PI*.5,len=s*.45;
+    const ox=Math.cos(ang)*s*.3+shake,oy=s*.3;
+    cx.beginPath();cx.moveTo(ox,oy);
+    cx.bezierCurveTo(ox+Math.cos(ang+.5)*len*.5,oy+len*.5,ox+Math.cos(ang-.3)*len*.8,oy+len*.8,ox+Math.cos(ang)*len,oy+len);
+    cx.stroke();
+  }
+  cx.fillStyle=flinch?"#ffffff":"#ff3344";cx.shadowColor=flinch?"#fff":"#f00";cx.shadowBlur=flinch?20:12;
+  cx.beginPath();cx.arc(-s*.12+shake,-s*.08,s*.06,0,Math.PI*2);cx.fill();
+  cx.beginPath();cx.arc(s*.12+shake,-s*.08,s*.06,0,Math.PI*2);cx.fill();
+  cx.shadowBlur=0;
+}
+function drawPlayerSprite(cx,x,y,cls,isMe,pl){
+  cx.save();cx.translate(x,y);
+  const colors={assassin:"#aa44ff",tank:"#4488ff",supporter:"#ffcc44",mage:"#ff4488"};
+  const color=colors[cls]||"#aaa";
+  const h=56,w=24;
+  if(isMe){
+    cx.fillStyle="rgba(245,196,0,.12)";cx.beginPath();cx.arc(0,0,34,0,Math.PI*2);cx.fill();
+    cx.strokeStyle=color;cx.lineWidth=1.5;cx.beginPath();cx.arc(0,0,34,0,Math.PI*2);cx.stroke();
+  }
+  const clsImg=CLASS_IMGS[cls];
+  if(clsImg&&clsImg.complete&&clsImg.naturalWidth>0){
+    cx.drawImage(clsImg,-w,-h*.8,w*2,h*1.6);
+  } else {
+    // Fallback drawn character
+    cx.fillStyle=color+"33";cx.fillRect(-w/2+4,8,w/2-6,20);cx.fillRect(4,8,w/2-6,20);
+    const bg=cx.createLinearGradient(-w/2,-h/2,w/2,h/2);bg.addColorStop(0,color);bg.addColorStop(1,color+"88");
+    cx.fillStyle=bg;
+    if(cls==="tank")cx.fillRect(-w/2,-h*.4,w,h*.48);
+    else{cx.beginPath();cx.moveTo(-w/2+2,-h*.4);cx.lineTo(w/2-2,-h*.4);cx.lineTo(w/2-2,h*.08);cx.lineTo(-w/2+2,h*.08);cx.closePath();cx.fill()}
+    cx.fillStyle=color;cx.beginPath();cx.arc(0,-h*.48,w/2*.72,0,Math.PI*2);cx.fill();
+    cx.fillStyle="#fff";cx.font=`bold 8px 'Black Ops One',sans-serif`;cx.textAlign="center";cx.textBaseline="middle";
+    cx.fillText((cls||"???").slice(0,3).toUpperCase(),0,-h*.48);
+  }
+  // HP bar
+  if(pl){
+    const bw=50,bh=5;
+    cx.fillStyle="#000a";cx.fillRect(-bw/2,h*.1,bw,bh);
+    cx.fillStyle=pl.hp/pl.max_hp>0.5?"#44ff88":pl.hp/pl.max_hp>0.25?"#ffaa00":"#ff3344";
+    cx.fillRect(-bw/2,h*.1,bw*(pl.hp/pl.max_hp),bh);
+    cx.fillStyle="#fff";cx.font="bold 7px sans-serif";cx.textBaseline="middle";
+    cx.fillText((pl.name||"").slice(0,10),0,h*.22);
+  }
+  cx.restore();
+}
+
+// ══════════════════════════════════════════════════════════
+// GUESSING — rules → questions → leaderboard
+// ══════════════════════════════════════════════════════════
+// Guess questions fetched from server — see /guessing/questions
+const GQS = []; // populated at runtime from server
+
+async function renderGuess(m){
+  const ev=EVENTS.find(e=>e.id==="guess");
+  if(!isLive(ev)){m.innerHTML=evHdr(ev)+cdHTML(ev.date,"Event starts in");startCd(ev.date);return}
+  if(_guessPhase==="rules"){m.innerHTML=evHdr(ev)+guessRulesHTML();return}
+  if(_guessPhase==="done"){renderGuessResults(m,ev);return}
+  if(!me?.demo){
+    const st=await api(`/guessing/status/${me.discord_id}`);
+    if(st.done){_guessPhase="done";renderGuessResults(m,ev);return}
+  }
+  renderGuessPlaying(m,ev);
+}
+
+function guessRulesHTML(){
+  return`<div class="card">
+    <div class="ctitle">Guessing Games — Rules</div>
+    <p style="color:var(--text2);font-size:.85rem;line-height:1.7;margin-bottom:.9rem">
+      Guess Sumnor's real answers to 10 personal questions. If your answer <em>contains</em> the correct keyword, it counts.
+    </p>
+    <table class="rtable" style="margin-bottom:1rem"><thead><tr><th>Rank</th><th>Tickets</th></tr></thead><tbody>
+      <tr><td>1st</td><td class="gold">+20</td></tr><tr><td>2nd</td><td class="gold">+10</td></tr>
+      <tr><td>3rd</td><td class="gold">+5</td></tr><tr><td>Participation</td><td class="gold">+1</td></tr>
+    </tbody></table>
+    <button class="btn btn-primary" style="max-width:200px" onclick="_guessPhase='playing';renderGuess($('main'))">Start Guessing</button>
+  </div>`;
+}
+function renderGuessPlaying(m,ev){
+  m.innerHTML=evHdr(ev)+GQS.map(q=>`<div class="qcard">
+    <div class="qt">Q${q.id+1}. ${q.q}</div>
+    <input class="ginput" id="g${q.id}" placeholder="Your answer..." value="${guessAns[q.id]||""}">
+  </div>`).join("")+`<button class="btn btn-primary" style="margin-top:.8rem;max-width:220px" onclick="submitGuess()">Submit Answers</button>`;
+}
+async function submitGuess(){
+  GQS.forEach(q=>{guessAns[q.id]=($(`g${q.id}`)?.value||"").trim().toLowerCase()});
+  _guessPhase="done";
+  const ev=EVENTS.find(e=>e.id==="guess");
+  renderGuessResults($("main"),ev);
+  const score=GQS.reduce((s,q)=>{const c=(GA[q.id]||"").toLowerCase();return s+(guessAns[q.id]?.includes(c)?1:0)},0);
+  if(!me?.demo){
+    try{
+      const r=await api("/guessing/submit","POST",{discord_id:me.discord_id,score});
+      if(!r.error){me.tickets=r.total;renderAuth();notify(`Submitted! ${score}/10 — +1 ticket`)}
+    }catch{notify("Save failed","err")}
+  }
+}
+async function renderGuessResults(m,ev){
+  const score=GQS.reduce((s,q)=>{const c=(GA[q.id]||"").toLowerCase();return s+(guessAns[q.id]?.includes(c)?1:0)},0);
+  let html=evHdr(ev)+`<div class="card"><div class="ctitle">Results — ${score}/10</div>
+    ${GQS.map(q=>{
+      const c=(GA[q.id]||"").toLowerCase();
+      const hit=(guessAns[q.id]||"").includes(c);
+      return`<div style="padding:.42rem 0;border-bottom:1px solid var(--border);display:flex;gap:.5rem;align-items:flex-start">
+        <span style="color:${hit?"var(--green)":"var(--red)"};font-weight:700;flex-shrink:0">${hit?"✓":"✗"}</span>
         <div>
-          <label style="font-size:0.7rem; display:block; color:var(--text2)">BET TICKETS:</label>
-          <input type="number" id="rr-bet" class="input-num" style="width:100%" value="100">
+          <div style="font-size:.78rem;color:var(--text2)">${q.q}</div>
+          <div style="font-size:.7rem;color:${hit?"var(--green)":"var(--red)"}">Answer: ${GA[q.id]}</div>
+          <div style="font-size:.68rem;color:var(--text3)">Your guess: ${guessAns[q.id]||"—"}</div>
         </div>
-        
-        <div id="rr-feedback" class="feedback"></div>
-        <div class="game-action-row">
-          <button class="btn btn-primary" onclick="playRussianRoulette()">PULL TRIGGER</button>
-        </div>
-      </div>
-      
-      <div class="game-window" id="win-blackjack">
-        <h4>🃏 Blackjack Matrix</h4>
-        <div style="font-size:0.75rem; color:var(--text3); margin-bottom:0.5rem">Dealer stands on soft 17 baseline engine</div>
-        
-        <div style="margin-bottom:0.6rem">
-          <label style="font-size:0.7rem; display:block; color:var(--text2)">BET TICKETS:</label>
-          <input type="number" id="bj-bet" class="input-num" style="width:100%" value="100">
-        </div>
-        
-        <div id="bj-feedback" class="feedback"></div>
-        <div class="game-action-row">
-          <button class="btn btn-primary" onclick="playBlackjack()">DEAL HAND</button>
-        </div>
-      </div>
-      
-      <div class="game-window" id="win-roulette">
-        <h4>🎡 Wheel Roulette (Group Betting Hub)</h4>
-        <div style="font-size:0.75rem; color:var(--text3); margin-bottom:0.5rem">Betting synchronous or group aligned targeting</div>
-        
-        <div style="margin-bottom:0.6rem">
-          <label style="font-size:0.7rem; display:block; color:var(--text2)">TARGET SELECTION:</label>
-          <select id="wheel-target" class="linput" style="padding:.3rem; font-size:.8rem; margin:.2rem 0">
-            <option value="red">RED CHIPS (1:1 payout)</option>
-            <option value="black">BLACK CHIPS (1:1 payout)</option>
-            <option value="green">GREEN CHAMBER 0 (35:1 payout)</option>
-          </select>
-        </div>
-        
-        <div style="margin-bottom:0.6rem">
-          <label style="font-size:0.7rem; display:block; color:var(--text2)">BET TICKETS:</label>
-          <input type="number" id="wheel-bet" class="input-num" style="width:100%" value="50">
-        </div>
-        
-        <div id="wheel-feedback" class="feedback"></div>
-        <div class="game-action-row">
-          <button class="btn btn-primary" onclick="playWheelRoulette()">SPIN WHEEL</button>
-        </div>
-      </div>
+      </div>`;
+    }).join("")}
+  </div>
+  <div class="card" id="guess-lb"><div class="ctitle">Leaderboard</div><div class="loading">Loading...</div></div>`;
+  m.innerHTML=html;
+  if(!me?.demo){
+    try{
+      const lb=await api("/guessing/leaderboard");
+      let lbHtml="";
+      lb.forEach((row,i)=>{
+        const rc=i===0?"r1":i===1?"r2":i===2?"r3":"";
+        const isMe2=me?.discord_id===row.discord_id;
+        lbHtml+=`<div class="lb-row" style="${isMe2?"background:rgba(245,196,0,.03)":""}">
+          <div class="lb-rank ${rc}">${i+1}</div>
+          <div class="lb-name">${isMe2?`<span class="gold">@${row.username}</span>`:row.username}</div>
+          <div class="lb-val">${row.score}/10</div>
+        </div>`;
+      });
+      $("guess-lb").innerHTML=`<div class="ctitle">Leaderboard</div>`+lbHtml;
+    }catch{}
+  } else {
+    $("guess-lb").innerHTML=`<div class="ctitle">Leaderboard</div><p style="color:var(--text3);font-size:.78rem;padding:.5rem">Demo mode — leaderboard not available.</p>`;
+  }
+}
+
+// ── BREATHER ──────────────────────────────────────────────
+function renderBreather(){
+  const ev=EVENTS.find(e=>e.id==="breather");
+  if(!isLive(ev))return evHdr(ev)+cdHTML(ev.date,"Event begins in");
+  return evHdr(ev)+`<div class="card" style="text-align:center;padding:2.2rem 1.5rem">
+    <div style="font-family:'Black Ops One',sans-serif;font-size:1.3rem;color:var(--gold);margin-bottom:1rem">Codes</div>
+    <p style="color:var(--text2);font-size:.82rem;margin-bottom:.5rem;max-width:480px;margin-inline:auto">Some found them. Most probably didn't. Hidden everywhere — announcements, nation page.</p>
+    <p style="color:var(--text2);font-size:.82rem;margin-bottom:.5rem">But today is different.</p>
+    <p style="color:var(--gold);font-weight:700;font-size:.85rem;margin-bottom:.5rem">My bot will DM them to you.</p>
+    <p style="color:var(--text2);font-size:.82rem;margin-bottom:.5rem">You have <strong style="color:var(--gold2)">5 minutes</strong> to redeem.</p>
+    <div class="divider"></div>
+    <p style="color:var(--text3);font-size:.72rem">1st code = 10 tickets · 2nd = 7 · 3rd = 5 · 4th = 3</p>
+    <p style="color:var(--text3);font-size:.7rem;margin-top:.28rem;font-style:italic">Breather round while the final event is being prepared</p>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+// CASINO — room-based lobby
+// ══════════════════════════════════════════════════════════
+function renderCasinoLobby(){
+  const ev=EVENTS.find(e=>e.id==="casino");
+  if(!isLive(ev))return evHdr(ev)+cdHTML(ev.date,"Casino opens in");
+  if(_casinoRoom)return evHdr(ev)+renderCasinoRoom();
+  const rooms=[
+    {id:"coinflip",  icon:"🪙", name:"Coin Flip",    desc:"50/50 — double or nothing"},
+    {id:"slots",     icon:"🎰", name:"Slots",         desc:"3 reels, 5x jackpot"},
+    {id:"roulette",  icon:"🎡", name:"Roulette",      desc:"Pick red, black, or a number"},
+    {id:"rr",        icon:"🔫", name:"Russian Roulette", desc:"Solo or 1v1 — high risk"},
+    {id:"blackjack", icon:"🃏", name:"Blackjack",     desc:"Beat the dealer to 21"},
+    {id:"poker",     icon:"♠️", name:"Poker",         desc:"Texas Hold'em with friends"},
+  ];
+  return evHdr(ev)+`<p style="color:var(--text2);font-size:.82rem;margin-bottom:1rem">Welcome to Casino Night. Pick a game to enter.</p>
+    <div class="casino-rooms">
+      ${rooms.map(r=>`<div class="casino-room" onclick="enterCasinoRoom('${r.id}')">
+        <span class="room-icon">${r.icon}</span>
+        <div class="room-name">${r.name}</div>
+        <div class="room-desc">${r.desc}</div>
+      </div>`).join("")}
     </div>`;
 }
-
-function toggleRRBulletsDisplay() {
-  const mode = document.getElementById("rr-mode").value;
-  document.getElementById("rr-bullets-wrap").style.display = mode === 'solo' ? 'block' : 'none';
+function enterCasinoRoom(id){
+  _casinoRoom=id;
+  const ev=EVENTS.find(e=>e.id==="casino");
+  $("main").innerHTML=evHdr(ev)+renderCasinoRoom();
+}
+function renderCasinoRoom(){
+  const back=`<button class="casino-back" onclick="_casinoRoom=null;showTab('casino')">← Casino Lobby</button>`;
+  if(_casinoRoom==="coinflip")return back+renderCoinFlip();
+  if(_casinoRoom==="slots")return back+renderSlots();
+  if(_casinoRoom==="roulette")return back+renderRouletteGame();
+  if(_casinoRoom==="rr")return back+renderRR();
+  if(_casinoRoom==="blackjack")return back+renderBlackjack();
+  if(_casinoRoom==="poker")return back+renderPoker();
+  return back+"Unknown room";
 }
 
-async function playRussianRoulette() {
-  const mode = document.getElementById("rr-mode").value;
-  const bullets = document.getElementById("rr-bullets").value;
-  const bet = document.getElementById("rr-bet").value;
-  const fb = document.getElementById("rr-feedback");
-  fb.innerText = "Spinning chamber cylinder...";
-  
-  const res = await fetch(`${API_URL}/api/casino/play`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ game: `russian_${mode}`, bullets, bet, discord_id: me.discord_id })
+// ── COIN FLIP ─────────────────────────────────────────────
+function renderCoinFlip(){
+  return`<div class="cgame">
+    <h3>🪙 Coin Flip</h3>
+    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.6rem">50/50. Win = double bet. Disabled above 100 tickets.</p>
+    <div class="coin" id="coin">FLIP</div>
+    <div class="cresult" id="cfr">—</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.4rem">
+      <span style="color:var(--text3);font-size:.78rem">Bet:</span>
+      <input class="binput" type="number" id="cfb" value="1" min="1" max="99">
+      <button class="btn btn-primary btn-sm" onclick="playCF()">Flip</button>
+    </div>
+    <p style="color:var(--text3);font-size:.68rem;margin-top:.65rem">Tickets: <span class="gold" id="cf-bal">${me?.tickets??0}</span></p>
+  </div>`;
+}
+async function playCF(){
+  const b=Math.max(1,parseInt($("cfb")?.value)||1);
+  if((me?.tickets??0)>=100){notify("Disabled above 100 tickets","err");return}
+  if((me?.tickets??0)<b){notify("Not enough tickets","err");return}
+  const won=Math.random()<0.5;const diff=won?b:-b;
+  const c=$("coin");c.classList.add("flip");setTimeout(()=>c.classList.remove("flip"),900);
+  if(!me.demo){
+    const r=await api("/casino/coinflip","POST",{discord_id:me.discord_id,bet:b});
+    if(r.error){notify(r.error,"err");return}
+    me.tickets=r.total;renderAuth();
+    $("cfr").innerHTML=r.won?`<span class="ok">Heads! +${b} (${r.total} total)</span>`:`<span class="err">Tails. -${b} (${r.total} total)</span>`;
+    if($("cf-bal"))$("cf-bal").textContent=r.total;
+  } else {
+    me.tickets=Math.max(0,(me.tickets||0)+diff);
+    $("cfr").innerHTML=won?`<span class="ok">Heads! +${b}</span>`:`<span class="err">Tails. -${b}</span>`;
+    if($("cf-bal"))$("cf-bal").textContent=me.tickets;
+  }
+}
+
+// ── SLOTS ─────────────────────────────────────────────────
+function renderSlots(){
+  return`<div class="cgame">
+    <h3>🎰 Slots</h3>
+    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.55rem">3 match = 3× | 💎💎💎 = 5× | 2 match = 0.5×</p>
+    <div class="reels"><div class="reel" id="sl0">🍒</div><div class="reel" id="sl1">🍋</div><div class="reel" id="sl2">🍊</div></div>
+    <div class="cresult" id="slr">—</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:.5rem">
+      <span style="color:var(--text3);font-size:.78rem">Bet:</span>
+      <input class="binput" type="number" id="slb" value="1" min="1">
+      <button class="btn btn-primary btn-sm" onclick="playSlots()">Spin</button>
+    </div>
+  </div>`;
+}
+const SLOT_SYMS=["🍒","🍋","🍊","⭐","💎","7️⃣"];
+async function playSlots(){
+  const b=Math.max(1,parseInt($("slb")?.value)||1);
+  if((me?.tickets??0)<b){notify("Not enough tickets","err");return}
+  for(let i=0;i<3;i++){const e=$(`sl${i}`);if(e){e.classList.add("spin");setTimeout(()=>e.classList.remove("spin"),400+i*100)}}
+  if(!me.demo){
+    const r=await api("/casino/slots","POST",{discord_id:me.discord_id,bet:b});
+    if(r.error){notify(r.error,"err");return}
+    me.tickets=r.total;renderAuth();
+    setTimeout(()=>{(r.reels||[]).forEach((v,i)=>{const e=$(`sl${i}`);if(e)e.textContent=v});
+      $("slr").innerHTML=r.diff>0?`<span class="ok">+${r.diff} (${r.total})</span>`:`<span class="err">${r.diff} (${r.total})</span>`},650);
+  } else {
+    const reels=SLOT_SYMS.map(()=>SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)]);
+    let diff;
+    if(reels[0]===reels[1]&&reels[1]===reels[2])diff=reels[0]==="💎"?b*5:b*3;
+    else if(reels[0]===reels[1]||reels[1]===reels[2])diff=Math.max(1,Math.floor(b*.5));
+    else diff=-b;
+    me.tickets=Math.max(0,(me.tickets||0)+diff);
+    setTimeout(()=>{reels.forEach((v,i)=>{const e=$(`sl${i}`);if(e)e.textContent=v});
+      $("slr").innerHTML=diff>0?`<span class="ok">+${diff}</span>`:`<span class="err">${diff}</span>`;},650);
+  }
+}
+
+// ── ROULETTE ──────────────────────────────────────────────
+function renderRouletteGame(){
+  const bets=[
+    {id:"red",label:"Red",cls:"red-btn"},{id:"black",label:"Black",cls:"black-btn"},{id:"green",label:"Green (0)",cls:"green-btn"},
+    {id:"1-18",label:"1–18"},{id:"19-36",label:"19–36"},{id:"single",label:"Pick #"},
+  ];
+  const rlNum=$("rl-num");
+  return`<div class="cgame" style="max-width:480px">
+    <h3>🎡 Roulette</h3>
+    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.6rem">Red/Black = 1× | 1-18/19-36 = 1× | Green (0) = 35× | Single number = 35×</p>
+    <div class="roulette-wheel-wrap">
+      <div class="roulette-number rn-black" id="rl-num" style="display:none">—</div>
+    </div>
+    <div class="cresult" id="rlr">Pick a bet below</div>
+    <div class="roulette-bets">
+      ${bets.map(bt=>`<div class="roulette-bet-btn ${bt.cls||""} ${_rlBetOn===bt.id?"sel":""}" onclick="setRlBet('${bt.id}',this)">${bt.label}</div>`).join("")}
+    </div>
+    ${_rlBetOn==="single"?`<div style="display:flex;align-items:center;gap:.5rem;margin:.5rem 0;justify-content:center">
+      <input class="binput" type="number" id="rl-single" min="0" max="36" value="7" style="width:60px">
+      <span style="color:var(--text3);font-size:.78rem">Number (0–36)</span>
+    </div>`:""}
+    <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.5rem">
+      <span style="color:var(--text3);font-size:.78rem">Bet:</span>
+      <input class="binput" type="number" id="rl-bet" value="${_rlBet}" min="1">
+      <button class="btn btn-primary btn-sm" onclick="playRoulette()">Spin</button>
+    </div>
+    <p style="color:var(--text3);font-size:.68rem;margin-top:.6rem">Multiplayer: all players bet independently on the same spin.</p>
+  </div>`;
+}
+function setRlBet(id,el){_rlBetOn=id;document.querySelectorAll(".roulette-bet-btn").forEach(b=>b.classList.remove("sel"));el.classList.add("sel");enterCasinoRoom("roulette")}
+async function playRoulette(){
+  if(!_rlBetOn){notify("Pick a bet type","err");return}
+  _rlBet=Math.max(1,parseInt($("rl-bet")?.value)||5);
+  if((me?.tickets??0)<_rlBet){notify("Not enough tickets","err");return}
+  let betOn=_rlBetOn;
+  if(betOn==="single"){betOn=($("rl-single")?.value||"7").toString()}
+  const number=Math.floor(Math.random()*37);
+  const color=number===0?"green":(number%2===1?"red":"black");
+  const rlDiv=$("rl-num");
+  if(rlDiv){rlDiv.style.display="inline-flex";rlDiv.className=`roulette-number rn-${color}`;rlDiv.textContent=number}
+  let won=false,diff=-_rlBet;
+  if(betOn==="red"&&color==="red"){won=true;diff=_rlBet}
+  else if(betOn==="black"&&color==="black"){won=true;diff=_rlBet}
+  else if(betOn==="green"&&color==="green"){won=true;diff=_rlBet*35}
+  else if(betOn==="1-18"&&number>=1&&number<=18){won=true;diff=_rlBet}
+  else if(betOn==="19-36"&&number>=19&&number<=36){won=true;diff=_rlBet}
+  else if(betOn===number.toString()){won=true;diff=_rlBet*35}
+  if(!me.demo){
+    const r=await api("/casino/roulette_settle","POST",{discord_id:me.discord_id,bet:_rlBet,bet_on:betOn});
+    if(r.error){notify(r.error,"err");return}
+    me.tickets=r.total;renderAuth();
+    $("rlr").innerHTML=r.won?`<span class="ok">Won! +${r.diff} (${r.total} total)</span>`:`<span class="err">Lost. -${_rlBet} (${r.total} total)</span>`;
+  } else {
+    me.tickets=Math.max(0,(me.tickets||0)+diff);
+    $("rlr").innerHTML=won?`<span class="ok">Won! +${diff}</span>`:`<span class="err">Lost. -${_rlBet}</span>`;
+  }
+}
+
+// ── RUSSIAN ROULETTE ──────────────────────────────────────
+const RR_MULTS=[1.1,1.3,1.6,2.0,2.5,4.0];
+
+function renderRR(){
+  const tabs=[["solo","Solo"],["duo","Duo (1v1)"]];
+  return`<div class="cgame" style="max-width:480px">
+    <h3>🔫 Russian Roulette</h3>
+    <div style="display:flex;gap:.4rem;margin-bottom:.9rem">
+      ${tabs.map(([id,lb])=>`<button class="btn ${(()=>{ if(id==="solo"&&!_rrDuoStarted&&_rrSoloCurrent===0&&!_rrDuoPlayers.length)return"btn-primary"; if(id==="duo"&&(_rrDuoStarted||_rrDuoPlayers.length))return"btn-primary"; return"btn-ghost";})()}" onclick="setRRTab('${id}')">${lb}</button>`).join("")}
+    </div>
+    ${_rrDuoStarted||_rrDuoPlayers.length?renderRRDuo():renderRRSolo()}
+  </div>`;
+}
+function setRRTab(t){
+  if(t==="solo"){_rrDuoStarted=false;_rrDuoPlayers=[];_rrDuoAlive=[];_rrSoloCurrent=0;_rrSoloBet=0;_rrSelectedChamber=null}
+  else{_rrSoloCurrent=0;_rrSoloBet=0;_rrSelectedChamber=null}
+  enterCasinoRoom("rr");
+}
+
+// Solo: pick which chamber to pull (out of 6), one is the bullet
+function renderRRSolo(){
+  const started=_rrSoloCurrent>0&&_rrSoloCurrent<6;
+  const bulletCh=_rrSoloBullet??null; // revealed after game
+  return`<div>
+    <p style="color:var(--text3);font-size:.72rem;margin-bottom:.75rem">Pick a chamber to pull. One hides a bullet. Survive = grow your multiplier. Cash out anytime.</p>
+    <div class="mult-track">
+      ${RR_MULTS.map((m,i)=>`<div class="mult-step ${i<_rrSoloCurrent?"done":i===_rrSoloCurrent&&started?"current":""}" id="mstep${i}">
+        <span class="ms-val">${m}x</span>
+        <span class="ms-label">pull ${i+1}</span>
+      </div>`).join("")}
+    </div>
+    <div class="mult-display" id="rr-mult">${started?`${RR_MULTS[_rrSoloCurrent-1]}x`:started?"1x":"—"}</div>
+    <div class="chambers" id="rr-chambers">
+      ${Array.from({length:6},(_,i)=>`<div class="chamber ${i<_rrSoloCurrent?"safe":""} ${_rrSelectedChamber===i&&!started?"selected":""}" 
+        id="rrch${i}" onclick="selectRRChamber(${i})">${i<_rrSoloCurrent?"✓":i+1}</div>`).join("")}
+    </div>
+    <div class="cresult" id="rrr">${started?"Surviving... pick next chamber or cash out.":_rrSelectedChamber!==null?`Chamber ${_rrSelectedChamber+1} selected — pull trigger!`:"Click a chamber to select it"}</div>
+    ${!started?`<div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.6rem 0">
+      <span style="color:var(--text2);font-size:.78rem">Bet:</span>
+      <input class="binput" type="number" id="rr-bet" value="5" min="1">
+    </div>`:`<p style="color:var(--text3);font-size:.72rem;text-align:center">Bet: ${_rrSoloBet} tickets</p>`}
+    <div style="display:flex;gap:.5rem;justify-content:center;margin-top:.65rem;flex-wrap:wrap">
+      <button class="btn btn-danger" onclick="pullRRSolo()" ${_rrSelectedChamber===null&&!started?"disabled":""}>Pull Trigger</button>
+      ${started?`<button class="btn btn-green btn-sm" onclick="cashOutRR()">Cash Out (${Math.floor(_rrSoloBet*RR_MULTS[_rrSoloCurrent-1])} tickets)</button>`:""}
+    </div>
+  </div>`;
+}
+function selectRRChamber(i){
+  if(_rrSoloCurrent>0)return; // already in game, next chamber auto-picked
+  _rrSelectedChamber=i;
+  renderRR_update();
+}
+function renderRR_update(){enterCasinoRoom("rr")}
+
+let _rrSoloBullet=null; // which chamber has the bullet (set when game starts)
+async function pullRRSolo(){
+  if(_rrSoloCurrent===0){
+    // Start game
+    if(_rrSelectedChamber===null){notify("Select a chamber first","err");return}
+    const bet=Math.max(1,parseInt($("rr-bet")?.value)||5);
+    if((me?.tickets??0)<bet){notify("Not enough tickets","err");return}
+    _rrSoloBet=bet;
+    _rrSoloBullet=Math.floor(Math.random()*6); // hidden bullet
+    if(me?.demo){me.tickets-=bet}
+    else{
+      const r=await api("/casino/roulette","POST",{discord_id:me.discord_id,bet,action:"start",shots:1,solo:true});
+      if(r.error){notify(r.error,"err");return}
+      me.tickets=r.total;renderAuth();
+    }
+  } else {
+    // Subsequent pulls — must pick next chamber
+    if(_rrSelectedChamber===null){
+      // Auto-pick any unplayed chamber
+      for(let i=0;i<6;i++){
+        const ch=$(`rrch${i}`);
+        if(ch&&!ch.classList.contains("safe")&&!ch.classList.contains("danger")){_rrSelectedChamber=i;break}
+      }
+    }
+  }
+  if(_rrSelectedChamber===null){notify("Pick a chamber","err");return}
+  const dead=_rrSelectedChamber===_rrSoloBullet;
+  const ch=$(`rrch${_rrSelectedChamber}`);
+  if(dead){
+    if(ch){ch.className="chamber danger";ch.textContent="💥"}
+    // Reveal bullet
+    const bch=$(`rrch${_rrSoloBullet}`);if(bch)bch.style.borderColor="var(--red)";
+    $("rr-mult").textContent="DEAD";
+    $("rrr").innerHTML=`<span class="err">Chamber ${_rrSelectedChamber+1} — bang. Lost ${_rrSoloBet} tickets.</span>`;
+    _rrSoloCurrent=0;_rrSoloBet=0;_rrSoloBullet=null;_rrSelectedChamber=null;
+    setTimeout(()=>renderRR_update(),2500);
+  } else {
+    if(ch){ch.className="chamber safe";ch.textContent="✓"}
+    _rrSoloCurrent++;_rrSelectedChamber=null;
+    const mult=RR_MULTS[_rrSoloCurrent-1];
+    $("rr-mult").textContent=`${mult}x`;
+    $("rrr").innerHTML=`<span class="ok">Survived! (${mult}x) — pick next chamber or cash out.</span>`;
+    if(_rrSoloCurrent===6){await cashOutRR();return}
+    renderRR_update();
+  }
+}
+async function cashOutRR(){
+  if(_rrSoloCurrent===0)return;
+  const mult=RR_MULTS[_rrSoloCurrent-1];
+  const winnings=Math.floor(_rrSoloBet*mult);
+  const profit=winnings-_rrSoloBet;
+  if(!me?.demo){
+    const r=await api("/casino/roulette","POST",{discord_id:me.discord_id,bet:_rrSoloBet,shots:_rrSoloCurrent,solo:true,action:"cashout",mult});
+    if(!r.error){me.tickets=r.total;renderAuth()}
+  } else {me.tickets=(me.tickets||0)+winnings}
+  notify(`Cashed out! +${profit} profit`);
+  _rrSoloCurrent=0;_rrSoloBet=0;_rrSoloBullet=null;_rrSelectedChamber=null;
+  setTimeout(()=>renderRR_update(),1500);
+}
+
+// Duo RR
+function renderRRDuo(){
+  if(!_rrDuoStarted){
+    return`<div>
+      <p style="color:var(--text3);font-size:.72rem;margin-bottom:.75rem">Both players bet the same. Take turns. Last one standing wins both bets.</p>
+      <div style="margin-bottom:.55rem">Player 1: <strong style="color:var(--gold)">@${me?.username}</strong></div>
+      <div style="display:flex;gap:.4rem;margin-bottom:.75rem;flex-wrap:wrap">
+        <input class="ginput" id="duo-p-in" placeholder="Player 2 name" style="flex:1;min-width:120px">
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem">
+        <span style="color:var(--text2);font-size:.78rem">Bet each:</span>
+        <input class="binput" type="number" id="duo-bet" value="10" min="1">
+      </div>
+      <button class="btn btn-danger" onclick="startRRDuo()">Start Duel</button>
+    </div>`;
+  }
+  const cur=_rrDuoAlive[_rrDuoTurn%_rrDuoAlive.length];
+  return`<div>
+    <div style="text-align:center;margin-bottom:.5rem;font-family:'Black Ops One',sans-serif;color:var(--gold)">Pot: ${_rrDuoBet*2} tickets</div>
+    <div class="chambers">
+      ${Array.from({length:6},(_,i)=>`<div class="chamber ${_rrDuoAlive.length<2?"":" "}" id="dch${i}">${i+1}</div>`).join("")}
+    </div>
+    <p style="color:var(--text2);font-size:.82rem;text-align:center;margin:.5rem 0">@${cur}'s turn</p>
+    <div style="margin:.4rem 0;text-align:center">${_rrDuoPlayers.map(p=>`<span class="tag ${_rrDuoAlive.includes(p)?"tag-green":"tag-dim"}" style="margin:.2rem">${_rrDuoAlive.includes(p)?"[A]":"[X]"} @${p}</span>`).join("")}</div>
+    <div class="cresult" id="rrr">—</div>
+    <button class="btn btn-danger" style="margin-top:.5rem" onclick="duoShoot()">Pull Trigger</button>
+  </div>`;
+}
+function startRRDuo(){
+  const p2=($("duo-p-in")?.value||"").trim();
+  if(!p2){notify("Enter Player 2 name","err");return}
+  _rrDuoBet=Math.max(1,parseInt($("duo-bet")?.value)||10);
+  if((me?.tickets??0)<_rrDuoBet){notify("Not enough tickets","err");return}
+  _rrDuoPlayers=[me.username,p2];_rrDuoAlive=[me.username,p2];
+  _rrDuoTurn=0;_rrDuoStarted=true;
+  // Show invite to player 2
+  _pendingInvite={from:me.username,toName:p2};
+  $("invite-title").textContent="Roulette Duel Invite";
+  $("invite-text").textContent=`@${me.username} challenges you to Russian Roulette (${_rrDuoBet} tickets)`;
+  $("invite-notif").classList.add("show");
+  enterCasinoRoom("rr");
+}
+async function duoShoot(){
+  const shooter=_rrDuoAlive[_rrDuoTurn%_rrDuoAlive.length];
+  const dead=Math.random()<1/6;
+  document.querySelectorAll("[id^='dch']").forEach((c,i)=>{c.className="chamber";c.textContent=i+1});
+  const hitCh=Math.floor(Math.random()*6);
+  if(dead){
+    const ch=$(`dch${hitCh}`);if(ch){ch.className="chamber danger";ch.textContent="💥"}
+    _rrDuoAlive=_rrDuoAlive.filter(p=>p!==shooter);
+    $("rrr").innerHTML=`<span class="err">@${shooter} eliminated!</span>`;
+    if(_rrDuoAlive.length===1){
+      const winner=_rrDuoAlive[0];const pot=_rrDuoBet*2;
+      $("rrr").innerHTML=`<span class="ok">@${winner} wins ${pot} tickets!</span>`;
+      if(winner===me?.username&&!me?.demo){
+        const r=await api("/casino/roulette","POST",{discord_id:me.discord_id,bet:_rrDuoBet,solo:false,action:"win"});
+        if(!r.error){me.tickets=r.total;renderAuth()}
+      } else if(winner===me?.username){me.tickets=(me.tickets||0)+_rrDuoBet}
+      setTimeout(()=>{_rrDuoStarted=false;_rrDuoPlayers=[];_rrDuoAlive=[];enterCasinoRoom("rr")},3000);
+    }
+  } else {
+    const ch=$(`dch${hitCh}`);if(ch){ch.className="chamber safe";ch.textContent="✓"}
+    $("rrr").innerHTML=`<span class="ok">@${shooter} survived!</span>`;
+    _rrDuoTurn++;setTimeout(()=>enterCasinoRoom("rr"),1000);
+  }
+}
+
+// ── BLACKJACK ─────────────────────────────────────────────
+const BJ_SUITS=["♠","♥","♦","♣"];
+const BJ_RANKS=["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+function bjDeck(){return BJ_SUITS.flatMap(s=>BJ_RANKS.map(r=>({r,s})))}
+function bjShuffle(d){for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
+function bjVal(cards){
+  let total=0,aces=0;
+  cards.forEach(c=>{
+    if(c.r==="A"){total+=11;aces++}
+    else if(["J","Q","K"].includes(c.r))total+=10;
+    else total+=parseInt(c.r);
   });
-  const data = await res.json();
-  if(data.error) { fb.innerText = data.error; return; }
-  
-  if(!me.demo) { me.tickets = data.total; document.getElementById("tickets-display").innerText = `[T] ${me.tickets}`; }
-  fb.innerHTML = `<span style="color:${data.won ? 'var(--green)':'var(--red)'}">${data.msg} Balance diff: ${data.diff}</span>`;
+  while(total>21&&aces>0){total-=10;aces--}
+  return total;
+}
+function bjCardHTML(c,hidden){
+  if(!c||hidden)return`<div class="card-widget back"><span class="rank">?</span><span class="suit">?</span></div>`;
+  const red=["♥","♦"].includes(c.s);
+  return`<div class="card-widget ${red?"red":"black"}"><span class="rank">${c.r}</span><span class="suit">${c.s}</span></div>`;
 }
 
-async function playBlackjack() {
-  const bet = document.getElementById("bj-bet").value;
-  const fb = document.getElementById("bj-feedback");
-  fb.innerText = "Shuffling and distributing cards...";
-  
-  const res = await fetch(`${API_URL}/api/casino/play`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ game: "blackjack", bet, discord_id: me.discord_id })
-  });
-  const data = await res.json();
-  if(data.error) { fb.innerText = data.error; return; }
-  
-  if(!me.demo) { me.tickets = data.total; document.getElementById("tickets-display").innerText = `[T] ${me.tickets}`; }
-  let color = data.push ? 'var(--gold)' : (data.won ? 'var(--green)' : 'var(--red)');
-  fb.innerHTML = `<span style="color:${color}">${data.msg} (Player: ${data.player} | Dealer: ${data.dealer})</span>`;
+function renderBlackjack(){
+  if(!_bjState||_bjState.phase==="setup"){
+    return`<div class="cgame" style="max-width:480px">
+      <h3>🃏 Blackjack</h3>
+      <p style="color:var(--text3);font-size:.72rem;margin-bottom:.65rem">Beat the dealer without going over 21. Blackjack pays 1.5×.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:.6rem;margin:.65rem 0">
+        <span style="color:var(--text2);font-size:.78rem">Bet:</span>
+        <input class="binput" type="number" id="bj-bet" value="5" min="1">
+        <button class="btn btn-primary btn-sm" onclick="bjDeal()">Deal</button>
+      </div>
+      <p style="color:var(--text3);font-size:.68rem">Tickets: <span class="gold">${me?.tickets??0}</span></p>
+    </div>`;
+  }
+  const s=_bjState;
+  const pval=bjVal(s.player);const dval=bjVal(s.dealer);
+  const showDealer=s.phase==="done";
+  return`<div class="cgame" style="max-width:480px">
+    <h3>🃏 Blackjack</h3>
+    <div class="bj-table">
+      <div class="bj-label">Dealer ${showDealer?`(${dval})`:"(?)"}</div>
+      <div class="bj-hand">${s.dealer.map((c,i)=>bjCardHTML(c,i===1&&!showDealer)).join("")}</div>
+      <div class="bj-label" style="margin-top:.65rem">You (${pval})</div>
+      <div class="bj-hand">${s.player.map(c=>bjCardHTML(c,false)).join("")}</div>
+    </div>
+    <div class="cresult" id="bj-res">${s.result||"—"}</div>
+    ${s.phase==="playing"?`<div style="display:flex;gap:.5rem;justify-content:center;margin-top:.5rem">
+      <button class="btn btn-primary btn-sm" onclick="bjHit()">Hit</button>
+      <button class="btn btn-ghost btn-sm" onclick="bjStand()">Stand</button>
+    </div>`:
+    `<button class="btn btn-primary" style="max-width:200px;margin-top:.5rem" onclick="bjNewGame()">New Hand</button>`}
+  </div>`;
 }
 
-async function playWheelRoulette() {
-  const target = document.getElementById("wheel-target").value;
-  const bet = document.getElementById("wheel-bet").value;
-  const fb = document.getElementById("wheel-feedback");
-  fb.innerText = "Releasing ball into drop frame...";
-  
-  const res = await fetch(`${API_URL}/api/casino/play`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ game: "roulette_settle", bet_on: target, bet, discord_id: me.discord_id })
-  });
-  const data = await res.json();
-  if(data.error) { fb.innerText = data.error; return; }
-  
-  if(!me.demo) { me.tickets = data.total; document.getElementById("tickets-display").innerText = `[T] ${me.tickets}`; }
-  fb.innerHTML = `<span style="color:${data.won?'var(--green)':'var(--red)'}">Landed on ${data.number} (${data.color.toUpperCase()}). ${data.won ? 'Winner!':'House Wins.'} Payout: ${data.diff}</span>`;
+function bjDeal(){
+  const bet=Math.max(1,parseInt($("bj-bet")?.value)||5);
+  if((me?.tickets??0)<bet){notify("Not enough tickets","err");return}
+  const deck=bjShuffle(bjDeck());
+  const player=[deck.pop(),deck.pop()];
+  const dealer=[deck.pop(),deck.pop()];
+  const pval=bjVal(player);
+  _bjState={player,dealer,deck,bet,phase:pval===21?"done":"playing",result:pval===21?"Blackjack! You win!":null};
+  if(pval===21){bjSettle("blackjack")}
+  enterCasinoRoom("blackjack");
 }
+function bjHit(){
+  if(!_bjState||_bjState.phase!=="playing")return;
+  _bjState.player.push(_bjState.deck.pop());
+  const pval=bjVal(_bjState.player);
+  if(pval>21){_bjState.phase="done";_bjState.result=`Bust! (${pval}) — You lose.`;bjSettle("lose")}
+  else if(pval===21){bjStand()}
+  else enterCasinoRoom("blackjack");
+}
+function bjStand(){
+  if(!_bjState||_bjState.phase!=="playing")return;
+  // Dealer draws to 17
+  while(bjVal(_bjState.dealer)<17)_bjState.dealer.push(_bjState.deck.pop());
+  const pval=bjVal(_bjState.player),dval=bjVal(_bjState.dealer);
+  let result,settle;
+  if(dval>21||pval>dval){result=`You win! (${pval} vs ${dval})`;settle="win"}
+  else if(pval===dval){result=`Push. (${pval})`;settle="push"}
+  else{result=`Dealer wins. (${pval} vs ${dval})`;settle="lose"}
+  _bjState.phase="done";_bjState.result=result;
+  bjSettle(settle);
+  enterCasinoRoom("blackjack");
+}
+async function bjSettle(result){
+  const bet=_bjState?.bet||5;
+  if(!me.demo){
+    const r=await api("/casino/blackjack_settle","POST",{discord_id:me.discord_id,bet,result});
+    if(!r.error){me.tickets=r.total;renderAuth()}
+  } else {
+    let diff=result==="blackjack"?Math.floor(bet*1.5):result==="win"?bet:result==="push"?0:-bet;
+    me.tickets=Math.max(0,(me.tickets||0)+diff);
+  }
+}
+function bjNewGame(){_bjState={phase:"setup"};enterCasinoRoom("blackjack")}
+
+// ── POKER ─────────────────────────────────────────────────
+const P_SUITS=["S","H","D","C"];
+const P_SUIT_SYM={S:"♠",H:"♥",D:"♦",C:"♣"};
+const P_RANKS=["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
+const P_RED=["H","D"];
+function freshDeck(){return P_SUITS.flatMap(s=>P_RANKS.map(r=>({r,s})))}
+function pShuffle(d){for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
+function pCardHTML(c,hidden){
+  if(!c||hidden)return`<div class="card-widget back"><span class="rank">?</span><span class="suit">X</span></div>`;
+  const red=P_RED.includes(c.s);
+  return`<div class="card-widget ${red?"red":"black"}"><span class="rank">${c.r}</span><span class="suit">${P_SUIT_SYM[c.s]||c.s}</span></div>`;
+}
+function evalHand(cards){
+  const all=cards.map(c=>({r:P_RANKS.indexOf(c.r),s:c.s}));
+  const ranks=all.map(c=>c.r).sort((a,b)=>b-a);
+  const suits=all.map(c=>c.s);
+  const counts={};ranks.forEach(r=>counts[r]=(counts[r]||0)+1);
+  const vals=Object.values(counts).sort((a,b)=>b-a);
+  const isFlush=suits.length>=5&&suits.every(s=>s===suits[0]);
+  const uniq=[...new Set(ranks)].sort((a,b)=>b-a);
+  const isStraight=uniq.length>=5&&uniq[0]-uniq[4]===4;
+  if(isFlush&&isStraight&&uniq[0]===12)return{rank:9,name:"Royal Flush"};
+  if(isFlush&&isStraight)return{rank:8,name:"Straight Flush"};
+  if(vals[0]===4)return{rank:7,name:"Four of a Kind"};
+  if(vals[0]===3&&vals[1]===2)return{rank:6,name:"Full House"};
+  if(isFlush)return{rank:5,name:"Flush"};
+  if(isStraight)return{rank:4,name:"Straight"};
+  if(vals[0]===3)return{rank:3,name:"Three of a Kind"};
+  if(vals[0]===2&&vals[1]===2)return{rank:2,name:"Two Pair"};
+  if(vals[0]===2)return{rank:1,name:"Pair"};
+  return{rank:0,name:"High Card"};
+}
+
+function renderPoker(){
+  if(!_poker.started)return renderPokerSetup();
+  return renderPokerTable();
+}
+function renderPokerSetup(){
+  // Auto-add current player if not there
+  if(me?.username&&!_poker.players.includes(me.username))_poker.players.unshift(me.username);
+  return`<div class="cgame" style="max-width:540px;background:none;border:none;padding:0">
+    <div class="poker-room">
+      <div class="ctitle" style="color:#4aaa4a">Texas Hold'em Poker</div>
+      <p style="color:#5a8a5a;font-size:.82rem;margin-bottom:.85rem">You are auto-added. Add up to 5 more players, set the buy-in, then deal.</p>
+      <div style="display:flex;gap:.4rem;margin-bottom:.5rem">
+        <input class="ginput" id="poker-p-in" placeholder="Add player" style="flex:1;background:#051205;border-color:#1a4a1a;color:#ccc">
+        <button class="btn btn-ghost btn-sm" onclick="addPokerPlayer()">Add</button>
+      </div>
+      <div style="margin-bottom:.8rem">
+        ${_poker.players.map((p,i)=>`<div style="display:flex;align-items:center;gap:.5rem;padding:.28rem 0;border-bottom:1px solid #0d2a0d">
+          <span style="flex:1;font-size:.8rem;color:#ccc">@${p}${p===me?.username?" <span style='color:var(--gold)'>(You)</span>":""}</span>
+          ${p!==me?.username?`<button class="btn btn-danger btn-sm" onclick="removePokerPlayer(${i})">×</button>`:""}
+        </div>`).join("")}
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem">
+        <span style="color:#5a8a5a;font-size:.78rem">Buy-in:</span>
+        <input class="binput" type="number" id="poker-bet" value="10" min="2" style="background:#051205;border-color:#1a4a1a;color:var(--gold2)">
+        <span style="color:#5a8a5a;font-size:.72rem">tickets</span>
+      </div>
+      ${_poker.players.length>=2?`<button class="btn btn-green" onclick="dealPoker()">Deal Cards</button>`:`<p style="color:#3a5a3a;font-size:.72rem">Add at least 2 players</p>`}
+    </div>
+  </div>`;
+}
+function renderPokerTable(){
+  const p=_poker;
+  const alive=p.players.filter(pl=>!p.folded.has(pl));
+  const cur=alive[p.turn%alive.length];
+  const phaseLabel={preflop:"Pre-Flop",flop:"Flop",turn:"Turn",river:"River",showdown:"Showdown"}[p.phase]||p.phase;
+  return`<div class="cgame" style="max-width:600px;background:none;border:none;padding:0">
+    <div class="poker-room">
+      <div style="text-align:center;margin-bottom:.5rem">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:#4a8a4a">${phaseLabel}</span>
+      </div>
+      <div class="poker-table">
+        <div>
+          <div style="display:flex;gap:.3rem;justify-content:center;margin-bottom:.35rem">
+            ${p.community.length?p.community.map(c=>pCardHTML(c,false)).join(""):Array.from({length:5},()=>pCardHTML(null,true)).join("")}
+          </div>
+          <div class="poker-pot">Pot: ${p.pot} [T]</div>
+        </div>
+      </div>
+      <div class="player-seats">
+        ${p.players.map(pl=>{
+          const isActive=pl===cur&&p.phase!=="showdown";
+          const folded=p.folded.has(pl);
+          const hand=p.hands[pl]||[];
+          const isMe=pl===me?.username;
+          const showFaceUp=isMe||p.phase==="showdown";
+          return`<div class="seat ${isActive?"active-seat":""} ${folded?"folded-seat":""}">
+            <div class="seat-name">${folded?"✗ ":isMe?"★ ":""}<strong>${pl}</strong>${isActive?" ←":""}</div>
+            <div class="seat-cards">${hand.map(c=>pCardHTML(c,!showFaceUp)).join("")}</div>
+            <div class="seat-chips">Bet: ${p.bets[pl]||0} [T]</div>
+          </div>`;
+        }).join("")}
+      </div>
+      ${p.phase==="showdown"?renderShowdown():renderPokerActions(cur)}
+    </div>
+  </div>`;
+}
+function renderPokerActions(cur){
+  if(!cur)return"";
+  return`<div style="text-align:center;margin-top:.6rem">
+    <p style="color:#4a8a4a;font-size:.8rem;margin-bottom:.6rem">@${cur}'s turn</p>
+    <div class="poker-actions">
+      <button class="btn btn-danger btn-sm" onclick="pokerAct('fold')">Fold</button>
+      <button class="btn btn-ghost btn-sm" style="border-color:#2a6a2a;color:#4a8a4a" onclick="pokerAct('check')">Check/Call</button>
+      <button class="btn btn-green btn-sm" onclick="pokerAct('raise')">Raise +${_poker.bet}</button>
+    </div>
+    ${_poker.phase!=="preflop"?`<button class="btn btn-ghost btn-sm" style="margin-top:.5rem;border-color:#2a6a2a;color:#4a8a4a" onclick="advancePoker()">Next Phase →</button>`:""}
+  </div>`;
+}
+function renderShowdown(){
+  const alive2=_poker.players.filter(p=>!_poker.folded.has(p));
+  let winner=null;let best=-1;
+  alive2.forEach(p=>{
+    const h=[...(_poker.hands[p]||[]),..._poker.community];
+    const score=evalHand(h.slice(0,7));
+    if(score.rank>best){best=score.rank;winner=p}
+  });
+  return`<div style="text-align:center;padding:.85rem">
+    <div style="font-family:'Black Ops One',sans-serif;font-size:1.1rem;color:var(--gold);margin-bottom:.5rem">@${winner||"?"} wins ${_poker.pot} tickets!</div>
+    <div style="color:#5a8a5a;font-size:.78rem;margin-bottom:.9rem">${alive2.map(p=>{const h=[...(_poker.hands[p]||[]),..._poker.community].slice(0,5);return`@${p}: ${evalHand(h).name}`}).join(" / ")}</div>
+    <button class="btn btn-green" onclick="resetPoker()">New Game</button>
+  </div>`;
+}
+function addPokerPlayer(){
+  const n=($("poker-p-in")?.value||"").trim();
+  if(n&&n!==me?.username&&!_poker.players.includes(n)&&_poker.players.length<6){
+    _poker.players.push(n);
+    // Send invite notification
+    _pendingInvite={from:me.username,toName:n,context:"poker"};
+    $("invite-title").textContent="Poker Table Invite";
+    $("invite-text").textContent=`@${me.username} invites you to join the poker table`;
+    $("invite-notif").classList.add("show");
+    enterCasinoRoom("poker");
+  }
+}
+function removePokerPlayer(i){_poker.players.splice(i,1);enterCasinoRoom("poker")}
+function dealPoker(){
+  const bet=Math.max(2,parseInt($("poker-bet")?.value)||10);
+  const deck=pShuffle(freshDeck());
+  const hands={};_poker.players.forEach(p=>{hands[p]=[deck.pop(),deck.pop()]});
+  const bets={};_poker.players.forEach(p=>{bets[p]=bet});
+  _poker={..._poker,deck,hands,community:[],pot:_poker.players.length*bet,bet,phase:"preflop",turn:0,bets,folded:new Set(),started:true};
+  enterCasinoRoom("poker");
+}
+function pokerAct(action){
+  const alive3=_poker.players.filter(p=>!_poker.folded.has(p));
+  const cur2=alive3[_poker.turn%alive3.length];
+  if(action==="fold")_poker.folded.add(cur2);
+  else if(action==="raise"){_poker.bets[cur2]=(_poker.bets[cur2]||0)+_poker.bet;_poker.pot+=_poker.bet}
+  _poker.turn++;
+  const alive4=_poker.players.filter(p=>!_poker.folded.has(p));
+  if(alive4.length===1)_poker.phase="showdown";
+  else if(_poker.turn%alive4.length===0&&_poker.turn>0){advancePoker();return}
+  enterCasinoRoom("poker");
+}
+function advancePoker(){
+  const phases=["preflop","flop","turn","river","showdown"];
+  const cur3=phases.indexOf(_poker.phase);
+  if(cur3<phases.length-1){
+    _poker.phase=phases[cur3+1];
+    if(_poker.phase==="flop")for(let i=0;i<3;i++)_poker.community.push(_poker.deck.pop());
+    else if(_poker.phase==="turn"||_poker.phase==="river")_poker.community.push(_poker.deck.pop());
+    _poker.turn=0;
+  }
+  enterCasinoRoom("poker");
+}
+function resetPoker(){
+  // Keep players, reset game state
+  const pls=[..._poker.players];
+  _poker={players:pls,hands:{},community:[],deck:[],pot:0,phase:"setup",bet:5,turn:0,bets:{},folded:new Set(),started:false};
+  enterCasinoRoom("poker");
+}
+
+// ── LEADERBOARD ───────────────────────────────────────────
+async function renderLB(m){
+  m.innerHTML=`<div class="evhdr"><div class="evtitle">Leaderboard</div></div><div class="loading">Loading...</div>`;
+  try{
+    const lb=await api("/tickets/leaderboard");
+    let html=`<div class="evhdr"><div class="evtitle">Leaderboard</div></div><div class="card">`;
+    if(!lb.length)html+=`<p style="color:var(--text3);font-size:.82rem;padding:.45rem">No entries yet.</p>`;
+    lb.forEach((row,i)=>{
+      const rc=i===0?"r1":i===1?"r2":i===2?"r3":"";
+      const isMe=!me?.demo&&me?.discord_id===row.discord_id;
+      html+=`<div class="lb-row" style="${isMe?"background:rgba(245,196,0,.03)":""}">
+        <div class="lb-rank ${rc}">${i+1}</div>
+        <div class="lb-name">${isMe?`<span class="gold">@${row.username}</span>`:row.username}${isMe?` <span class="tag tag-gold">You</span>`:""}</div>
+        <div class="lb-val">[T] ${row.tickets}</div>
+      </div>`;
+    });
+    m.innerHTML=html+`</div>`;
+  }catch{m.innerHTML=`<p style="color:var(--red);padding:2rem">Failed to load.</p>`}
+}
+
+// ── BOOT ──────────────────────────────────────────────────
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&document.activeElement?.id==="key-in")doLogin();
+  if(e.key==="Enter"&&document.activeElement?.id==="name-in")confirmName();
+});
+(async()=>{const ok=await restoreSession();if(ok)launch()})();
 </script>
 </body>
 </html>
